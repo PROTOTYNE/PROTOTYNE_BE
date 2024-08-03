@@ -1,3 +1,4 @@
+# .github/workflows/cicd.yml
 name: CICD
 
 on:
@@ -33,7 +34,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker
-        run: docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/live_server .
+        run: docker build --platform linux/amd64 --build-arg PROFILES=blue --build-arg ENV=blue -t ${{ secrets.DOCKERHUB_USERNAME }}/live_server .
+        
       - name: Push Docker
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/live_server:latest
         
