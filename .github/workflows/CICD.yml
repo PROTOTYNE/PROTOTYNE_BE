@@ -108,9 +108,4 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script_stop: true
           script: |
-            if [ "${{env.CURRENT_UPSTREAM}}" != "default_env" ]; then
-              sudo docker stop ${{env.CURRENT_UPSTREAM}}
-              sudo docker rm ${{env.CURRENT_UPSTREAM}}
-            else
-              echo "Skipping stop and remove for default_env"
-            fi
+            if [ "${{env.CURRENT_UPSTREAM}}" != "default_env" ]; then sudo docker stop ${{env.CURRENT_UPSTREAM}} && sudo docker rm ${{env.CURRENT_UPSTREAM}}; else echo "Skipping stop and remove for default_env"; fi
