@@ -1,6 +1,11 @@
 package com.prototyne.service.LoginService;
 
-import com.prototyne.web.dto.LoginDto;
+import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
+import com.prototyne.converter.UserConverter;
+import com.prototyne.domain.User;
+import com.prototyne.repository.UserRepository;
+import com.prototyne.web.dto.UserDto;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,22 +15,28 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Objects;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoServiceImpl implements KakaoService {
+    // 위에서 구현한 JwtManager 주입
+    private final JwtManager jwtManager;
+    private final UserRepository userRepository;
     private String clientId;
 
     @Autowired
-    public KakaoServiceImpl(@Value("${spring.datasource.client-id}") String clientId) {
+    public KakaoServiceImpl(JwtManager jwtManager, UserRepository userRepository, @Value("${spring.datasource.client-id}") String clientId) {
+        this.jwtManager = jwtManager;
+        this.userRepository = userRepository;
         this.clientId = clientId;
     }
 
     @Override
-    public LoginDto.KakaoTokenResponse getAccessToken(String code) {
-        log.info("client_id: {}", clientId);
+    public UserDto.KakaoTokenResponse getAccessToken(String code) {
         String KAUTH_TOKEN_URL_HOST = "https://kauth.kakao.com";
-        return WebClient.create(KAUTH_TOKEN_URL_HOST).post()
+        UserDto.KakaoTokenResponse kakaotokenresponse = WebClient.create(KAUTH_TOKEN_URL_HOST).post()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
                         .path("/oauth/token")
@@ -35,12 +46,19 @@ public class KakaoServiceImpl implements KakaoService {
                         .build(true))
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .retrieve()
-                .bodyToMono(LoginDto.KakaoTokenResponse.class)
+                .bodyToMono(UserDto.KakaoTokenResponse.class)
                 .block();
+        UserDto.UserInfoResponse userinfo = getKakaoInfo(Objects.requireNonNull(kakaotokenresponse).getAccessToken());
+        User user = userRepository.findByEmail(userinfo.getKakaoAccount().getEmail());
+        kakaotokenresponse.setNewUser(user == null);
+        if (user == null) {
+            userRepository.save(UserConverter.toUser(userinfo));
+        }
+        return kakaotokenresponse;
     }
 
     @Override
-    public LoginDto.UserInfoResponse getUserInfo(String accessToken) {
+    public UserDto.UserInfoResponse getKakaoInfo(String accessToken) {
         return WebClient.create("https://kapi.kakao.com")
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -50,7 +68,14 @@ public class KakaoServiceImpl implements KakaoService {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken) // access token 인가
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .retrieve()
-                .bodyToMono(LoginDto.UserInfoResponse.class)
+                .bodyToMono(UserDto.UserInfoResponse.class)
                 .block();
+    }
+
+    @Override
+    public UserDto.UserRequest getUserInfo(String accessToken) {
+        Integer id = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+        return UserConverter.toUserInfoDto(user);
     }
 }

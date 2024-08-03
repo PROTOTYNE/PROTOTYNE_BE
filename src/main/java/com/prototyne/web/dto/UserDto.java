@@ -3,13 +3,42 @@ package com.prototyne.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prototyne.domain.enums.Gender;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
-public class LoginDto {
+public class UserDto {
+    @Builder
     @Getter
+    public static class UserRequest {
+        private String username;
+        private String email;
+        private String profileUrl;
+        private Integer tickets;
+        private Gender gender;
+        private LocalDateTime birth;
+    }
+
+    @Getter
+    public static class UserDetailRequest {
+        private final Integer familyMember;
+        private final Gender Gender;
+        private final LocalDateTime Birth;
+
+        public UserDetailRequest(Integer familyMember, Gender gender, LocalDateTime birth) {
+            this.familyMember = familyMember;
+            this.Gender = gender;
+            this.Birth = birth;
+        }
+    }
+
+    @Getter
+    @Setter
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class KakaoTokenResponse {
@@ -25,12 +54,17 @@ public class LoginDto {
         //        public Integer refreshTokenExpiresIn;
         @JsonProperty("scope")
         public String scope;
+        public Boolean newUser;
     }
 
     @Getter
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UserInfoResponse {
+        //사용자 고유 식별값
+        @JsonProperty("id")
+        public Long id;
+
         //서비스에 연결 완료된 시각. UTC
         @JsonProperty("connected_at")
         public Date connectedAt;

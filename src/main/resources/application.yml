@@ -20,3 +20,8 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
+swagger:
+  tag:
+    auth: '01. 로그인/회원가입'
+    my: '02. 마이 페이지'
+    test: 'A. Test API'
