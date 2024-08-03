@@ -44,6 +44,7 @@ public class Product extends BaseEntity {
     @Column(nullable = true, length = 100)
     private String question5;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
