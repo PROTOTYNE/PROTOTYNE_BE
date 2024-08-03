@@ -66,7 +66,11 @@ jobs:
             echo "TARGET_UPSTREAM=blue" >> $GITHUB_ENV
           else
             echo "Unexpected CURRENT_UPSTREAM value: $CURRENT_UPSTREAM"
-            exit 1
+            echo "CURRENT_UPSTREAM default: green"
+            CURRENT_UPSTREAM=green
+            echo "CURRENT_PORT=8081" >> $GITHUB_ENV
+            echo "STOPPED_PORT=8080" >> $GITHUB_ENV
+            echo "TARGET_UPSTREAM=blue" >> $GITHUB_ENV
           fi
 
       - name: Docker compose
