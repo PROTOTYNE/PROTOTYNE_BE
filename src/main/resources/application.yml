@@ -1,14 +1,27 @@
 spring:
+  profiles:
+    active: local
+    group:
+      local: local, common, secret
+      blue: blue, common, secret
+      green: green, common, secret
+
+  server:
+    env: blue
+
   config:
     import: optional:file:.env[.properties]
+
   datasource:
     url: jdbc:mysql://${MYSQL_URL}:${MYSQL_PORT}/${MYSQL_DB}
     username: ${MYSQL_USER}
     password: ${MYSQL_PW}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   sql:
     init:
       mode: never
+
   jpa:
     properties:
       hibernate:
@@ -19,3 +32,62 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
+
+server:
+  port: 8080
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: blue
+
+  server:
+    port: 8080
+    serverAddress: 15.165.65.130
+
+serverName: blue_server
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: green
+
+  server:
+    port: 8081
+    serverAddress: 15.165.65.130
+
+serverName: green_server
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  server:
+    port: 8080
+    serverAddress: localhost
+
+serverName: local_server
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: common
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+server:
+  port: 8080
