@@ -34,10 +34,10 @@ public class LoginController {
     @Operation(summary = "회원가입 API - 인증 필요",
             description = "회원가입 API - 인증 필요",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<UserDto.UserInfoResponse> userInfo(HttpServletRequest token, @RequestBody @Valid UserDto.UserDetailRequest request) {
+    public ApiResponse<String> userInfo(HttpServletRequest token, @RequestBody @Valid UserDto.UserDetailRequest request) {
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
-//        kakaoService.signIn(aouthtoken, request);
-        return ApiResponse.onSuccess(kakaoService.getKakaoInfo(aouthtoken));
+        kakaoService.signIn(aouthtoken, request);
+        return ApiResponse.onSuccess("회원가입 완료");
     }
 
     @Tag(name = "${swagger.tag.my}")

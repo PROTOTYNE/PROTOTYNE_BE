@@ -47,7 +47,7 @@ public class TempRestController {
                                         \s
                      flag 값에 따라 토큰 발급 (1 ~ 5)
                     \s""")
-    public ResponseEntity<String> jwks(@RequestParam Integer flag) {
+    public ResponseEntity<String> jwks(@RequestParam Long flag) {
         if (flag > 5) {
             return ResponseEntity.badRequest().body("flag must be less than 5");
         } else if (flag < 1) {
