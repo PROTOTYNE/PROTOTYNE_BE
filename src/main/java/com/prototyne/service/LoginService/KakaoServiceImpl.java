@@ -10,47 +10,38 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Objects;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class KakaoServiceImpl {
+public class KakaoServiceImpl implements KakaoService {
+    private String clientId;
 
-//    private String clientId;
-//    //    private String KAUTH_USER_URL_HOST;
-//
-//    @Autowired
-//    public void KakaoService(@Value("d6a11050f565f605ac69c90bc3f26ec8") String clientId) {
-//        this.clientId = clientId;
-////        KAUTH_TOKEN_URL_HOST ="https://kauth.kakao.com";
-////        KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
-//    }
+    @Autowired
+    public KakaoServiceImpl(@Value("${spring.datasource.client-id}") String clientId) {
+        this.clientId = clientId;
+    }
 
+    @Override
     public LoginDto.KakaoTokenResponse getAccessToken(String code) {
-
+        log.info("client_id: {}", clientId);
         String KAUTH_TOKEN_URL_HOST = "https://kauth.kakao.com";
-        LoginDto.KakaoTokenResponse kakaoTokenResponseDto = (LoginDto.KakaoTokenResponse) WebClient.create(KAUTH_TOKEN_URL_HOST).post()
+        return WebClient.create(KAUTH_TOKEN_URL_HOST).post()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
                         .path("/oauth/token")
                         .queryParam("grant_type", "authorization_code")
-                        .queryParam("client_id", "d6a11050f565f605ac69c90bc3f26ec8")
+                        .queryParam("client_id", clientId)
                         .queryParam("code", code)
                         .build(true))
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .retrieve()
                 .bodyToMono(LoginDto.KakaoTokenResponse.class)
                 .block();
-
-        log.info(" [Kakao Service] Access Token ------> {}", Objects.requireNonNull(kakaoTokenResponseDto).getAccessToken());
-        log.info(" [Kakao Service] Refresh Token ------> {}", kakaoTokenResponseDto.getRefreshToken());
-
-        return kakaoTokenResponseDto;
     }
-    public LoginDto.UserInfoResponse getUserInfo(String accessToken) {
 
-        LoginDto.UserInfoResponse userInfo = WebClient.create("https://kapi.kakao.com")
+    @Override
+    public LoginDto.UserInfoResponse getUserInfo(String accessToken) {
+        return WebClient.create("https://kapi.kakao.com")
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
@@ -61,14 +52,5 @@ public class KakaoServiceImpl {
                 .retrieve()
                 .bodyToMono(LoginDto.UserInfoResponse.class)
                 .block();
-
-        log.info("[ Kakao Service ] Auth ID ---> {} ", Objects.requireNonNull(userInfo).getId());
-        log.info("[ Kakao Service ] NickName ---> {} ", userInfo.getKakaoAccount().getProfile().getNickName());
-        log.info("[ Kakao Service ] ProfileImageUrl ---> {} ", userInfo.getKakaoAccount().getProfile().getProfileImageUrl());
-
-        return userInfo;
     }
-
 }
-
-

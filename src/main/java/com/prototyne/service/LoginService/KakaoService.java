@@ -1,7 +1,8 @@
 package com.prototyne.service.LoginService;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.prototyne.web.dto.LoginDto;
 
 public interface KakaoService {
-    public String getAccessToken(String code);
+    LoginDto.KakaoTokenResponse getAccessToken(String code);
+    LoginDto.UserInfoResponse getUserInfo(String accessToken);
 }
