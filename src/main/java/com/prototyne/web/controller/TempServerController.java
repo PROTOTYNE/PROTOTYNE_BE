@@ -28,6 +28,7 @@ public class TempServerController {
         responseData.put("serverAddress", serverAddress);
         responseData.put("serverPort", serverPort);
         responseData.put("env", env);
+        responseData.put("name", "ci/cd test code");
 
         return ResponseEntity.ok(responseData);
     }
