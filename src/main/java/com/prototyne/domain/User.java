@@ -6,6 +6,7 @@ import com.prototyne.domain.mapping.Additional;
 import com.prototyne.domain.mapping.Heart;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,13 +31,19 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "NVARCHAR(512)")
     private String profileUrl;
 
+    @Column(nullable = false)
     private LocalDateTime birth;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
     private Integer tickets;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
     private Integer familyMember;
 
     @OneToMany(mappedBy ="user",cascade=CascadeType.ALL)
