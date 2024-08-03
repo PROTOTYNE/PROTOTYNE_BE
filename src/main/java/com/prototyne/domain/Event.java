@@ -19,22 +19,31 @@ public class Event extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private LocalDateTime eventStart;
 
+    @Column(nullable = false)
     private LocalDateTime eventEnd;
 
+    @Column(nullable = false)
     private LocalDateTime releaseStart;
 
+    @Column(nullable = false)
     private LocalDateTime releaseEnd;
 
+    @Column(nullable = false)
     private LocalDateTime feedbackStart;
 
+    @Column(nullable = false)
     private LocalDateTime feedbackEnd;
 
+    @Column(nullable = false)
     private LocalDateTime judgeStart;
 
+    @Column(nullable = false)
     private LocalDateTime judgeEnd;
 
+    @Column(nullable = false)
     private LocalDateTime endDate;
 
     @ManyToOne(fetch=FetchType.LAZY)

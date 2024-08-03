@@ -19,6 +19,7 @@ public class ADD_set extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AddsetTitle title;
 
