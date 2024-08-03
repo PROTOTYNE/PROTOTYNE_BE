@@ -52,8 +52,13 @@ public class KakaoServiceImpl implements KakaoService {
         User user = userRepository.findByEmail(userinfo.getKakaoAccount().getEmail());
         kakaotokenresponse.setNewUser(user == null);
         if (user == null) {
-            userRepository.save(UserConverter.toUser(userinfo));
+            user = userRepository.save(UserConverter.toUser(userinfo));
+        } else if (!user.getSignupComplete()) {
+            kakaotokenresponse.setNewUser(true);
         }
+        Long id = user.getId();
+        String token = jwtManager.createJwt(id);
+        kakaotokenresponse.setAccessToken(token);
         return kakaotokenresponse;
     }
 
@@ -74,8 +79,19 @@ public class KakaoServiceImpl implements KakaoService {
 
     @Override
     public UserDto.UserRequest getUserInfo(String accessToken) {
-        Integer id = jwtManager.validateJwt(accessToken);
+        Long id = jwtManager.validateJwt(accessToken);
+        log.info("id : {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
         return UserConverter.toUserInfoDto(user);
+    }
+
+    public void signIn(String token, UserDto.UserDetailRequest request) {
+        Long id = jwtManager.validateJwt(token);
+        User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+        user.setFamilyMember(request.getFamilyMember());
+        user.setGender(request.getGender());
+        user.setBirth(request.getBirth());
+        user.setSignupComplete(true);
+        userRepository.save(user);
     }
 }

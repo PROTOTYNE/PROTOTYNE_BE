@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtManager {
     private final SecretKey key = Jwts.SIG.HS256.key().build();
 
-    public String createJwt(Integer id) {
+    public String createJwt(Long id) {
         return Jwts.builder()
                 .subject(String.valueOf(id))
                 .issuedAt(new Date())
@@ -22,13 +22,13 @@ public class JwtManager {
                 .compact();
     }
 
-    public Integer validateJwt(String token) {
+    public Long validateJwt(String token) {
         Claims claims = Jwts
                 .parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return Integer.parseInt(claims.getSubject());
+        return Long.parseLong(claims.getSubject());
     }
 }
