@@ -63,7 +63,8 @@ jobs:
           else
             echo "error"
             exit 1
-          
+          fi
+
       - name: Docker compose
         uses: appleboy/ssh-action@master
         with:
@@ -91,7 +92,7 @@ jobs:
           script_stop: true
           script: |
             echo "set \$service_url ${{ env.TARGET_UPSTREAM }};" | sudo tee /etc/nginx/conf.d/service-env.inc
-            sudo nginx -s reload 
+            sudo nginx -s reload
 
       - name: Stop current server
         uses: appleboy/ssh-action@master
