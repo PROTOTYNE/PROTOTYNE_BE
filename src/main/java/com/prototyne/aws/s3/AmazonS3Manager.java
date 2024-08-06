@@ -1,7 +1,6 @@
 package com.prototyne.aws.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.prototyne.apiPayload.config.AmazonConfig;
@@ -11,6 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -20,29 +22,48 @@ public class AmazonS3Manager {
     private final AmazonS3 amazonS3;
     private final AmazonConfig amazonConfig;
 
-    // S3에 이미지 업로드
-    // 임시로 originalFilename 변수 사용 (uuid 엔티티 추후 구현?)
-    public String uploadFile(MultipartFile file) throws IOException {
+    // S3에 여러 이미지 업로드
+    public List<String> uploadFile(String dirName, List<MultipartFile> files) {
 
-        // 메타데이터 설정
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(file.getSize());
-        //metadata.setContentType(file.getContentType()); // Content-Type 설정
+        // 반환 받을 이미지 url 리스트
+        List<String> imageUrlList = new ArrayList<>();
 
-        // 키네임 설정
-        String originalFilename = file.getOriginalFilename();
-        String keyName = generateKeyName(originalFilename);
+        for (MultipartFile file : files) {
+            // 메타데이터 설정
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(file.getContentType());
+            objectMetadata.setContentLength(file.getSize());
 
-        PutObjectRequest request = new PutObjectRequest(amazonConfig.getBucket(),
-                keyName, file.getInputStream(), metadata);
+            // 이미지 파일에 대한 키네임 생성
+            String originalName = file.getOriginalFilename();
+            String keyName = generateTestKeyName(dirName, originalName);
 
-        amazonS3.putObject(request);
-
-        return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
+            // S3에 업로드
+            try {
+                amazonS3.putObject(new PutObjectRequest(amazonConfig.getBucket(), keyName, file.getInputStream(), objectMetadata));
+                // 업로드된 이미지 url 저장
+                String imageUrl = amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
+                imageUrlList.add(imageUrl);
+            } catch (IOException e) { // 업로드 실패
+                log.error("error at AmazonS3Manager uploadFile : {}", (Object) e.getStackTrace());
+            }
+        }
+        return imageUrlList;
     }
 
-    // 디렉터리 경로 생성
-    private String generateKeyName(String originalFilename) {
-        return amazonConfig.getTestPath() + '/' + originalFilename;
+    /* 동일 이름의 이미지 방지를 위한, 이미지 이름 대신 랜덤 uuid 사용
+       버킷/디렉터리/uuid.확장자 */
+
+    // 디렉터리 + 키네임 생성
+    public String generateTestKeyName(String dirName, String originalName){
+        String ext = extractExt(originalName);
+        String uuid = UUID.randomUUID().toString();
+        return dirName + '/' + uuid + "." + ext;
+    }
+
+    // 파일 확장명 추출
+    private static String extractExt(String originalName) {
+        int pos = originalName.lastIndexOf(".");
+        return originalName.substring(pos + 1);
     }
 }
