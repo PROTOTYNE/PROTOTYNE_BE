@@ -5,6 +5,7 @@ import com.prototyne.domain.enums.InvestmentShipping;
 import com.prototyne.domain.enums.InvestmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +20,16 @@ public class Investment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private InvestmentStatus status;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private InvestmentShipping shipping;
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
     private Boolean apply;
 
     @Column(nullable = true, length = 20)

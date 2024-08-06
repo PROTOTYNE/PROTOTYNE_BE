@@ -3,6 +3,7 @@ package com.prototyne.domain;
 import com.prototyne.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class Feedback extends BaseEntity {
     private String contents;
     //nvarchar
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
     private Boolean penalty;
 
     private Integer answer1;

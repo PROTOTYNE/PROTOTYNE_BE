@@ -17,9 +17,10 @@ public class Ticket extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = true, length = 40)
     private String ticketDesc;
 
+    @Column(nullable = false)
     private Integer ticketChange;
 
     @ManyToOne(fetch=FetchType.LAZY)
