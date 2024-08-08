@@ -15,9 +15,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-
-    LOGIN_ERROR_ID(HttpStatus.BAD_REQUEST, "LOGIN4001", "중복된 ID입니다"),
-    LOGIN_ERROR_NICKNAME(HttpStatus.BAD_REQUEST, "LOGIN4002", "중복된 닉네임입니다"),
+    LOGIN_ERROR_ID(HttpStatus.BAD_REQUEST, "LOGIN4001", "존재하지 않는 유저입니다"),
 
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
 
