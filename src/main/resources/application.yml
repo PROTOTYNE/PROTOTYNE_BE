@@ -35,7 +35,7 @@ spring:
 
 server:
   port: 8080
-
+  
 ---
 
 spring:
@@ -91,3 +91,33 @@ spring:
 
 server:
   port: 8080
+
+swagger:
+  tag:
+    auth: '01. 로그인/회원가입'
+    my: '02. 내 정보 - 기본'
+    my-product: '03. 내 정보 - 체험 내역'
+    my-etc: '04. 내 정보 - 배송지/티켓'
+    product: '05. 시제품 - 기본'
+    product-etc: '06. 시제품 - 신청/리뷰'
+    like: '07. 좋아요(북마크)'
+    test: 'A. Test API'
+
+spring-doc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
+
+cloud:
+  aws:
+    s3:
+      bucket: prototyne
+      path: # 이미지 디렉터리 (가게, 상품, 피드백 ..)
+        test: test
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
