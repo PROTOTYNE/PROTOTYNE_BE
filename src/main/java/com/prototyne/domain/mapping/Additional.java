@@ -23,4 +23,8 @@ public class Additional extends BaseEntity {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="set_id")
     private ADD_set addSet;
+
+    public Additional(User user, ADD_set addSet) {
+        super();
+    }
 }

@@ -3,13 +3,11 @@ package com.prototyne.web.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prototyne.domain.enums.Gender;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public class UserDto {
     @Builder
@@ -35,6 +33,29 @@ public class UserDto {
             this.Birth = birth;
         }
     }
+
+    @Getter
+    public static class UserAddInfoRequest {
+        private final String occupation;
+        private final Integer income;
+        private final List<String> interests;
+        private final String familyComposition;
+        private final List<String> productTypes;
+        private final List<String> smartDevices;
+        private final Integer healthStatus;
+
+        public UserAddInfoRequest(String occupation, Integer income, List<String> interests, String familyComposition,
+                                     List<String> productTypes, List<String> smartDevices, Integer healthStatus){
+            this.occupation = occupation;
+            this.income = income;
+            this.interests = interests;
+            this.familyComposition = familyComposition;
+            this.productTypes = productTypes;
+            this.smartDevices = smartDevices;
+            this.healthStatus = healthStatus;
+        }
+    }
+
 
     @Getter
     @Setter
@@ -110,4 +131,20 @@ public class UserDto {
             }
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class UserSignUpRequest {
+        private UserDto.UserDetailRequest detailRequest;
+        private UserDto.UserAddInfoRequest addInfoRequest;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UserSignUpResponse {
+        private final Long userId;
+        private final String token;
+    }
+
 }

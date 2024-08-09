@@ -29,16 +29,16 @@ public class LoginController {
         return ApiResponse.onSuccess(accessToken);
     }
 
-    @Tag(name = "${swagger.tag.auth}")
-    @PostMapping("/signup")
-    @Operation(summary = "회원가입 API - 인증 필요",
-            description = "회원가입 API - 인증 필요",
-            security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<String> userInfo(HttpServletRequest token, @RequestBody @Valid UserDto.UserDetailRequest request) {
-        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
-        kakaoService.signIn(aouthtoken, request);
-        return ApiResponse.onSuccess("회원가입 완료");
-    }
+//    @Tag(name = "${swagger.tag.auth}")
+//    @PostMapping("/signup")
+//    @Operation(summary = "회원가입 API - 인증 필요",
+//            description = "회원가입 API - 인증 필요",
+//            security = {@SecurityRequirement(name = "session-token")})
+//    public ApiResponse<String> userInfo(HttpServletRequest token, @RequestBody @Valid UserDto.UserDetailRequest request) {
+//        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
+//        kakaoService.signIn(aouthtoken, request);
+//        return ApiResponse.onSuccess("회원가입 완료");
+//    }
 
     @Tag(name = "${swagger.tag.my}")
     @GetMapping("/user")

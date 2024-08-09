@@ -25,4 +25,14 @@ public class UserConverter {
                 .birth(user.getBirth())
                 .build();
     }
+
+    public static User toSignedUser(UserDto.UserInfoResponse kakaoUserInfo, UserDto.UserDetailRequest userDetailRequest){
+        return User.builder()
+                .email(kakaoUserInfo.getKakaoAccount().getEmail())
+                .username(kakaoUserInfo.getKakaoAccount().getProfile().getNickName())
+                .gender(userDetailRequest.getGender())
+                .birth(userDetailRequest.getBirth())
+                .familyMember(userDetailRequest.getFamilyMember())
+                .build();
+    }
 }
