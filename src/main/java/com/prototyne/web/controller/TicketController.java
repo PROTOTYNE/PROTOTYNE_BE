@@ -44,4 +44,17 @@ public class TicketController {
         List<TicketDto.TicketListDto> ticketList = ticketService.getTicketList(aouthtoken);
         return ApiResponse.onSuccess(ticketList);
     }
+
+    @Tag(name = "${swagger.tag.my-etc}")
+    @GetMapping("/used")
+    @Operation(summary = "티켓 사용 내역 조회 API - 인증 필요",
+            description = "티켓 사용 내역 조회",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<List<TicketDto.TicketListDto>> getTicketListUsed(HttpServletRequest token) {
+        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
+        List<TicketDto.TicketListDto> ticketList = ticketService.getTicketList(aouthtoken).stream()
+                .filter(ticket -> ticket.getTicketChange() < 0)
+                .toList();
+        return ApiResponse.onSuccess(ticketList);
+    }
 }
