@@ -32,4 +32,13 @@ public class DeliveryServiceImpl implements DeliveryService {
         User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
         return toDeliveryDto(user);
     }
+
+    @Override
+    public DeliveryDto patchDeliveryInfo(String accessToken, DeliveryDto deliveryDto) {
+        Long id = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+        user.setDelivery(deliveryDto);
+        userRepository.save(user);
+        return deliveryDto;
+    }
 }
