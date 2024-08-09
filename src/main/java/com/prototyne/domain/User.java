@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String email;
 
-    @Column(columnDefinition = "NVARCHAR(512)")
+    @Column(nullable = true, length = 512)
     private String profileUrl;
 
     @Column(nullable = false)
