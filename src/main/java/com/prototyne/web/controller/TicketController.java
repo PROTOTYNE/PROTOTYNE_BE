@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -33,10 +35,13 @@ public class TicketController {
     }
 
     @Tag(name = "${swagger.tag.my-etc}")
-    @GetMapping("/list")
-    public ApiResponse<String> getTicketList(HttpServletRequest token) {
+    @GetMapping("/all")
+    @Operation(summary = "티켓 전체 내역 조회 API - 인증 필요",
+            description = "티켓 전체 내역 조회",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<List<TicketDto.TicketListDto>> getTicketList(HttpServletRequest token) {
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
-
-        return ApiResponse.onSuccess("success");
+        List<TicketDto.TicketListDto> ticketList = ticketService.getTicketList(aouthtoken);
+        return ApiResponse.onSuccess(ticketList);
     }
 }

@@ -25,6 +25,7 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.findByUserId(id).stream()
                 .map(ticket -> TicketDto.TicketListDto.builder()
                         .name(ticket.getName())
+                        .createdAt(ticket.getCreatedAt())
                         .ticketDesc(ticket.getTicketDesc())
                         .ticketChange(ticket.getTicketChange())
                         .build())
@@ -40,8 +41,4 @@ public class TicketServiceImpl implements TicketService {
                 .build();
     }
 
-//    @Override
-//    public List<TicketDto.TicketListDto> getTicketList(String accessToken) {
-//        return null;
-//    }
 }
