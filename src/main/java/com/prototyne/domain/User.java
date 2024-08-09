@@ -55,6 +55,15 @@ public class User extends BaseEntity {
     @ColumnDefault("false")
     private Boolean signupComplete;
 
+    @Column(length = 20)
+    private String deliveryName;
+
+    @Column(length = 20)
+    private String deliveryPhone;
+
+    @Column(length = 200)
+    private String deliveryAddress;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Investment> investmentList = new ArrayList<>();
 
