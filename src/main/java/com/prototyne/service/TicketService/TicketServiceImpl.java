@@ -22,7 +22,7 @@ public class TicketServiceImpl implements TicketService {
     public List<TicketDto.TicketListDto> getTicketList(String accessToken) {
         Long id = jwtManager.validateJwt(accessToken);
 
-        return ticketRepository.findByUserId(id).stream()
+        return ticketRepository.findByUserId(id).stream().sorted((o2, o1) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
                 .map(ticket -> TicketDto.TicketListDto.builder()
                         .name(ticket.getName())
                         .createdAt(ticket.getCreatedAt())
