@@ -7,13 +7,24 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Builder
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class TicketDto {
-    private LocalDate createdAt;
-    private String name;
-    private String ticketDesc;
-    private Integer ticketChange;
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TicketListDto {
+        private LocalDate createdAt;
+        private String name;
+        private String ticketDesc;
+        private Integer ticketChange;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TicketNumberDto {
+        private Integer ticketNumber;
+    }
 }

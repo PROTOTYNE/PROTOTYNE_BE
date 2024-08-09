@@ -1,6 +1,10 @@
 package com.prototyne.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.service.TicketService.TicketService;
+import com.prototyne.web.dto.TicketDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ticket")
 public class TicketController {
 
+    private final TicketService ticketService;
+
     @Tag(name = "${swagger.tag.my-etc}")
     @GetMapping
-    public ApiResponse<String> getTicket(HttpServletRequest token) {
+    @Operation(summary = "티켓 개수 조회 API - 인증 필요",
+            description = "티켓 개수 조회",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<TicketDto.TicketNumberDto> getTicket(HttpServletRequest token) {
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
-
-        return ApiResponse.onSuccess("success");
+        TicketDto.TicketNumberDto ticketNumber = ticketService.getTicketNumber(aouthtoken);
+        return ApiResponse.onSuccess(ticketNumber);
     }
 
     @Tag(name = "${swagger.tag.my-etc}")
