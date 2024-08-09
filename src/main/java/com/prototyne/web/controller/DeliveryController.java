@@ -1,6 +1,8 @@
 package com.prototyne.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.service.DeliveryService.DeliveryService;
+import com.prototyne.web.dto.DeliveryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,14 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/delivery")
 public class DeliveryController {
 
+    private final DeliveryService deliveryService;
+
     @Tag(name = "${swagger.tag.my-etc}")
     @GetMapping
     @Operation(summary = "배송지 조회 API - 인증 필요",
             description = "유저 배송지 조회",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<String> callback(HttpServletRequest token) {
+    public ApiResponse<DeliveryDto> callback(HttpServletRequest token) {
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
-        return ApiResponse.onSuccess("배송지 조회 성공");
+        DeliveryDto deliveryDto = deliveryService.getDeliveryInfo(aouthtoken);
+        return ApiResponse.onSuccess(deliveryDto);
     }
 
     @Tag(name = "${swagger.tag.my-etc}")
