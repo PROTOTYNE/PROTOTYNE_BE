@@ -24,7 +24,7 @@ public class DeliveryController {
     @Operation(summary = "배송지 조회 API - 인증 필요",
             description = "유저 배송지 조회",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<DeliveryDto> callback(HttpServletRequest token) {
+    public ApiResponse<DeliveryDto> GetDelivery(HttpServletRequest token) {
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
         DeliveryDto deliveryDto = deliveryService.getDeliveryInfo(aouthtoken);
         return ApiResponse.onSuccess(deliveryDto);
@@ -35,7 +35,7 @@ public class DeliveryController {
     @Operation(summary = "배송지 수정 API - 인증 필요",
             description = "유저 배송지 수정",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<DeliveryDto> add(HttpServletRequest token, @RequestBody DeliveryDto newDeliveryDto) {
+    public ApiResponse<DeliveryDto> PatchDelivery(HttpServletRequest token, @RequestBody DeliveryDto newDeliveryDto) {
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
         DeliveryDto deliveryDto = deliveryService.patchDeliveryInfo(aouthtoken, newDeliveryDto);
         return ApiResponse.onSuccess(deliveryDto);
