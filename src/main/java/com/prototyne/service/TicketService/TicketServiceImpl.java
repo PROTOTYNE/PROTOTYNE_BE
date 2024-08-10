@@ -1,5 +1,7 @@
 package com.prototyne.service.TicketService;
 
+import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.repository.TicketRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.TicketDto;
@@ -7,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -19,6 +23,7 @@ public class TicketServiceImpl implements TicketService {
     private final JwtManager jwtManager;
     private final TicketRepository ticketRepository;
 
+    @Override
     public List<TicketDto.TicketListDto> getTicketList(String accessToken) {
         Long id = jwtManager.validateJwt(accessToken);
 
@@ -29,6 +34,26 @@ public class TicketServiceImpl implements TicketService {
                         .ticketDesc(ticket.getTicketDesc())
                         .ticketChange(ticket.getTicketChange())
                         .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TicketDto.TicketListDto> getTicketDateList(String accessToken, String startDate, String endDate, boolean used) {
+        List<TicketDto.TicketListDto> ticketList = getTicketList(accessToken);
+        LocalDate start;
+        LocalDate end;
+        try {
+            start = LocalDate.parse(startDate);
+            end = LocalDate.parse(endDate);
+        } catch (DateTimeParseException e) {
+            throw new TempHandler(ErrorStatus.DATE_FORMAT_ERROR);
+        }
+        return ticketList.stream()
+                .filter(ticket -> {
+                    LocalDate ticketDate = ticket.getCreatedAt().toLocalDate();
+                    return !ticketDate.isBefore(start) && !ticketDate.isAfter(end);
+                })
+                .filter(ticket -> !used || ticket.getTicketChange() < 0)
                 .collect(Collectors.toList());
     }
 
