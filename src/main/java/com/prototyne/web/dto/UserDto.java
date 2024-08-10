@@ -174,7 +174,7 @@ public class UserDto {
         private List<String> interests;
         private String familyComposition;
         private List<String> productTypes;
-        private List<String> smartDevices;
+        private List<String> phones;
         private int healthStatus;
 
     }
