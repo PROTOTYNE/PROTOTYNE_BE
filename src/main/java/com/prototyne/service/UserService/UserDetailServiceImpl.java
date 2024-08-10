@@ -6,6 +6,7 @@ import com.prototyne.domain.User;
 import com.prototyne.domain.enums.AddsetTitle;
 import com.prototyne.domain.enums.Gender;
 import com.prototyne.domain.mapping.Additional;
+import com.prototyne.repository.ADD_setRepository;
 import com.prototyne.repository.AdditionalRepository;
 import com.prototyne.repository.UserRepository;
 import com.prototyne.service.LoginService.JwtManager;
@@ -27,6 +28,7 @@ public class UserDetailServiceImpl implements UserDetailService {
 
     private final UserRepository userRepository;
     private final AdditionalRepository additionalRepository;
+    private final ADD_setRepository addSetRepository;
     private final JwtManager jwtManager;
     private final UserConverter userConverter;
 
@@ -39,7 +41,7 @@ public class UserDetailServiceImpl implements UserDetailService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserPrincipalNotFoundException(userId + "에 해당하는 회원이 없습니다."));
 
-        List<Additional> additionalInfo = (List<Additional>) additionalRepository.findByUserId(userId);
+        List<Additional> additionalInfo = additionalRepository.findByUserId(userId);
         if(additionalInfo.isEmpty()){
             throw new UserPrincipalNotFoundException(userId + "에 해당하는 추가 정보가 없습니다.");
         }
@@ -52,31 +54,36 @@ public class UserDetailServiceImpl implements UserDetailService {
 
     private UserDto.AddInfo convertToAddInfo(List<Additional> additionalInfo) {
         UserDto.AddInfo addInfo = new UserDto.AddInfo();
+
         for (Additional additional : additionalInfo) {
+            String[] values = additional.getAddSet().getValue().split(",");
+            List<String> valueList = Arrays.asList(values);
+
             switch (additional.getAddSet().getTitle()) {
                 case 직업:
-                    addInfo.setOccupation(additional.getAddSet().getValue());
+                    addInfo.setOccupation(valueList.get(0));  // 직업은 단일값
                     break;
                 case 소득수준:
-                    addInfo.setIncome(Integer.parseInt(additional.getAddSet().getValue()));
+                    addInfo.setIncome(Integer.parseInt(valueList.get(0)));  // 소득수준은 단일값
                     break;
                 case 관심사:
-                    addInfo.setInterests(Arrays.asList(additional.getAddSet().getValue().split(",")));
+                    addInfo.setInterests(valueList);  // 관심사는 리스트
                     break;
                 case 가족구성:
-                    addInfo.setFamilyComposition(additional.getAddSet().getValue());
+                    addInfo.setFamilyComposition(valueList.get(0));  // 가족구성은 단일값
                     break;
                 case 관심제품유형:
-                    addInfo.setProductTypes(Arrays.asList(additional.getAddSet().getValue().split(",")));
+                    addInfo.setProductTypes(valueList);  // 관심제품유형은 리스트
                     break;
                 case 스마트기기_기종:
-                    addInfo.setSmartDevices(Arrays.asList(additional.getAddSet().getValue().split(",")));
+                    addInfo.setSmartDevices(valueList);  // 스마트기기_기종은 리스트
                     break;
                 case 건강상태:
-                    addInfo.setHealthStatus(Integer.parseInt(additional.getAddSet().getValue()));
+                    addInfo.setHealthStatus(Integer.parseInt(valueList.get(0)));  // 건강상태는 단일값
                     break;
             }
         }
+
         return addInfo;
     }
 
@@ -135,11 +142,16 @@ public class UserDetailServiceImpl implements UserDetailService {
 
     private void saveAddSetInfo(User user, AddsetTitle title, String value) {
         if (value != null && !value.isEmpty()) {
-            ADD_set addSet = ADD_set.builder()
-                    .title(title)
-                    .value(value)
-                    .build();
+            // ADD_set 엔티티를 먼저 저장합니다.
+            ADD_set addSet = addSetRepository.findByTitleAndValue(title, value)
+                    .orElseGet(() -> addSetRepository.save(ADD_set.builder()
+                            .title(title)
+                            .value(value)
+                            .build()));
+
+            // 저장된 ADD_set 엔티티를 Additional 엔티티와 함께 저장합니다.
             additionalRepository.save(new Additional(user, addSet));
         }
     }
+
 }

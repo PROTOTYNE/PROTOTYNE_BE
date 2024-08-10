@@ -47,7 +47,7 @@ public class UserConverter {
                 .build();
 
         // AddInfo 생성
-        UserDto.AddInfo addInfo = UserDto.AddInfo.builder()
+        UserDto.AddInfo addInfo = (additionalInfo != null) ? UserDto.AddInfo.builder()
                 .occupation(additionalInfo.getOccupation())
                 .income(additionalInfo.getIncome())
                 .interests(additionalInfo.getInterests())
@@ -55,7 +55,7 @@ public class UserConverter {
                 .productTypes(additionalInfo.getProductTypes())
                 .smartDevices(additionalInfo.getSmartDevices())
                 .healthStatus(additionalInfo.getHealthStatus())
-                .build();
+                .build() : new UserDto.AddInfo();
 
         // UserDetailResponse 생성
         return UserDto.UserDetailResponse.builder()

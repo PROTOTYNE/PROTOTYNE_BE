@@ -30,13 +30,11 @@ public class SignupController {
     @Operation(summary = "회원가입 API - 인증 필요",
             description = "회원가입 API - 인증 필요",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<UserDto.UserSignUpResponse> userInfo(HttpServletRequest token,
+    public ApiResponse<UserDto.UserSignUpResponse> signup(HttpServletRequest token,
                                         @RequestBody @Valid UserDto.UserSignUpRequest signUpRequest) {
 
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
-        User user = signupService.signup(aouthtoken, signUpRequest.getDetailRequest(), signUpRequest.getAddInfoRequest());
+        return ApiResponse.onSuccess(signupService.signup(aouthtoken, signUpRequest.getDetailRequest(), signUpRequest.getAddInfoRequest()));
 
-        UserDto.UserSignUpResponse signUpResponse = new UserDto.UserSignUpResponse(user.getId(), aouthtoken);
-        return ApiResponse.onSuccess(signUpResponse);
     }
 }
