@@ -49,4 +49,5 @@ public class LoginController {
         String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
         return ApiResponse.onSuccess(kakaoService.getUserInfo(aouthtoken));
     }
+
 }

@@ -1,20 +1,18 @@
 package com.prototyne.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.service.UserService.UserDetailServiceImpl;
 import com.prototyne.web.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 @Slf4j
 @RestController
@@ -35,6 +33,31 @@ public class MyController {
         log.info("JWT Token: {}", accessToken);
         UserDto.UserDetailResponse userDetailResponse = userDetailService.getUserDetail(accessToken);
         return ApiResponse.onSuccess(userDetailResponse);
+    }
+
+    @PatchMapping("/basicInfo")
+    @Operation(summary = "필수 정보 수정 API - 인증 필요",
+            description = "유저의 필수 정보를 수정합니다.",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<UserDto.DetailInfo> updateDetailInfo(HttpServletRequest request,
+                                                @RequestBody @Valid UserDto.DetailInfo detailInfo) throws UserPrincipalNotFoundException {
+        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+        log.info("JWT Token: {}", accessToken);
+
+        return ApiResponse.onSuccess(userDetailService.updateBasicInfo(accessToken, detailInfo));
+
+    }
+
+    @PatchMapping("/addInfo")
+    @Operation(summary = "추가 정보 수정 API - 인증 필요",
+            description = "유저의 추가 정보를 수정합니다.",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<UserDto.AddInfo> updateAddInfo(HttpServletRequest request,
+                                         @RequestBody @Valid UserDto.AddInfo addInfo) throws UserPrincipalNotFoundException {
+        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+        log.info("JWT Token: {}", accessToken);
+
+        return ApiResponse.onSuccess(userDetailService.updateAddInfo(accessToken, addInfo));
     }
 
 }

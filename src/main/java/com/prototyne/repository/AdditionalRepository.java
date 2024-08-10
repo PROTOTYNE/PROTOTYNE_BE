@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface AdditionalRepository extends JpaRepository<Additional, Long> {
     List<Additional> findByUserId(Long userId);
+    void deleteByUserId(Long userId);
 }
