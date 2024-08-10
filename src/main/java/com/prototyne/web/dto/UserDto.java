@@ -2,6 +2,7 @@ package com.prototyne.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prototyne.domain.User;
 import com.prototyne.domain.enums.Gender;
 import lombok.*;
 
@@ -145,6 +146,37 @@ public class UserDto {
     public static class UserSignUpResponse {
         private final Long userId;
         private final String token;
+    }
+
+    @Data
+    @Builder
+    public static class UserDetailResponse {
+        private DetailInfo detailInfo;
+        private AddInfo addInfo;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class DetailInfo {
+        private int familyMember;
+        private String gender;
+        private String birth;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AddInfo {
+        private String occupation;
+        private int income;
+        private List<String> interests;
+        private String familyComposition;
+        private List<String> productTypes;
+        private List<String> smartDevices;
+        private int healthStatus;
+
     }
 
 }

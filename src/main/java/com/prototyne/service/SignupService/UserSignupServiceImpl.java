@@ -30,16 +30,6 @@ public class UserSignupServiceImpl implements UserSignupService {
     @Lazy
     private final KakaoServiceImpl kakaoService;
     private final JwtManager jwtManager;
-
-    public void signIn(String token, UserDto.UserDetailRequest request) {
-        Long id = jwtManager.validateJwt(token);
-        User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
-        user.setFamilyMember(request.getFamilyMember());
-        user.setGender(request.getGender());
-        user.setBirth(request.getBirth());
-        user.setSignupComplete(true);
-        userRepository.save(user);
-    }
     @Override
     public User signup(String aouthToken,
                        UserDto.UserDetailRequest userDetailRequest,
