@@ -19,7 +19,7 @@ public class Alarm extends BaseEntity {
     @Column(nullable = false, length = 150)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "NVARCHAR(512)")
+    @Column(nullable = false, length = 512)
     private String contents;
     //nvarchar
 

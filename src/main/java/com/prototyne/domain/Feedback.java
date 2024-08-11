@@ -21,7 +21,7 @@ public class Feedback extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT")
     private Byte reYn;
 
-    @Column(columnDefinition = "NVARCHAR(512)")
+    @Column(nullable = true, length = 512)
     private String contents;
     //nvarchar
 
