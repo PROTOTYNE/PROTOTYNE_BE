@@ -18,4 +18,15 @@ public class ProductConverter {
                 .reqTickets(product.getReqTickets())
                 .build();
     }
+
+    // 검색/카테고리 결과 목록 형식
+    public static ProductDTO.SearchResponse toSearch(Event event, Product product, int dDay) {
+        return ProductDTO.SearchResponse.builder()
+                .id(event.getId())
+                .name(product.getName())
+                .thumbnailUrl(product.getThumbnailUrl())
+                .dDay(dDay)
+                .reqTickets(product.getReqTickets())
+                .build();
+    }
 }

@@ -5,6 +5,7 @@ import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.converter.ProductConverter;
 import com.prototyne.domain.Event;
 import com.prototyne.domain.Product;
+import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.repository.EventRepository;
 import com.prototyne.web.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,29 @@ public class EventServiceImpl implements EventService {
                     return ProductConverter.toEvent(event, product, investCount);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO.SearchResponse> getEventsByCategory(ProductCategory category) {
+        LocalDateTime now = LocalDateTime.now();
+        // 신청 진행 중인 시제품 이벤트만 가져옴
+        List<Event> events = eventRepository.findByProductCategory(category).stream()
+                .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
+                .collect(Collectors.toList());
+
+        // DTO 변환
+        return events.stream()
+                .map(event -> {
+                    Product product = event.getProduct();
+                    int dDay = calculateDDay(now, event.getEventEnd());
+                    return ProductConverter.toSearch(event, product, dDay);
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 디데이 계산
+    private Integer calculateDDay(LocalDateTime now, LocalDateTime endDate) {
+        long daysBetween = java.time.Duration.between(now, endDate).toDays();
+        return (int) daysBetween;
     }
 }

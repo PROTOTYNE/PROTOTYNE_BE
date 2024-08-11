@@ -1,6 +1,7 @@
 package com.prototyne.repository;
 
 import com.prototyne.domain.Event;
+import com.prototyne.domain.enums.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +35,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "WHERE e.eventStart <= :now AND e.eventEnd >= :now " +
             "ORDER BY e.eventStart DESC")
     List<Event> findAllEventsByNew(@Param("now") LocalDateTime now);
+
+    // 카테고리에 따른 이벤트
+    List<Event> findByProductCategory(ProductCategory category);
 }

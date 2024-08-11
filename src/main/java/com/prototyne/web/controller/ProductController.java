@@ -2,12 +2,12 @@ package com.prototyne.web.controller;
 
 
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.service.ProductService.EventService;
 import com.prototyne.web.dto.ProductDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/product")
@@ -32,4 +31,23 @@ public class ProductController {
         return ApiResponse.onSuccess(eventsList);
     }
 
+    @Tag(name = "${swagger.tag.product}")
+    @GetMapping("/search")
+    @Operation(summary = "시제품 검색 조회 API",
+            description = "검색어 입력")
+    public ApiResponse<List<ProductDTO.EventResponse>> getSearchesList(
+            @RequestParam("name") String name) {
+        List<ProductDTO.EventResponse> searchesList = eventService.getEventsByType(name);
+        return ApiResponse.onSuccess(searchesList);
+    }
+
+    @Tag(name = "${swagger.tag.product}")
+    @GetMapping("/select")
+    @Operation(summary = "시제품 카테고리 선택 조회 API",
+            description = "카테고리 선택")
+    public ApiResponse<List<ProductDTO.SearchResponse>> getCategoriesList(
+            @RequestParam(value = "category") ProductCategory category) {
+        List<ProductDTO.SearchResponse> categoriesList = eventService.getEventsByCategory(category);
+        return ApiResponse.onSuccess(categoriesList);
+    }
 }
