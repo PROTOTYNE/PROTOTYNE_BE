@@ -10,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class User extends BaseEntity {
     private String profileUrl;
 
     @Column(nullable = false)
-    private LocalDateTime birth;
+    private LocalDate birth;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -81,7 +81,7 @@ public class UserSignupServiceImpl implements UserSignupService {
         saveAddSetInfo(user, AddsetTitle.관심사, request.getInterests());
         saveAddSetInfo(user, AddsetTitle.가족구성, Collections.singletonList(request.getFamilyComposition()));
         saveAddSetInfo(user, AddsetTitle.관심제품유형, request.getProductTypes());
-        saveAddSetInfo(user, AddsetTitle.스마트기기_기종, request.getSmartDevices());
+        saveAddSetInfo(user, AddsetTitle.스마트기기_기종, request.getPhones());
         saveAddSetInfo(user, AddsetTitle.건강상태, Collections.singletonList(String.valueOf(request.getHealthStatus())));
     }
 

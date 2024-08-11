@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -42,9 +43,6 @@ public class UserDetailServiceImpl implements UserDetailService {
                 .orElseThrow(() -> new UserPrincipalNotFoundException(userId + "에 해당하는 회원이 없습니다."));
 
         List<Additional> additionalInfo = additionalRepository.findByUserId(userId);
-        if(additionalInfo.isEmpty()){
-            throw new UserPrincipalNotFoundException(userId + "에 해당하는 추가 정보가 없습니다.");
-        }
 
         UserDto.AddInfo convertedAddInfo = convertToAddInfo(additionalInfo);
 
@@ -61,25 +59,25 @@ public class UserDetailServiceImpl implements UserDetailService {
 
             switch (additional.getAddSet().getTitle()) {
                 case 직업:
-                    addInfo.setOccupation(valueList.get(0));  // 직업은 단일값
+                    addInfo.setOccupation(valueList.isEmpty()? null : valueList.get(0));  // 직업은 단일값
                     break;
                 case 소득수준:
-                    addInfo.setIncome(Integer.parseInt(valueList.get(0)));  // 소득수준은 단일값
+                    addInfo.setIncome(valueList.isEmpty()? 0 : Integer.parseInt(valueList.get(0)));  // 소득수준은 단일값
                     break;
                 case 관심사:
                     addInfo.setInterests(valueList);  // 관심사는 리스트
                     break;
                 case 가족구성:
-                    addInfo.setFamilyComposition(valueList.get(0));  // 가족구성은 단일값
+                    addInfo.setFamilyComposition(valueList.isEmpty()? null : valueList.get(0));  // 가족구성은 단일값
                     break;
                 case 관심제품유형:
                     addInfo.setProductTypes(valueList);  // 관심제품유형은 리스트
                     break;
                 case 스마트기기_기종:
-                    addInfo.setSmartDevices(valueList);  // 스마트기기_기종은 리스트
+                    addInfo.setPhones(valueList);  // 스마트기기_기종은 리스트
                     break;
                 case 건강상태:
-                    addInfo.setHealthStatus(Integer.parseInt(valueList.get(0)));  // 건강상태는 단일값
+                    addInfo.setHealthStatus(valueList.isEmpty()? null : Integer.parseInt(valueList.get(0)));  // 건강상태는 단일값
                     break;
             }
         }
@@ -98,7 +96,7 @@ public class UserDetailServiceImpl implements UserDetailService {
         // 업데이트할 정보를 설정합니다.
         user.setFamilyMember(detailInfo.getFamilyMember());
         user.setGender(Gender.valueOf(detailInfo.getGender()));
-        user.setBirth(LocalDateTime.parse(detailInfo.getBirth()));
+        user.setBirth(LocalDate.parse(detailInfo.getBirth()));
 
         userRepository.save(user);
 
@@ -131,8 +129,8 @@ public class UserDetailServiceImpl implements UserDetailService {
         if (addInfo.getProductTypes() != null) {
             saveAddSetInfo(user, AddsetTitle.관심제품유형, String.join(",", addInfo.getProductTypes()));
         }
-        if (addInfo.getSmartDevices() != null) {
-            saveAddSetInfo(user, AddsetTitle.스마트기기_기종, String.join(",", addInfo.getSmartDevices()));
+        if (addInfo.getPhones() != null) {
+            saveAddSetInfo(user, AddsetTitle.스마트기기_기종, String.join(",", addInfo.getPhones()));
         }
         if (addInfo.getHealthStatus() > 0) {
             saveAddSetInfo(user, AddsetTitle.건강상태, String.valueOf(addInfo.getHealthStatus()));

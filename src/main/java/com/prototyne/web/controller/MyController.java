@@ -23,7 +23,7 @@ public class MyController {
 
     private final UserDetailServiceImpl userDetailService;
 
-    @Tag(name = "${swagger.tag.auth}")
+    @Tag(name = "${swagger.tag.my}")
     @GetMapping("/detail")
     @Operation(summary = "유저 정보 조회 API - 인증 필요",
             description = "유저 정보 조회 API - 인증 필요",

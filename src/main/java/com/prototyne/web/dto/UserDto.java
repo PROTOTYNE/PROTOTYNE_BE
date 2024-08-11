@@ -42,17 +42,17 @@ public class UserDto {
         private final List<String> interests;
         private final String familyComposition;
         private final List<String> productTypes;
-        private final List<String> smartDevices;
+        private final List<String> phones;
         private final Integer healthStatus;
 
         public UserAddInfoRequest(String occupation, Integer income, List<String> interests, String familyComposition,
-                                     List<String> productTypes, List<String> smartDevices, Integer healthStatus){
+                                     List<String> productTypes, List<String> phones, Integer healthStatus){
             this.occupation = occupation;
             this.income = income;
             this.interests = interests;
             this.familyComposition = familyComposition;
             this.productTypes = productTypes;
-            this.smartDevices = smartDevices;
+            this.phones = phones;
             this.healthStatus = healthStatus;
         }
     }

@@ -5,6 +5,8 @@ import com.prototyne.web.dto.UserDto;
 import lombok.Builder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 @Builder
 public class UserConverter {
@@ -24,7 +26,7 @@ public class UserConverter {
                 .profileUrl(user.getProfileUrl())
                 .tickets(user.getTickets())
                 .gender(user.getGender())
-                .birth(user.getBirth())
+                .birth(user.getBirth().atStartOfDay())
                 .build();
     }
 
@@ -33,7 +35,7 @@ public class UserConverter {
                 .email(kakaoUserInfo.getKakaoAccount().getEmail())
                 .username(kakaoUserInfo.getKakaoAccount().getProfile().getNickName())
                 .gender(userDetailRequest.getGender())
-                .birth(userDetailRequest.getBirth())
+                .birth(LocalDate.from(userDetailRequest.getBirth()))
                 .familyMember(userDetailRequest.getFamilyMember())
                 .build();
     }
@@ -53,7 +55,7 @@ public class UserConverter {
                 .interests(additionalInfo.getInterests())
                 .familyComposition(additionalInfo.getFamilyComposition())
                 .productTypes(additionalInfo.getProductTypes())
-                .smartDevices(additionalInfo.getSmartDevices())
+                .phones(additionalInfo.getPhones())
                 .healthStatus(additionalInfo.getHealthStatus())
                 .build() : new UserDto.AddInfo();
 
