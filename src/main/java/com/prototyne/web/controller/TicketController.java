@@ -1,6 +1,7 @@
 package com.prototyne.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.service.TicketService.TicketService;
 import com.prototyne.web.dto.TicketDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,22 +21,22 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ticket")
+@Tag(name = "${swagger.tag.my-etc}")
 public class TicketController {
 
     private final TicketService ticketService;
+    private final JwtManager jwtManager;
 
-    @Tag(name = "${swagger.tag.my-etc}")
     @GetMapping
     @Operation(summary = "티켓 개수 조회 API - 인증 필요",
             description = "티켓 개수 조회",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<TicketDto.TicketNumberDto> getTicket(HttpServletRequest token) {
-        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
+        String aouthtoken = jwtManager.getToken(token);
         TicketDto.TicketNumberDto ticketNumber = ticketService.getTicketNumber(aouthtoken);
         return ApiResponse.onSuccess(ticketNumber);
     }
 
-    @Tag(name = "${swagger.tag.my-etc}")
     @GetMapping("/all")
     @Operation(summary = "티켓 전체 내역 조회 API - 인증 필요",
             description = """
@@ -45,11 +46,10 @@ public class TicketController {
                     """,
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<TicketDto.TicketListDto>> getTicketList(HttpServletRequest token, @RequestParam String startDate, @RequestParam String endDate) {
-        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
+        String aouthtoken = jwtManager.getToken(token);
         return ApiResponse.onSuccess(ticketService.getTicketDateList(aouthtoken, startDate, endDate, false));
     }
 
-    @Tag(name = "${swagger.tag.my-etc}")
     @GetMapping("/used")
     @Operation(summary = "티켓 사용 내역 조회 API - 인증 필요",
             description = """
@@ -59,7 +59,7 @@ public class TicketController {
                     """,
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<TicketDto.TicketListDto>> getTicketListUsed(HttpServletRequest token,@RequestParam String startDate, @RequestParam String endDate) {
-        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
+        String aouthtoken = jwtManager.getToken(token);
         List<TicketDto.TicketListDto> ticketList = ticketService.getTicketDateList(aouthtoken, startDate, endDate, true);
         return ApiResponse.onSuccess(ticketList);
     }

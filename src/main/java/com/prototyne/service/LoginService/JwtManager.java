@@ -4,6 +4,7 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -37,5 +38,12 @@ public class JwtManager {
         catch (Exception e) {
             throw new TempHandler(ErrorStatus.TOKEN_UNVALID);
         }
+    }
+
+    public String getToken(HttpServletRequest token) {
+        if (token.getHeader("Authorization") == null) {
+            throw new TempHandler(ErrorStatus.TOKEN_NOT_FOUND);
+        }
+        return token.getHeader("Authorization").replace("Bearer ", "");
     }
 }
