@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductConverter {
-    // 시제품 목록 반환 형식
-    public static ProductDTO.EventResponse toProduct(Event event, Product product, int investCount) {
+
+    // 체험 진행 중인 시제품 목록 형식
+    public static ProductDTO.EventResponse toEvent(Event event, Product product, int investCount) {
         return ProductDTO.EventResponse.builder()
                 .id(event.getId())
                 .name(product.getName())

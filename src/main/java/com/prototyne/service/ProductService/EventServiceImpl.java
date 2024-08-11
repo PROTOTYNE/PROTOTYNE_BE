@@ -1,19 +1,19 @@
 package com.prototyne.service.ProductService;
 
+import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.converter.ProductConverter;
 import com.prototyne.domain.Event;
 import com.prototyne.domain.Product;
 import com.prototyne.repository.EventRepository;
 import com.prototyne.web.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -21,41 +21,31 @@ public class EventServiceImpl implements EventService {
 
     public List<ProductDTO.EventResponse> getEventsByType(String type) {
         LocalDateTime now = LocalDateTime.now();
-        List<Event> events;
+        List<Event> events = switch (type) {
 
-        switch (type) {
             // 인기순
-            case "popular":
-                events = eventRepository.findAllActiveEventsByPopular(now);
-                break;
+            case "popular" -> eventRepository.findAllActiveEventsByPopular(now);
 
-            // 마감 입박순 (3일 기준)
-            case "imminent":
-                events = eventRepository.findAllEventsByImminent(now);
-                events.stream()
-                        .filter(event ->
-                                event.getEventEnd().isAfter(now) && event.getEventEnd().isBefore(now.plusDays(3)))
-                        .collect(Collectors.toList());
-                break;
+            // 마감 임박순 (3일)
+            case "imminent" -> eventRepository.findAllEventsByImminent(now).stream()
+                    .filter(event -> event.getEventEnd().isBefore(now.plusDays(3)))
+                    .collect(Collectors.toList());
 
-            // 최신 등록순 (일주징 기준)
-            case "new":
-                events = eventRepository.findAllEventsByNew(now);
-                events.stream()
-                        .filter(event ->
-                                event.getEventStart().isAfter(now.minusWeeks(1)) && event.getEventStart().isBefore(now))
-                        .collect(Collectors.toList());
-                break;
+            // 최신 등록순 (일주일)
+            case "new" -> eventRepository.findAllEventsByNew(now).stream()
+                    .filter(event -> event.getEventStart().isAfter(now.minusWeeks(1)))
+                    .collect(Collectors.toList());
 
-            default:
-                return List.of(); // 빈 리스트를 반환 -> 에러?
-        }
+            // 그 외 예외처리
+            default -> throw new TempHandler(ErrorStatus.PRODUCT_ERROR_TYPE);
+        };
 
+        // DTO 변환
         return events.stream()
                 .map(event -> {
                     Product product = event.getProduct();
                     int investCount = event.getInvestmentList().size();
-                    return ProductConverter.toProduct(event, product, investCount);
+                    return ProductConverter.toEvent(event, product, investCount);
                 })
                 .collect(Collectors.toList());
     }

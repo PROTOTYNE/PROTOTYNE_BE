@@ -25,9 +25,9 @@ public class ProductController {
     @Tag(name = "${swagger.tag.product}")
     @GetMapping("/list")
     @Operation(summary = "시제품 목록 조회 API",
-            description = "popular(인기순), imminent(마감 임박순), new(최신 등록순)")
+            description = "popular(인기순, 기본), imminent(마감 임박순), new(최신 등록순)")
     public ApiResponse<List<ProductDTO.EventResponse>> getEventsList(
-            @RequestParam("type") String type) {
+            @RequestParam(value = "type", defaultValue = "popular") String type) {
         List<ProductDTO.EventResponse> eventsList = eventService.getEventsByType(type);
         return ApiResponse.onSuccess(eventsList);
     }
