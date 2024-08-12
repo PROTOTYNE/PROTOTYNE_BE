@@ -53,8 +53,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<ProductDTO.SearchResponse> getEventsBySearch(String name) {
-        LocalDateTime now = LocalDateTime.now();
         // 신청 진행 중인 시제품 이벤트만 가져옴
+        LocalDateTime now = LocalDateTime.now();
         List<Event> events = eventRepository.findAllByProductNameContaining(name).stream()
                 .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
                 .collect(Collectors.toList());
@@ -69,10 +69,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<ProductDTO.SearchResponse> getEventsByCategory(ProductCategory category) {
-        LocalDateTime now = LocalDateTime.now();
+    public List<ProductDTO.SearchResponse> getEventsByCategory(String category) {
+
+        // 카테고리 타입 변환 (String -> Enum)
+        ProductCategory productCategory = changeToProductCategory(category);
+
         // 신청 진행 중인 시제품 이벤트만 가져옴
-        List<Event> events = eventRepository.findByProductCategory(category).stream()
+        LocalDateTime now = LocalDateTime.now();
+        List<Event> events = eventRepository.findByProductCategory(productCategory).stream()
                 .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
                 .collect(Collectors.toList());
 
@@ -84,6 +88,14 @@ public class EventServiceImpl implements EventService {
                     return ProductConverter.toSearch(event, product, dDay);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private ProductCategory changeToProductCategory(String category) {
+        try {
+            return ProductCategory.valueOf(category.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new TempHandler(ErrorStatus.PRODUCT_ERROR_CATEGORY);
+        }
     }
 
     // 디데이 계산

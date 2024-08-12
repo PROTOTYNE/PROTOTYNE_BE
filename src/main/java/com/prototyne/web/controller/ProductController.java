@@ -45,7 +45,7 @@ public class ProductController {
     @Operation(summary = "시제품 카테고리 선택 조회 API",
             description = "카테고리 선택")
     public ApiResponse<List<ProductDTO.SearchResponse>> getCategoriesList(
-            @RequestParam(value = "category") ProductCategory category) {
+            @RequestParam(value = "category") String category) {
         List<ProductDTO.SearchResponse> categoriesList = eventService.getEventsByCategory(category);
         return ApiResponse.onSuccess(categoriesList);
     }
