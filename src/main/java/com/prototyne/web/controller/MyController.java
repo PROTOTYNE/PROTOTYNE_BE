@@ -1,6 +1,7 @@
 package com.prototyne.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.service.UserService.UserDetailServiceImpl;
 import com.prototyne.web.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,13 +23,14 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 public class MyController {
 
     private final UserDetailServiceImpl userDetailService;
+    private final JwtManager jwtManager;
 
     @GetMapping("/detail")
     @Operation(summary = "유저 정보 조회 API - 인증 필요",
             description = "유저 정보 조회 API - 인증 필요",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<UserDto.UserDetailResponse> getUserDetail(HttpServletRequest request) throws Exception {
-        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+        String accessToken = jwtManager.getToken(request);
         UserDto.UserDetailResponse userDetailResponse = userDetailService.getUserDetail(accessToken);
         return ApiResponse.onSuccess(userDetailResponse);
     }
@@ -45,7 +47,7 @@ public class MyController {
                    \s""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<UserDto.DetailInfo> updateDetailInfo(HttpServletRequest request, @RequestBody @Valid UserDto.DetailInfo detailInfo) throws UserPrincipalNotFoundException {
-        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+        String accessToken = jwtManager.getToken(request);
         return ApiResponse.onSuccess(userDetailService.updateBasicInfo(accessToken, detailInfo));
 
     }
@@ -66,9 +68,8 @@ public class MyController {
                     \s
                    \s""",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<UserDto.AddInfo> updateAddInfo(HttpServletRequest request,
-                                         @RequestBody @Valid UserDto.AddInfo addInfo) throws UserPrincipalNotFoundException {
-        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+    public ApiResponse<UserDto.AddInfo> updateAddInfo(HttpServletRequest request, @RequestBody @Valid UserDto.AddInfo addInfo) throws UserPrincipalNotFoundException {
+        String accessToken = jwtManager.getToken(request);
         return ApiResponse.onSuccess(userDetailService.updateAddInfo(accessToken, addInfo));
     }
 

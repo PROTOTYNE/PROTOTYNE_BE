@@ -2,6 +2,7 @@ package com.prototyne.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
 import com.prototyne.service.DeliveryService.DeliveryService;
+import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.DeliveryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
+    private final JwtManager jwtManager;
 
     @Tag(name = "${swagger.tag.my-etc}")
     @GetMapping
@@ -26,7 +28,7 @@ public class DeliveryController {
             description = "유저 배송지 조회",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<DeliveryDto> GetDelivery(HttpServletRequest token) {
-        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
+        String aouthtoken = jwtManager.getToken(token);
         DeliveryDto deliveryDto = deliveryService.getDeliveryInfo(aouthtoken);
         return ApiResponse.onSuccess(deliveryDto);
     }
@@ -37,7 +39,7 @@ public class DeliveryController {
             description = "유저 배송지 수정",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<DeliveryDto> PatchDelivery(HttpServletRequest token, @RequestBody @Valid DeliveryDto newDeliveryDto) {
-        String aouthtoken = token.getHeader("Authorization").replace("Bearer ", "");
+        String aouthtoken = jwtManager.getToken(token);
         DeliveryDto deliveryDto = deliveryService.patchDeliveryInfo(aouthtoken, newDeliveryDto);
         return ApiResponse.onSuccess(deliveryDto);
     }
