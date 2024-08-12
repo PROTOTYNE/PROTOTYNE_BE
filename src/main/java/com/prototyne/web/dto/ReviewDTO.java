@@ -25,15 +25,5 @@ public class ReviewDTO {
         private String question5; // 주관식 질문
 
     }
-    /*
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ReviewResponseDTO {
-        Long reviewId;
-        LocalDateTime createdAt;
-    }
-     */
 
 }
