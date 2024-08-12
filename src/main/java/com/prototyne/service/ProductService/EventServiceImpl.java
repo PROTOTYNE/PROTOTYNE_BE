@@ -52,6 +52,23 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<ProductDTO.SearchResponse> getEventsBySearch(String name) {
+        LocalDateTime now = LocalDateTime.now();
+        // 신청 진행 중인 시제품 이벤트만 가져옴
+        List<Event> events = eventRepository.findAllByProductNameContaining(name).stream()
+                .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
+                .collect(Collectors.toList());
+
+        return events.stream()
+                .map(event -> {
+                    Product product = event.getProduct();
+                    int dDay = calculateDDay(now, event.getEventEnd());
+                    return ProductConverter.toSearch(event, product, dDay);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ProductDTO.SearchResponse> getEventsByCategory(ProductCategory category) {
         LocalDateTime now = LocalDateTime.now();
         // 신청 진행 중인 시제품 이벤트만 가져옴

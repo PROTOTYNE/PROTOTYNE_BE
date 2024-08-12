@@ -36,6 +36,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "ORDER BY e.eventStart DESC")
     List<Event> findAllEventsByNew(@Param("now") LocalDateTime now);
 
+    // 검색(제품)명을 포함하는 이벤트
+    List<Event> findAllByProductNameContaining(String name);
+
     // 카테고리에 따른 이벤트
     List<Event> findByProductCategory(ProductCategory category);
 }

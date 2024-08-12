@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface EventService {
     List<ProductDTO.EventResponse> getEventsByType(String type);
-//    List<ProductDTO.EventResponse> getEventsBySearch(String type);
+    List<ProductDTO.SearchResponse> getEventsBySearch(String name);
     List<ProductDTO.SearchResponse> getEventsByCategory(ProductCategory category);
 }

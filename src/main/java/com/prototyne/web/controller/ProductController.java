@@ -18,10 +18,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/product")
+@Tag(name = "${swagger.tag.product}")
 public class ProductController {
+
     private final EventService eventService;
 
-    @Tag(name = "${swagger.tag.product}")
     @GetMapping("/list")
     @Operation(summary = "시제품 목록 조회 API",
             description = "popular(인기순, 기본), imminent(마감 임박순), new(최신 등록순)")
@@ -31,17 +32,15 @@ public class ProductController {
         return ApiResponse.onSuccess(eventsList);
     }
 
-    @Tag(name = "${swagger.tag.product}")
     @GetMapping("/search")
     @Operation(summary = "시제품 검색 조회 API",
             description = "검색어 입력")
-    public ApiResponse<List<ProductDTO.EventResponse>> getSearchesList(
+    public ApiResponse<List<ProductDTO.SearchResponse>> getSearchesList(
             @RequestParam("name") String name) {
-        List<ProductDTO.EventResponse> searchesList = eventService.getEventsByType(name);
-        return ApiResponse.onSuccess(searchesList);
+        List<ProductDTO.SearchResponse> searchList = eventService.getEventsBySearch(name);
+        return ApiResponse.onSuccess(searchList);
     }
 
-    @Tag(name = "${swagger.tag.product}")
     @GetMapping("/select")
     @Operation(summary = "시제품 카테고리 선택 조회 API",
             description = "카테고리 선택")
