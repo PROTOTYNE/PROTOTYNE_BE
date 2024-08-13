@@ -41,4 +41,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     // 카테고리에 따른 이벤트
     List<Event> findByProductCategory(ProductCategory category);
+
+    // 시제품 이벤트 id
 }

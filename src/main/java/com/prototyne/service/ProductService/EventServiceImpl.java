@@ -4,11 +4,14 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.converter.ProductConverter;
 import com.prototyne.domain.Event;
+import com.prototyne.domain.Investment;
 import com.prototyne.domain.Product;
 import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.repository.EventRepository;
+import com.prototyne.repository.InvestmentRepository;
 import com.prototyne.web.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
+    private final InvestmentRepository investmentRepository;
 
     public List<ProductDTO.EventResponse> getEventsByType(String type) {
         LocalDateTime now = LocalDateTime.now();
@@ -70,7 +74,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<ProductDTO.SearchResponse> getEventsByCategory(String category) {
-
         // 카테고리 타입 변환 (String -> Enum)
         ProductCategory productCategory = changeToProductCategory(category);
 
@@ -90,6 +93,22 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ProductDTO.EventDetailsResponse getEventDetailsById(Long userId, Long eventId) {
+        // 이벤트 아이디로 이벤트 객체 가져옴
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
+
+        // 유저 아이디와 이벤트 아이디로 투자 객체 가져옴
+        Investment investment = investmentRepository.findByUserIdAndEventId(userId, eventId)
+                .orElse(null);
+
+
+        // DTO로 변환
+        return ProductConverter.toEventDetails(event, investment);
+    }
+
+    // Enum에 category 없으면 오류 처리
     private ProductCategory changeToProductCategory(String category) {
         try {
             return ProductCategory.valueOf(category.toUpperCase());

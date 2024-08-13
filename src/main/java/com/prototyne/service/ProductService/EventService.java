@@ -9,4 +9,5 @@ public interface EventService {
     List<ProductDTO.EventResponse> getEventsByType(String type);
     List<ProductDTO.SearchResponse> getEventsBySearch(String name);
     List<ProductDTO.SearchResponse> getEventsByCategory(String category);
+    ProductDTO.EventDetailsResponse getEventDetailsById(Long userId, Long eventId);
 }

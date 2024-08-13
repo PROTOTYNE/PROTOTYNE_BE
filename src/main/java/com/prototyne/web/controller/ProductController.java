@@ -2,16 +2,12 @@ package com.prototyne.web.controller;
 
 
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.service.ProductService.EventService;
 import com.prototyne.web.dto.ProductDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,5 +44,15 @@ public class ProductController {
             @RequestParam(value = "category") String category) {
         List<ProductDTO.SearchResponse> categoriesList = eventService.getEventsByCategory(category);
         return ApiResponse.onSuccess(categoriesList);
+    }
+
+    @GetMapping("/detail/{eventId}")
+    @Operation(summary = "시제품 상세보기 API",
+            description = "유저 id와 시제품 id 입력")
+    public ApiResponse<ProductDTO.EventDetailsResponse> getEventDetails(
+            @RequestHeader("userId") Long userId,
+            @PathVariable("eventId") Long eventId) {
+        ProductDTO.EventDetailsResponse eventDetails = eventService.getEventDetailsById(userId, eventId);
+        return ApiResponse.onSuccess(eventDetails);
     }
 }
