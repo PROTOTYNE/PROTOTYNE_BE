@@ -35,10 +35,10 @@ public class FeedbackServiceImpl implements FeedbackService{
     //private final FeedbackImageRepository feedbackImageRepository;
 
     @Override
-    public FeedbackDTO UpdateFeedbacks(Long investmentId, FeedbackDTO feedbackDTO, String accessToken){
+    public FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO){
 
-        Long userId = jwtManager.validateJwt(accessToken);
-        User user=userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+        Long id = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Investment investment = investmentRepository.findById(investmentId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
