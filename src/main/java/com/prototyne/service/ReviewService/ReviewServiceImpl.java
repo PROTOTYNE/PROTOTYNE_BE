@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.prototyne.converter.ProductConverter.toReview;
+import static com.prototyne.converter.ReviewConverter.toReview;
 
 @Slf4j
 @Service
