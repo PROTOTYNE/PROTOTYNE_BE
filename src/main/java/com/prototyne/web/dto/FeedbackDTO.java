@@ -28,6 +28,6 @@ public class FeedbackDTO {
 
     private Boolean answer6; //재사용 유무 Y/N
 
-    private List<FeedbackImageDTO> feedbackImages;  // 피드백에 첨부된 이미지 목록
+    //private List<FeedbackImageDTO> feedbackImages;  // 피드백에 첨부된 이미지 목록
 
 }

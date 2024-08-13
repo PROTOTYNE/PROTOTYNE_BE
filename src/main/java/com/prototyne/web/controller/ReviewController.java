@@ -37,6 +37,7 @@ public class ReviewController {
         FeedbackDTO UpdateFeedbacks = feedbackService.UpdateFeedbacks(investmentId, feedbackDTO, accessToken);
         return ApiResponse.onSuccess(UpdateFeedbacks);
     }
+    /*
     @Tag(name="${swagger.tag.product-etc}")
     @PostMapping("/image/{investmentId}")
     @Operation(summary="후기 작성 이미지 API", description="사용자가 체험했던 시제품에 대한 후기 이미지 업로드")
@@ -46,7 +47,7 @@ public class ReviewController {
         FeedbackImageDTO CreateFeedbacksImage = feedbackService.CreateFeedbacksImage(investmentId, feedbackImageDTO, accessToken);
 
         return ApiResponse.onSuccess(CreateFeedbacksImage);
-    }
+    }*/
 
 
 }

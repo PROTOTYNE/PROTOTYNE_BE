@@ -24,7 +24,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 시제품 목록 조회 실패
     PRODUCT_ERROR_TYPE(HttpStatus.BAD_REQUEST, "PRODUCT4001", "잘못된 정렬 타입입니다."),
 
-    DATE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "FORMAT4001", "잘못된 날짜 형식입니다. 올바른 형식: yyyy-MM-dd");
+    DATE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "FORMAT4001", "잘못된 날짜 형식입니다. 올바른 형식: yyyy-MM-dd"),
 
 
     PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4001","존재하지 않는 시제품입니다."),

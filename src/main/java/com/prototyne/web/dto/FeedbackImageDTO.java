@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class FeedbackImageDTO {
     private Long id;
-    private MultipartFile feedbackImage;
+    private String imageUrl;
     private Long feedbackId;  // 이 이미지가 속한 피드백의 ID
+    private MultipartFile feedbackImage;
 }

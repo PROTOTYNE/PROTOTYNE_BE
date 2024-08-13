@@ -4,7 +4,9 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.aws.s3.AmazonS3Manager;
 import com.prototyne.converter.FeedbackConverter;
+import com.prototyne.converter.FeedbackImageConverter;
 import com.prototyne.domain.Feedback;
+import com.prototyne.domain.FeedbackImage;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.User;
 import com.prototyne.repository.*;
@@ -16,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -55,7 +59,7 @@ public class FeedbackServiceImpl implements FeedbackService{
         return FeedbackConverter.toFeedbackDto(feedback,investment);
 
     }
-    /*
+/*
     public FeedbackImageDTO CreateFeedbacksImage(Long investmentId, FeedbackImageDTO feedbackImageDTO, String accessToken){
         Long userId = jwtManager.validateJwt(accessToken);
         User user=userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
@@ -65,11 +69,17 @@ public class FeedbackServiceImpl implements FeedbackService{
 
         Feedback feedback = feedbackRepository.findByInvestmentId(investmentId);
 
-        String uuid = UUID.randomUUID().toString();
-        Uuid savedUuid = uuidRepository.save(Uuid.builder()
-                .uuid(uuid).build());
+        // Amazon S3에 이미지 업로드
+        List<String> uploadedUrls = AmazonS3Manager.uploadFile("feedback-images", Arrays.asList(feedbackImageDTO.getFeedbackImage()));
+        String imageUrl = uploadedUrls.get(0);
 
-        String imageUrl = s3Manager.uploadFile(s3Manager.generateReviewKeyName(savedUuid), feedbackImageDTO);
+        // FeedbackImage 엔티티 생성 및 저장
+        FeedbackImage feedbackImage = FeedbackImageConverter.toFeedbackImage(feedbackImageDTO, feedback);
+        feedbackImage.setImageUrl(imageUrl);
+        feedbackImageRepository.save(feedbackImage);
+
+        // 저장된 FeedbackImage 엔티티를 DTO로 변환하여 반환
+        return FeedbackImageConverter.toFeedbackImageDTO(feedbackImage);
 
     }*/
 
