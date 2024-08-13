@@ -1,26 +1,21 @@
 package com.prototyne.converter;
 
+import com.prototyne.domain.Event;
 import com.prototyne.domain.Product;
-import com.prototyne.web.dto.ReviewDTO;
-import lombok.Builder;
+import com.prototyne.web.dto.ProductDTO;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
-@Builder
 public class ProductConverter {
-    public static ReviewDTO.ReviewResponseDTO toReview(Product product){
-        return ReviewDTO.ReviewResponseDTO.builder()
-                .id(product.getId())
-                .question1(product.getQuestion1())
-                .question2(product.getQuestion2())
-                .question3(product.getQuestion3())
-                .question4(product.getQuestion4())
-                .question5(product.getQuestion5())
-                //.question6(request.getQuestion6()) //이미지 첨부 질문
+
+    // 체험 진행 중인 시제품 목록 형식
+    public static ProductDTO.EventResponse toEvent(Event event, Product product, int investCount) {
+        return ProductDTO.EventResponse.builder()
+                .id(event.getId())
+                .name(product.getName())
+                .thumbnailUrl(product.getThumbnailUrl())
+                .investCount(investCount)
+                .reqTickets(product.getReqTickets())
                 .build();
     }
-
-
 }
