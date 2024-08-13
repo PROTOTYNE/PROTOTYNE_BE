@@ -6,5 +6,5 @@ import com.prototyne.web.dto.FeedbackImageDTO;
 public interface FeedbackService {
     FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO);
 
-    //FeedbackImageDTO CreateFeedbacksImage(Long investmentId, FeedbackImageDTO feedbackImageDTO, String accessToken);
+    FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long feedbackId, FeedbackImageDTO feedbackImageDTO);
 }

@@ -41,17 +41,17 @@ public class ReviewController {
         FeedbackDTO UpdateFeedbacks = feedbackService.UpdateFeedbacks(aouthtoken,investmentId, feedbackDTO);
         return ApiResponse.onSuccess(UpdateFeedbacks);
     }
-    /*
+
     @Tag(name="${swagger.tag.product-etc}")
-    @PostMapping("/image/{investmentId}")
+    @PostMapping(value="/image/{feedbackId}", consumes="multipart/form-data")
     @Operation(summary="후기 작성 이미지 API", description="사용자가 체험했던 시제품에 대한 후기 이미지 업로드")
-    public ApiResponse<FeedbackImageDTO> CreateFeedbacksImage(@PathVariable Long investmentId,
-                                                              @RequestBody FeedbackImageDTO feedbackImageDTO,
-                                                              @RequestHeader("Authorization") String accessToken) {
-        FeedbackImageDTO CreateFeedbacksImage = feedbackService.CreateFeedbacksImage(investmentId, feedbackImageDTO, accessToken);
+    public ApiResponse<FeedbackImageDTO> CreateFeedbacksImage(HttpServletRequest token, @PathVariable Long feedbackId,
+                                                              @RequestBody FeedbackImageDTO feedbackImageDTO) {
+        String aouthtoken = jwtManager.getToken(token);
+        FeedbackImageDTO CreateFeedbacksImage = feedbackService.CreateFeedbacksImage(aouthtoken, feedbackId, feedbackImageDTO);
 
         return ApiResponse.onSuccess(CreateFeedbacksImage);
-    }*/
+    }
 
 
 }
