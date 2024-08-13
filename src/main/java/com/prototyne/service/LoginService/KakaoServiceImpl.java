@@ -49,11 +49,11 @@ public class KakaoServiceImpl implements KakaoService {
                 .block();
         UserDto.UserInfoResponse userinfo = getKakaoInfo(Objects.requireNonNull(kakaotokenresponse).getAccessToken());
         User user = userRepository.findByEmail(userinfo.getKakaoAccount().getEmail());
-        kakaotokenresponse.setNewUser(user == null);
+        kakaotokenresponse.setSignupComplete(user == null);
         if (user == null) {
             user = userRepository.save(UserConverter.toUser(userinfo));
         } else if (!user.getSignupComplete()) {
-            kakaotokenresponse.setNewUser(true);
+            kakaotokenresponse.setSignupComplete(false);
         }
         Long id = user.getId();
         String token = jwtManager.createJwt(id);
