@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+
+
 import java.util.List;
 
 @Slf4j
@@ -43,20 +45,29 @@ public class UserSignupServiceImpl implements UserSignupService {
         // 카카오 이메일로 기존 회원이 존재하는지 여부 조회
         User existingUser = userRepository.findByEmail(kakaoUserInfo.getKakaoAccount().getEmail());
 
-        if(existingUser != null) {
-            throw new RuntimeException("해당 이메일로 이미 가입한 회원이 존재합니다.");
+        if(existingUser != null){
+            if(existingUser.getSignupComplete()) {
+                throw new RuntimeException("이미 회원가입이 완료된 사용자입니다.");
+            }
+            else {
+                // 회원가입이 완료되지 않은 사용자라면,
+                // 사용자 정보를 유저 db에서 삭제(동일 유저에 대한 정보 중복 저장 방지)
+                userRepository.delete(existingUser);
+            }
         }
 
+        // 회원가입 로직: 카카오 로그인 -> 필수 정보 입력 -> 추가 정보 입력 -> 그 후에 회원가입 완료(db에 저장)
         User newUser = UserConverter.toSignedUser(kakaoUserInfo, userDetailRequest);
         userRepository.save(newUser);
 
-        // 추가 정보 저장
         saveAdditionalInfo(newUser, addInfoRequest);
-        // JWT 토큰 생성
-        String jwtToken = jwtManager.createJwt(newUser.getId());
 
-        // 회원가입 완료 후 JWT 토큰 반환
-        return new UserDto.UserSignUpResponse(newUser.getId(), jwtToken);
+        newUser.setSignupComplete(true);
+
+        String jwtToken = jwtManager.createJwt(newUser.getId());
+        System.out.println("회원가입 테스트용 토큰 발급: "+ jwtToken);
+
+        return new UserDto.UserSignUpResponse(newUser.getId(), "회원가입이 완료되었습니다.");
     }
 
     public void saveAddSetInfo(User user, AddsetTitle title, List<String> values) {

@@ -145,7 +145,7 @@ public class UserDto {
     @AllArgsConstructor
     public static class UserSignUpResponse {
         private final Long userId;
-        private final String token;
+        private final String msg;
     }
 
     @Data
