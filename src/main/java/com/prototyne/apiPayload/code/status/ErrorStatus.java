@@ -19,7 +19,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
-    PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4001","존재하지 않는 시제품입니다.");
+    PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4001","존재하지 않는 시제품입니다."),
+    INVESTMENT_ERROR_ID(HttpStatus.BAD_REQUEST, "INVESTMENT4001","존재하지 않는 나의 시제품입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

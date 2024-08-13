@@ -11,7 +11,7 @@ public class ReviewDTO {
 
     @Getter
     @Builder
-    public static class ReviewResponseDTO{
+    public static class ReviewResponseDTO {
         private Long id;  //시제품 아이디 (API 명세서에 투자 ID로 작성되어 있음)
 
         private String question1; // 객관식 1번 질문
@@ -25,5 +25,4 @@ public class ReviewDTO {
         private String question5; // 주관식 질문
 
     }
-
 }
