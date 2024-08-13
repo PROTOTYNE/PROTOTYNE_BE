@@ -111,45 +111,42 @@ public class UserDetailServiceImpl implements UserDetailService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserPrincipalNotFoundException(userId + "에 해당하는 회원이 없습니다."));
 
-        // 기존 추가 정보를 삭제하거나 업데이트하는 로직을 구현합니다.
-        additionalRepository.deleteByUserId(userId);
+        // 각 필드에 대해 기존 정보를 조회하고, 존재하면 업데이트, 존재하지 않으면 새로 추가
+        updateAddSetInfo(user, AddsetTitle.직업, addInfo.getOccupation());
+        updateAddSetInfo(user, AddsetTitle.소득수준, String.valueOf(addInfo.getIncome()));
+        updateAddSetInfo(user, AddsetTitle.관심사, addInfo.getInterests() != null ? String.join(",", addInfo.getInterests()) : null);
+        updateAddSetInfo(user, AddsetTitle.가족구성, addInfo.getFamilyComposition());
+        updateAddSetInfo(user, AddsetTitle.관심제품유형, addInfo.getProductTypes() != null ? String.join(",", addInfo.getProductTypes()) : null);
+        updateAddSetInfo(user, AddsetTitle.스마트기기_기종, addInfo.getPhones() != null ? String.join(",", addInfo.getPhones()) : null);
+        updateAddSetInfo(user, AddsetTitle.건강상태, String.valueOf(addInfo.getHealthStatus()));
 
-        if (addInfo.getOccupation() != null) {
-            saveAddSetInfo(user, AddsetTitle.직업, addInfo.getOccupation());
-        }
-        if (addInfo.getIncome() > 0) {
-            saveAddSetInfo(user, AddsetTitle.소득수준, String.valueOf(addInfo.getIncome()));
-        }
-        if (addInfo.getInterests() != null) {
-            saveAddSetInfo(user, AddsetTitle.관심사, String.join(",", addInfo.getInterests()));
-        }
-        if (addInfo.getFamilyComposition() != null) {
-            saveAddSetInfo(user, AddsetTitle.가족구성, addInfo.getFamilyComposition());
-        }
-        if (addInfo.getProductTypes() != null) {
-            saveAddSetInfo(user, AddsetTitle.관심제품유형, String.join(",", addInfo.getProductTypes()));
-        }
-        if (addInfo.getPhones() != null) {
-            saveAddSetInfo(user, AddsetTitle.스마트기기_기종, String.join(",", addInfo.getPhones()));
-        }
-        if (addInfo.getHealthStatus() > 0) {
-            saveAddSetInfo(user, AddsetTitle.건강상태, String.valueOf(addInfo.getHealthStatus()));
-        }
         return userConverter.toUserDetailResponse(user, addInfo).getAddInfo();
     }
 
-    private void saveAddSetInfo(User user, AddsetTitle title, String value) {
-        if (value != null && !value.isEmpty()) {
-            // ADD_set 엔티티를 먼저 저장합니다.
-            ADD_set addSet = addSetRepository.findByTitleAndValue(title, value)
-                    .orElseGet(() -> addSetRepository.save(ADD_set.builder()
-                            .title(title)
-                            .value(value)
-                            .build()));
+    private void updateAddSetInfo(User user, AddsetTitle title, String newValue) {
+        if (newValue != null && !newValue.isEmpty()) {
+            // ADD_set 엔티티를 찾는다.
+            ADD_set existingAddSet = additionalRepository.findByUserAndAddSet_Title(user, title)
+                    .map(Additional::getAddSet)
+                    .orElse(null);
 
-            // 저장된 ADD_set 엔티티를 Additional 엔티티와 함께 저장합니다.
-            additionalRepository.save(new Additional(user, addSet));
+            if (existingAddSet != null) {
+                // 기존 값과 비교하여 업데이트할 필요가 있는지 확인
+                if (!existingAddSet.getValue().equals(newValue)) {
+                    existingAddSet.setValue(newValue);
+                    addSetRepository.save(existingAddSet);  // 기존 엔티티 업데이트
+                }
+            } else {
+                // 기존 엔티티가 없으면 새로 추가
+                ADD_set newAddSet = addSetRepository.save(ADD_set.builder()
+                        .title(title)
+                        .value(newValue)
+                        .build());
+
+                additionalRepository.save(new Additional(user, newAddSet));  // 새로운 관계 저장
+            }
         }
     }
+
 
 }
