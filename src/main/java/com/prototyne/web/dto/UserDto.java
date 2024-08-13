@@ -75,7 +75,7 @@ public class UserDto {
         //        public Integer refreshTokenExpiresIn;
         @JsonProperty("scope")
         public String scope;
-        public Boolean newUser;
+        public Boolean signupComplete;
     }
 
     @Getter
