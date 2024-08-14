@@ -22,10 +22,11 @@ public class Product extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+    @Column(nullable = false, length = 200)
+    private String notes;
+
     @Column(nullable = false, length = 512)
     private String contents;
-
-    private String thumbnailUrl;
 
     private Integer reqTickets;
 
@@ -55,8 +56,6 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy ="product",cascade=CascadeType.ALL)
     private List<Event> eventList=new ArrayList<>();
 
-
-
-
-
+    @OneToMany(mappedBy ="product",cascade=CascadeType.ALL)
+    private List<ProductImage> productImageList = new ArrayList<>();
 }
