@@ -35,7 +35,7 @@ public class MyController {
         return ApiResponse.onSuccess(userDetailResponse);
     }
 
-    @PatchMapping("/basicInfo")
+    @PatchMapping("/basicinfo")
     @Operation(summary = "필수 정보 수정 API - 인증 필요",
             description = """
                     유저의 필수 정보를 수정합니다.
@@ -52,7 +52,7 @@ public class MyController {
 
     }
 
-    @PatchMapping("/addInfo")
+    @PatchMapping("/addinfo")
     @Operation(summary = "추가 정보 수정 API - 인증 필요",
             description = """
                     유저의 추가 정보를 수정합니다. - 수정 필요한 key-value 만 입력

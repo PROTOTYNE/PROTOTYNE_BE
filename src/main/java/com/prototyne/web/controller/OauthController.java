@@ -35,7 +35,8 @@ public class OauthController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입 API - 인증 필요",
-            description = "회원가입 API - 인증 필요",
+            description = """
+                    Body는 하단의 /my/basicinfo , /my/addinfo api의 설명 참고""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<UserDto.UserSignUpResponse> signup(HttpServletRequest token, @RequestBody @Valid UserDto.UserSignUpRequest signUpRequest) {
         String aouthtoken = jwtManager.getToken(token);

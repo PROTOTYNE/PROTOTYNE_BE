@@ -27,4 +27,5 @@ public class Additional extends BaseEntity {
     public Additional(User user, ADD_set addSet) {
         this.user = user;
         this.addSet = addSet;
-    }}
+    }
+}
