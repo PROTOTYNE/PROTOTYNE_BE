@@ -48,4 +48,13 @@ public class MyProductController {
 
         return ApiResponse.onSuccess(myProductService.getOngoingMyProduct(accessToken));
     }
+
+    @Tag(name = "${swagger.tag.myproduct}")
+    @GetMapping("/reviewed")
+    @Operation(summary = "체험 작성완료 내역 조회 API - 인증필요", description = "체험 작성완료 내역 조회 API - 인증필요", security = {@SecurityRequirement(name="session-token")})
+    public ApiResponse<List<MyProductDto.ReviewedDto>> reviewedMyProduct(HttpServletRequest request) throws Exception {
+        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+
+        return ApiResponse.onSuccess(myProductService.getReviewedMyProduct(accessToken));
+    }
 }

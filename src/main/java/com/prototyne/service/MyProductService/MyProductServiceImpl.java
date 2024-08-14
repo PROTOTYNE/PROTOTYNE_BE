@@ -50,4 +50,14 @@ public class MyProductServiceImpl implements MyProductService {
                 .map(myProductConverter::toOngoingDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MyProductDto.ReviewedDto> getReviewedMyProduct(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+
+        return myProductRepository.findByUserId(userId).stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.후기작성)
+                .map(myProductConverter::toReviewedDto)
+                .collect(Collectors.toList());
+    }
 }
