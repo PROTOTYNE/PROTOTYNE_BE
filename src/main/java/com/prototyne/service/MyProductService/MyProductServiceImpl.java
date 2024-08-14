@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +27,17 @@ public class MyProductServiceImpl implements MyProductService {
 
         return myProductRepository.findByUserId(userId).stream()
                 .map(myProductConverter::toCommonDto)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<MyProductDto.AppliedDto> getAppliedMyProduct(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+        LocalDateTime now = LocalDateTime.now();
+
+        return myProductRepository.findByUserId(userId).stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.신청)
+                .filter(investment -> investment.getEvent().getReleaseStart().isAfter(now))
+                .map(myProductConverter::toAppliedDto)
                 .collect(Collectors.toList());
     }
 

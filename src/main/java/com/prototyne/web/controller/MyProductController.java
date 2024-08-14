@@ -31,14 +31,14 @@ public class MyProductController {
         return ApiResponse.onSuccess(myProductService.getAllMyProduct(accessToken));
     }
 
-//    @Tag(name = "${swagger.tag.myproduct}")
-//    @GetMapping("/requested")
-//    @Operation(summary = "체험 신청중인 내역 조회 API - 인증필요", description = "체험 신청중인 내역 조회 API - 인증필요", security = {@SecurityRequirement(name="session-token")})
-//    public ApiResponse<List<MyProductDto.OngoingDto>> ongoingMyProduct(HttpServletRequest request) throws Exception {
-//        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
-//
-//        return ApiResponse.onSuccess(myProductService.getOngoingMyProduct(accessToken));
-//    }
+    @Tag(name = "${swagger.tag.myproduct}")
+    @GetMapping("/applied")
+    @Operation(summary = "체험 신청중인 내역 조회 API - 인증필요", description = "체험 신청중인 내역 조회 API - 인증필요", security = {@SecurityRequirement(name="session-token")})
+    public ApiResponse<List<MyProductDto.AppliedDto>> appliedMyProduct(HttpServletRequest request) throws Exception {
+        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+
+        return ApiResponse.onSuccess(myProductService.getAppliedMyProduct(accessToken));
+    }
 
     @Tag(name = "${swagger.tag.myproduct}")
     @GetMapping("/ongoing")
