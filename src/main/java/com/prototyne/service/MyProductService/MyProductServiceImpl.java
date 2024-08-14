@@ -1,6 +1,7 @@
 package com.prototyne.service.MyProductService;
 
 import com.prototyne.converter.MyProductConverter;
+import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.repository.MyProductRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.MyProductDto;
@@ -21,19 +22,21 @@ public class MyProductServiceImpl implements MyProductService {
     private final MyProductConverter myProductConverter;
 
     @Override
-    public List<MyProductDto> getAllMyProduct(String accessToken) throws UserPrincipalNotFoundException {
+    public List<MyProductDto.CommonDto> getAllMyProduct(String accessToken) {
         Long userId = jwtManager.validateJwt(accessToken);
 
         return myProductRepository.findByUserId(userId).stream()
-                .map(myProductConverter::toResponseDto)
+                .map(myProductConverter::toCommonDto)
                 .collect(Collectors.toList());
+    }
 
-//        return myProductRepository.findByUserId(userId).stream()
-//                .map(investment -> MyProductDto.builder()
-//                        .name(investment.getEvent().getProduct().getName())
-//                        .thumbnailUrl(investment.getEvent().getProduct().getThumbnailUrl())
-//                        .status(investment.getStatus())
-//                        .build())
-//                .collect(Collectors.toList());
+    @Override
+    public List<MyProductDto.OngoingDto> getOngoingMyProduct(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+
+        return myProductRepository.findByUserId(userId).stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.당첨)
+                .map(myProductConverter::toOngoingDto)
+                .collect(Collectors.toList());
     }
 }

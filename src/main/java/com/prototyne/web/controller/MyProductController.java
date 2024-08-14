@@ -23,11 +23,29 @@ public class MyProductController {
     private final MyProductServiceImpl myProductService;
 
     @Tag(name = "${swagger.tag.myproduct}")
-    @GetMapping("/request")
-    @Operation(summary = "체험 신청 내역 조회 API - 인증필요", description = "체험 신청 내역 조회 API - 인증필요", security = {@SecurityRequirement(name="session-token")})
-    public ApiResponse<List<MyProductDto>> allMyProduct(HttpServletRequest request) throws Exception {
+    @GetMapping("/allrequested")
+    @Operation(summary = "체험 전체보기 조회 API - 인증필요", description = "체험 전체보기 조회 API - 인증필요", security = {@SecurityRequirement(name="session-token")})
+    public ApiResponse<List<MyProductDto.CommonDto>> allMyProduct(HttpServletRequest request) throws Exception {
         String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
 
         return ApiResponse.onSuccess(myProductService.getAllMyProduct(accessToken));
+    }
+
+//    @Tag(name = "${swagger.tag.myproduct}")
+//    @GetMapping("/requested")
+//    @Operation(summary = "체험 신청중인 내역 조회 API - 인증필요", description = "체험 신청중인 내역 조회 API - 인증필요", security = {@SecurityRequirement(name="session-token")})
+//    public ApiResponse<List<MyProductDto.OngoingDto>> ongoingMyProduct(HttpServletRequest request) throws Exception {
+//        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+//
+//        return ApiResponse.onSuccess(myProductService.getOngoingMyProduct(accessToken));
+//    }
+
+    @Tag(name = "${swagger.tag.myproduct}")
+    @GetMapping("/ongoing")
+    @Operation(summary = "체험 당첨 내역 조회 API - 인증필요", description = "체험 당첨 내역 조회 API - 인증필요", security = {@SecurityRequirement(name="session-token")})
+    public ApiResponse<List<MyProductDto.OngoingDto>> ongoingMyProduct(HttpServletRequest request) throws Exception {
+        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+
+        return ApiResponse.onSuccess(myProductService.getOngoingMyProduct(accessToken));
     }
 }

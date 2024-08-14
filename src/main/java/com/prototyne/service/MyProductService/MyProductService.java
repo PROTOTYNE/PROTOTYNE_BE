@@ -6,5 +6,6 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
 public interface MyProductService {
-    List<MyProductDto> getAllMyProduct(String accessToken) throws UserPrincipalNotFoundException;
+    List<MyProductDto.CommonDto> getAllMyProduct(String accessToken);
+    List<MyProductDto.OngoingDto> getOngoingMyProduct(String accessToken);
 }
