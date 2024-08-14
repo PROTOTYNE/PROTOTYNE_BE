@@ -71,13 +71,27 @@ public class UserSignupServiceImpl implements UserSignupService {
 
     @Override
     public void saveAdditionalInfo(User user, UserDto.UserAddInfoRequest request) {
-        saveAddSetInfo(user, AddsetTitle.직업, Collections.singletonList(request.getOccupation()));
-        saveAddSetInfo(user, AddsetTitle.소득수준, Collections.singletonList(String.valueOf(request.getIncome())));
-        saveAddSetInfo(user, AddsetTitle.관심사, request.getInterests());
-        saveAddSetInfo(user, AddsetTitle.가족구성, Collections.singletonList(request.getFamilyComposition()));
-        saveAddSetInfo(user, AddsetTitle.관심제품유형, request.getProductTypes());
-        saveAddSetInfo(user, AddsetTitle.스마트기기_기종, request.getPhones());
-        saveAddSetInfo(user, AddsetTitle.건강상태, Collections.singletonList(String.valueOf(request.getHealthStatus())));
+        if (request.getOccupation() != null) {
+            saveAddSetInfo(user, AddsetTitle.직업, Collections.singletonList(request.getOccupation()));
+        }
+        if (request.getIncome() != null) {
+            saveAddSetInfo(user, AddsetTitle.소득수준, Collections.singletonList(String.valueOf(request.getIncome())));
+        }
+        if (request.getInterests() != null && !request.getInterests().isEmpty()) {
+            saveAddSetInfo(user, AddsetTitle.관심사, request.getInterests());
+        }
+        if (request.getFamilyComposition() != null) {
+            saveAddSetInfo(user, AddsetTitle.가족구성, Collections.singletonList(request.getFamilyComposition()));
+        }
+        if (request.getProductTypes() != null && !request.getProductTypes().isEmpty()) {
+            saveAddSetInfo(user, AddsetTitle.관심제품유형, request.getProductTypes());
+        }
+        if (request.getPhones() != null && !request.getPhones().isEmpty()) {
+            saveAddSetInfo(user, AddsetTitle.스마트기기_기종, request.getPhones());
+        }
+        if (request.getHealthStatus() != null) {
+            saveAddSetInfo(user, AddsetTitle.건강상태, Collections.singletonList(String.valueOf(request.getHealthStatus())));
+        }
     }
 
 
