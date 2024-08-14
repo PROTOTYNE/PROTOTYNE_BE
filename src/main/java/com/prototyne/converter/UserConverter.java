@@ -27,17 +27,29 @@ public class UserConverter {
                 .profileUrl(user.getProfileUrl())
                 .tickets(user.getTickets())
                 .gender(user.getGender())
-                .birth(user.getBirth().atStartOfDay())
+                .birth(user.getBirth())
                 .build();
     }
 
-    public static User toSignedUser(UserDto.UserInfoResponse kakaoUserInfo, UserDto.UserDetailRequest userDetailRequest){
+    public static User toSignedUser(User user, UserDto.UserDetailRequest userDetailRequest){
         return User.builder()
-                .email(kakaoUserInfo.getKakaoAccount().getEmail())
-                .username(kakaoUserInfo.getKakaoAccount().getProfile().getNickName())
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .profileUrl(user.getProfileUrl())
+                .signupComplete(true)
+                .tickets(0)
                 .gender(userDetailRequest.getGender())
                 .birth(LocalDate.from(userDetailRequest.getBirth()))
                 .familyMember(userDetailRequest.getFamilyMember())
+                .build();
+    }
+
+    public static DeliveryDto toDeliveryDto(User user) {
+        return DeliveryDto.builder()
+                .deliveryName(user.getDeliveryName())
+                .deliveryPhone(user.getDeliveryPhone())
+                .deliveryAddress(user.getDeliveryAddress())
                 .build();
     }
 
@@ -64,14 +76,6 @@ public class UserConverter {
         return UserDto.UserDetailResponse.builder()
                 .detailInfo(detailInfo)
                 .addInfo(addInfo)
-                .build();
-    }
-
-    public static DeliveryDto toDeliveryDto(User user) {
-        return DeliveryDto.builder()
-                .deliveryName(user.getDeliveryName())
-                .deliveryPhone(user.getDeliveryPhone())
-                .deliveryAddress(user.getDeliveryAddress())
                 .build();
     }
 }

@@ -43,8 +43,6 @@ public class Investment extends BaseEntity {
     @JoinColumn(name="event_id")
     private Event event;
 
-    @OneToMany(mappedBy ="investment",cascade=CascadeType.ALL)
-    private List<Feedback> feedbackList=new ArrayList<>();
-
-
+    @OneToOne(mappedBy ="investment", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    private Feedback feedback;
 }
