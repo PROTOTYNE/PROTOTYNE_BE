@@ -9,9 +9,9 @@ import com.prototyne.domain.Product;
 import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.repository.EventRepository;
 import com.prototyne.repository.InvestmentRepository;
+import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,8 +21,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
+
     private final EventRepository eventRepository;
     private final InvestmentRepository investmentRepository;
+    private final JwtManager jwtManager;
 
     public List<ProductDTO.EventResponse> getEventsByType(String type) {
         LocalDateTime now = LocalDateTime.now();
@@ -94,12 +96,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public ProductDTO.EventDetailsResponse getEventDetailsById(Long userId, Long eventId) {
+    public ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventId) {
         // 이벤트 아이디로 이벤트 객체 가져옴
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
 
         // 유저 아이디와 이벤트 아이디로 투자 객체 가져옴
+        Long userId = jwtManager.validateJwt(accessToken);
         Investment investment = investmentRepository.findByUserIdAndEventId(userId, eventId)
                 .orElse(null);
 
