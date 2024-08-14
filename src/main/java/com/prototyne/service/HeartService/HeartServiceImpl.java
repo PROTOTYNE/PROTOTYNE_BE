@@ -39,7 +39,7 @@ public class HeartServiceImpl implements HeartService{
 
         log.info("accessToken in Service",accessToken);
 
-        return HeartConverter.toHeartResponseDTO(user, hearts);
+        return HeartConverter.toHeartResponseDTO(user, hearts, heartRepository);
     }
 
     @Transactional

@@ -30,6 +30,8 @@ public class HeartDto {
             private Long productId;
             private String name;
             private Integer reqTickets;
+            private String thumbnailUrl;
+            private Long count;
         }
     }
 
