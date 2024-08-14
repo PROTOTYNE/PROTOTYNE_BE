@@ -70,17 +70,17 @@ public class ProductConverter {
         if (investment == null) // 모든 필드가 null인 빈 객체를 반환
             return ProductDTO.InvestInfo.builder().build();
 
-        // 가장 첫 번째 Feedback의 penalty 값을 가져오는 예시
-        Boolean penalty = investment.getFeedbackList().stream()
-                .map(Feedback::getPenalty)
-                .findFirst().orElse(null);
+        // 후기 작성 안한 경우, penalty null 기본
+        Boolean isWritten = (investment.getFeedback() != null) ?
+                            investment.getFeedback().getPenalty()
+                            : null;
 
         return ProductDTO.InvestInfo.builder()
                 .apply(investment.getApply())
                 .status(investment.getStatus())
                 .shipping(investment.getShipping())
                 .transportNum(investment.getTransportNum())
-                .penalty(penalty)
+                .penalty(isWritten)
                 .build();
     }
 }
