@@ -20,7 +20,8 @@ public class MyProductDto {
         private Long productId;
         private String name;                // 제품 이름 (Product)
         private String thumbnailUrl;        // 제품 썸네일 (Product)
-        private InvestmentStatus status;    // 투자 상태 (Investment)
+        // private InvestmentStatus status;    // 투자 상태 (Investment)
+        private String calculatedStatus;    // 디데이/당첨/미당첨
         private LocalDateTime createdAt;    // 체험 신청일 (createdAt)
     }
 

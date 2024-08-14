@@ -29,6 +29,7 @@ public class MyProductServiceImpl implements MyProductService {
         Long userId = jwtManager.validateJwt(accessToken);
 
         return myProductRepository.findByUserId(userId).stream()
+                .filter(investment -> investment.getApply())
                 .map(myProductConverter::toCommonDto)
                 .collect(Collectors.toList());
     }

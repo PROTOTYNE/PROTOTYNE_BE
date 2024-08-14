@@ -4,6 +4,7 @@ import com.prototyne.domain.Event;
 import com.prototyne.domain.Feedback;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.Product;
+import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.web.dto.MyProductDto;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,20 @@ public class MyProductConverter {
     public MyProductDto.CommonDto toCommonDto(Investment investment) {
         Event event = investment.getEvent();
         Product product = event.getProduct();
+        LocalDateTime releaseStart = event.getReleaseStart();
+        LocalDateTime now = LocalDateTime.now();
+        String calculatedStatus;
+
+        if(investment.getStatus()== InvestmentStatus.신청){
+            if(releaseStart.isBefore(now)) {
+                 calculatedStatus = "미당첨";
+            } else {
+                long dDayToOngoing = (int) ChronoUnit.DAYS.between(now.toLocalDate(), releaseStart.toLocalDate());
+                calculatedStatus = String.valueOf(dDayToOngoing);
+            }
+        } else {
+            calculatedStatus = "당첨";
+        }
 
         return MyProductDto.CommonDto.builder()
                 .investmentId(investment.getId())
@@ -24,7 +39,7 @@ public class MyProductConverter {
                 .productId(investment.getEvent().getProduct().getId())
                 .name(product.getName())
                 .thumbnailUrl(product.getThumbnailUrl())
-                .status(investment.getStatus())
+                .calculatedStatus(calculatedStatus)
                 .createdAt(investment.getCreatedAt())
                 .build();
     }
