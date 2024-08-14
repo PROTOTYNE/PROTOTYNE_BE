@@ -21,15 +21,21 @@ public enum ErrorStatus implements BaseErrorCode {
 
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
-    // 시제품 목록 조회 실패
-    PRODUCT_ERROR_TYPE(HttpStatus.BAD_REQUEST, "PRODUCT4001", "잘못된 정렬 타입입니다."),
-
     DATE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "FORMAT4001", "잘못된 날짜 형식입니다. 올바른 형식: yyyy-MM-dd"),
 
+    // 시제품 목록 조회 실패
+    PRODUCT_ERROR_TYPE(HttpStatus.BAD_REQUEST, "PRODUCT4001", "잘못된 정렬 타입입니다."),
+    // 시제품 카테고리 조회 실패
+    PRODUCT_ERROR_CATEGORY(HttpStatus.BAD_REQUEST, "PRODUCT4002", "존재하지 않는 카테고리입니다."),
+    // 시제품 상세보기 조회 실패
+    PRODUCT_ERROR_EVENT(HttpStatus.BAD_REQUEST, "PRODUCT4003", "존재하지 않는 이벤트입니다."),
 
-    PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4001","존재하지 않는 시제품입니다."),
+    PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4004","존재하지 않는 시제품입니다."),
+
     INVESTMENT_ERROR_ID(HttpStatus.BAD_REQUEST, "INVESTMENT4001","존재하지 않는 나의 시제품입니다."),
+
     FEEDBACK_ERROR_ID(HttpStatus.BAD_REQUEST, "FEEDBACK4001","존재하지 않는 체험 후기입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
