@@ -111,15 +111,28 @@ public class UserDetailServiceImpl implements UserDetailService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserPrincipalNotFoundException(userId + "에 해당하는 회원이 없습니다."));
 
-        // 각 필드에 대해 기존 정보를 조회하고, 존재하면 업데이트, 존재하지 않으면 새로 추가
-        updateAddSetInfo(user, AddsetTitle.직업, addInfo.getOccupation());
-        updateAddSetInfo(user, AddsetTitle.소득수준, String.valueOf(addInfo.getIncome()));
-        updateAddSetInfo(user, AddsetTitle.관심사, addInfo.getInterests() != null ? String.join(",", addInfo.getInterests()) : null);
-        updateAddSetInfo(user, AddsetTitle.가족구성, addInfo.getFamilyComposition());
-        updateAddSetInfo(user, AddsetTitle.관심제품유형, addInfo.getProductTypes() != null ? String.join(",", addInfo.getProductTypes()) : null);
-        updateAddSetInfo(user, AddsetTitle.스마트기기_기종, addInfo.getPhones() != null ? String.join(",", addInfo.getPhones()) : null);
-        updateAddSetInfo(user, AddsetTitle.건강상태, String.valueOf(addInfo.getHealthStatus()));
-
+        // addInfo(dto)의 필드값들에 대하여, 값이 존재하는 경우에만 업로드해준다.
+        if(addInfo.getOccupation() != null){
+            updateAddSetInfo(user ,AddsetTitle.직업, addInfo.getOccupation());
+        }
+        if (addInfo.getIncome() != null) {
+            updateAddSetInfo(user, AddsetTitle.소득수준, String.valueOf(addInfo.getIncome()));
+        }
+        if (addInfo.getInterests() != null) {
+            updateAddSetInfo(user, AddsetTitle.관심사, String.join(",", addInfo.getInterests()));
+        }
+        if (addInfo.getFamilyComposition() != null) {
+            updateAddSetInfo(user, AddsetTitle.가족구성, addInfo.getFamilyComposition());
+        }
+        if (addInfo.getProductTypes() != null) {
+            updateAddSetInfo(user, AddsetTitle.관심제품유형, String.join(",", addInfo.getProductTypes()));
+        }
+        if (addInfo.getPhones() != null) {
+            updateAddSetInfo(user, AddsetTitle.스마트기기_기종, String.join(",", addInfo.getPhones()));
+        }
+        if (addInfo.getHealthStatus() != null) {
+            updateAddSetInfo(user, AddsetTitle.건강상태, String.valueOf(addInfo.getHealthStatus()));
+        }
         return userConverter.toUserDetailResponse(user, addInfo).getAddInfo();
     }
 

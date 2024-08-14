@@ -169,12 +169,12 @@ public class UserDto {
     @NoArgsConstructor
     public static class AddInfo {
         private String occupation;
-        private int income;
+        private Integer income;
         private List<String> interests;
         private String familyComposition;
         private List<String> productTypes;
         private List<String> phones;
-        private int healthStatus;
+        private Integer healthStatus;
 
     }
 
