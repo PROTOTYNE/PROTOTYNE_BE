@@ -21,7 +21,7 @@ public class Feedback extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT")
     private Byte reYn;
 
-    @Column(columnDefinition = "NVARCHAR(512)")
+    @Column(nullable = true, length = 512)
     private String contents;
     //nvarchar
 
@@ -46,7 +46,7 @@ public class Feedback extends BaseEntity {
     @JoinColumn(name="user_id")
     private User user;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="investment_id")
     private Investment investment;
 

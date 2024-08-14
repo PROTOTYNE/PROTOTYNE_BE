@@ -11,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -23,10 +24,10 @@ public class ADD_set extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AddsetTitle title;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 1000)
     private String value;
 
-    @OneToMany(mappedBy ="addSet",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy ="addSet",cascade=CascadeType.ALL, orphanRemoval = true)
     private List<Additional> additionalList=new ArrayList<>();
 
 

@@ -3,13 +3,11 @@ package com.prototyne.web.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prototyne.domain.enums.Gender;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class UserDto {
     @Builder
@@ -20,21 +18,44 @@ public class UserDto {
         private String profileUrl;
         private Integer tickets;
         private Gender gender;
-        private LocalDateTime birth;
+        private LocalDate birth;
     }
 
     @Getter
     public static class UserDetailRequest {
         private final Integer familyMember;
         private final Gender Gender;
-        private final LocalDateTime Birth;
+        private final LocalDate Birth;
 
-        public UserDetailRequest(Integer familyMember, Gender gender, LocalDateTime birth) {
+        public UserDetailRequest(Integer familyMember, Gender gender, LocalDate birth) {
             this.familyMember = familyMember;
             this.Gender = gender;
             this.Birth = birth;
         }
     }
+
+    @Getter
+    public static class UserAddInfoRequest {
+        private final String occupation;
+        private final Integer income;
+        private final List<String> interests;
+        private final String familyComposition;
+        private final List<String> productTypes;
+        private final List<String> phones;
+        private final Integer healthStatus;
+
+        public UserAddInfoRequest(String occupation, Integer income, List<String> interests, String familyComposition,
+                                     List<String> productTypes, List<String> phones, Integer healthStatus){
+            this.occupation = occupation;
+            this.income = income;
+            this.interests = interests;
+            this.familyComposition = familyComposition;
+            this.productTypes = productTypes;
+            this.phones = phones;
+            this.healthStatus = healthStatus;
+        }
+    }
+
 
     @Getter
     @Setter
@@ -53,7 +74,7 @@ public class UserDto {
         //        public Integer refreshTokenExpiresIn;
         @JsonProperty("scope")
         public String scope;
-        public Boolean newUser;
+        public Boolean signupComplete;
     }
 
     @Getter
@@ -110,4 +131,51 @@ public class UserDto {
             }
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class UserSignUpRequest {
+        private UserDto.UserDetailRequest detailRequest;
+        private UserDto.UserAddInfoRequest addInfoRequest;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UserSignUpResponse {
+        private final Long userId;
+        private final String msg;
+    }
+
+    @Data
+    @Builder
+    public static class UserDetailResponse {
+        private DetailInfo detailInfo;
+        private AddInfo addInfo;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class DetailInfo {
+        private int familyMember;
+        private String gender;
+        private String birth;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AddInfo {
+        private String occupation;
+        private Integer income;
+        private List<String> interests;
+        private String familyComposition;
+        private List<String> productTypes;
+        private List<String> phones;
+        private Integer healthStatus;
+
+    }
+
 }
