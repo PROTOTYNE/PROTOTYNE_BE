@@ -2,11 +2,10 @@ package com.prototyne.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.prototyne.domain.User;
 import com.prototyne.domain.enums.Gender;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -19,16 +18,16 @@ public class UserDto {
         private String profileUrl;
         private Integer tickets;
         private Gender gender;
-        private LocalDateTime birth;
+        private LocalDate birth;
     }
 
     @Getter
     public static class UserDetailRequest {
         private final Integer familyMember;
         private final Gender Gender;
-        private final LocalDateTime Birth;
+        private final LocalDate Birth;
 
-        public UserDetailRequest(Integer familyMember, Gender gender, LocalDateTime birth) {
+        public UserDetailRequest(Integer familyMember, Gender gender, LocalDate birth) {
             this.familyMember = familyMember;
             this.Gender = gender;
             this.Birth = birth;

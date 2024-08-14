@@ -5,6 +5,7 @@ import com.prototyne.domain.enums.Gender;
 import com.prototyne.domain.mapping.Additional;
 import com.prototyne.domain.mapping.Heart;
 import com.prototyne.web.dto.DeliveryDto;
+import com.prototyne.web.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -12,7 +13,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +89,11 @@ public class User extends BaseEntity {
         System.out.println("deliveryDto.getDeliveryPhone() = " + deliveryDto.getDeliveryPhone());
         this.deliveryPhone = deliveryDto.getDeliveryPhone();
         this.deliveryAddress = deliveryDto.getDeliveryAddress();
+    }
+
+    public void setDetail(UserDto.UserDetailRequest userDetailRequest){
+        this.birth = LocalDate.from(userDetailRequest.getBirth());
+        this.familyMember = userDetailRequest.getFamilyMember();
+        this.gender = userDetailRequest.getGender();
     }
 }
