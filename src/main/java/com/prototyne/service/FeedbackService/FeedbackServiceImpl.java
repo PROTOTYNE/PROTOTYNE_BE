@@ -4,7 +4,6 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.aws.s3.AmazonS3Manager;
 import com.prototyne.converter.FeedbackConverter;
-import com.prototyne.converter.FeedbackImageConverter;
 import com.prototyne.domain.Feedback;
 import com.prototyne.domain.FeedbackImage;
 import com.prototyne.domain.Investment;
@@ -15,12 +14,12 @@ import com.prototyne.web.dto.FeedbackDTO;
 import com.prototyne.web.dto.FeedbackImageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -32,6 +31,7 @@ public class FeedbackServiceImpl implements FeedbackService{
     private final JwtManager jwtManager;
     private final AmazonS3Manager s3Manager;
     private final FeedbackImageRepository feedbackImageRepository;
+    private static final Logger logger = LoggerFactory.getLogger(FeedbackService.class);
 
     @Override
     public FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO){
@@ -44,8 +44,6 @@ public class FeedbackServiceImpl implements FeedbackService{
 
         Feedback feedback = feedbackRepository.findByInvestmentId(investmentId);
 
-        feedback.setReYn(feedbackDTO.getReYn());
-        feedback.setPenalty(feedbackDTO.getPenalty());
         feedback.setAnswer1(feedbackDTO.getAnswer1());
         feedback.setAnswer2(feedbackDTO.getAnswer2());
         feedback.setAnswer3(feedbackDTO.getAnswer3());
@@ -59,26 +57,31 @@ public class FeedbackServiceImpl implements FeedbackService{
 
     }
 
-    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long feedbackId, FeedbackImageDTO feedbackImageDTO){
+    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long feedbackId, String directory, List<MultipartFile> feedbackImages){
         Long id = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Feedback feedback = feedbackRepository.findById(feedbackId)
                 .orElseThrow(()->new TempHandler(ErrorStatus.FEEDBACK_ERROR_ID));
 
-        FeedbackImage feedbackImage = FeedbackImageConverter.toFeedbackImage(feedbackImageDTO, feedback);
-
         // Amazon S3에 이미지 업로드
-        List<String> uploadedUrls = s3Manager.uploadFile("feedback-images", feedbackImageDTO.getFeedbackImage());
-        String imageUrl = uploadedUrls.get(0);
+        List<String> imageUrls = s3Manager.uploadFile(directory, feedbackImages);
 
-        // FeedbackImage 엔티티 생성 및 저장
+        for (String imageUrl : imageUrls) {
+            FeedbackImage feedbackImage = FeedbackImage.builder()
+                    .imageUrl(imageUrl)
+                    .feedback(feedback)
+                    .build();
 
-        feedbackImage.setImageUrl(imageUrl);
-        feedbackImageRepository.save(feedbackImage);
+            feedbackImageRepository.save(feedbackImage);
 
-        // 저장된 FeedbackImage 엔티티를 DTO로 변환하여 반환
-        return FeedbackImageConverter.toFeedbackImageDTO(feedbackImage);
+        }
+
+        return FeedbackImageDTO.builder()
+                .id(id)
+                .imageUrls(imageUrls)
+                .build();
+
 
     }
 

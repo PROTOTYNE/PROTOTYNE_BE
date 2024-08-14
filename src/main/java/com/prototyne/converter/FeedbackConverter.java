@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class FeedbackConverter {
     public static Feedback toFeedback(FeedbackDTO feedbackRequestDTO) {
         return Feedback.builder()
-                .id(feedbackRequestDTO.getId())
                 .answer1(feedbackRequestDTO.getAnswer1())
                 .answer2(feedbackRequestDTO.getAnswer2())
                 .answer3(feedbackRequestDTO.getAnswer3())
@@ -21,8 +20,7 @@ public class FeedbackConverter {
     }
 
     public static FeedbackDTO toFeedbackDto(Feedback feedback, Investment investment) {
-        return FeedbackDTO.builder()
-                .id(investment.getId()) //맞는지 확인 필요
+        return FeedbackDTO.builder()//맞는지 확인 필요
                 .answer1(feedback.getAnswer1())
                 .answer2(feedback.getAnswer2())
                 .answer3(feedback.getAnswer3())

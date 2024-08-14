@@ -13,7 +13,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,14 +47,15 @@ public class ReviewController {
     }
 
     @Tag(name="${swagger.tag.product-etc}")
-    @PostMapping(value="/image/{feedbackId}", consumes="multipart/form-data")
-    @Operation(summary="후기 작성 이미지 API", description="사용자가 체험했던 시제품에 대한 후기 이미지 업로드")
-    public ApiResponse<FeedbackImageDTO> CreateFeedbacksImage(HttpServletRequest token, @PathVariable Long feedbackId,
-                                                              @RequestBody FeedbackImageDTO feedbackImageDTO) {
+    @PostMapping(value="/image/{feedbackId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary="후기 작성 이미지 API", description="사용자가 체험했던 시제품에 대한 후기 이미지 업로드",security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<FeedbackImageDTO> CreateFeedbacksImages(HttpServletRequest token, @PathVariable Long feedbackId,
+                                                              @RequestPart("imageFiles")
+                                                              List<MultipartFile> images) {
         String aouthtoken = jwtManager.getToken(token);
-        FeedbackImageDTO CreateFeedbacksImage = feedbackService.CreateFeedbacksImage(aouthtoken, feedbackId, feedbackImageDTO);
+        FeedbackImageDTO CreateFeedbacksImages = feedbackService.CreateFeedbacksImage(aouthtoken, feedbackId,"feedback-images", images);
 
-        return ApiResponse.onSuccess(CreateFeedbacksImage);
+        return ApiResponse.onSuccess(CreateFeedbacksImages);
     }
 
 
