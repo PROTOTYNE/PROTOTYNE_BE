@@ -42,7 +42,7 @@ public class UserSignupServiceImpl implements UserSignupService {
 
         // 회원가입 로직: 카카오 로그인 -> 필수 정보 입력 -> 추가 정보 입력 -> 그 후에 회원가입 완료(db에 저장)
         existingUser.setDetail(userDetailRequest);
-
+        existingUser.setSignupComplete(true);
 //        User newUser = UserConverter.toSignedUser(existingUser, userDetailRequest);
         userRepository.save(existingUser);
 
