@@ -1,7 +1,9 @@
 package com.prototyne.service.MyProductService;
 
 import com.prototyne.converter.MyProductConverter;
+import com.prototyne.domain.Investment;
 import com.prototyne.domain.enums.InvestmentStatus;
+import com.prototyne.repository.FeedbackRepository;
 import com.prototyne.repository.MyProductRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.MyProductDto;
@@ -20,6 +22,7 @@ public class MyProductServiceImpl implements MyProductService {
     private final MyProductRepository myProductRepository;
     private final JwtManager jwtManager;
     private final MyProductConverter myProductConverter;
+    private final FeedbackRepository feedbackRepository;
 
     @Override
     public List<MyProductDto.CommonDto> getAllMyProduct(String accessToken) {
@@ -58,6 +61,16 @@ public class MyProductServiceImpl implements MyProductService {
         return myProductRepository.findByUserId(userId).stream()
                 .filter(investment -> investment.getStatus() == InvestmentStatus.후기작성)
                 .map(myProductConverter::toReviewedDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MyProductDto.CompletedDto> getCompletedMyProduct(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+
+        return feedbackRepository.findByUserId(userId).stream()
+                .filter(feedback -> feedback.getInvestment().getStatus() == InvestmentStatus.종료)
+                .map(myProductConverter::toCompletedDto)
                 .collect(Collectors.toList());
     }
 }

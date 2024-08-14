@@ -57,6 +57,6 @@ public class MyProductDto {
     @AllArgsConstructor
     public static class CompletedDto {          // 종료란 체험
         private CommonDto commonInfo;
-        private String result;                  // 완료 or 페널티 (Feedback)
+        private boolean penalty;                  // 완료 or 페널티 (Feedback)
     }
 }

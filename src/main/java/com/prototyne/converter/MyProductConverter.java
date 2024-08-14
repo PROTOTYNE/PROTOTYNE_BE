@@ -1,6 +1,7 @@
 package com.prototyne.converter;
 
 import com.prototyne.domain.Event;
+import com.prototyne.domain.Feedback;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.Product;
 import com.prototyne.web.dto.MyProductDto;
@@ -66,6 +67,16 @@ public class MyProductConverter {
                 .commonInfo(commonInfo)
                 .judgeEnd(judgeEnd)
                 .dDayToComplete((int) dDayToComplete)
+                .build();
+    }
+
+    public MyProductDto.CompletedDto toCompletedDto(Feedback feedback) {
+        Investment investment = feedback.getInvestment();
+        MyProductDto.CommonDto commonInfo = toCommonDto(investment);
+
+        return MyProductDto.CompletedDto.builder()
+                .commonInfo(commonInfo)
+                .penalty(feedback.getPenalty())
                 .build();
     }
 }
