@@ -1,21 +1,26 @@
 package com.prototyne.converter;
 
 import com.prototyne.domain.Event;
-import com.prototyne.domain.Feedback;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.Product;
+import com.prototyne.domain.ProductImage;
 import com.prototyne.web.dto.ProductDTO;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ProductConverter {
 
     // 체험 진행 중인 시제품 목록 형식
     public static ProductDTO.EventResponse toEvent(Event event, Product product, int investCount) {
+        // 시제품 이미지의 첫번째 이미지
+        String productImage = getProductImageUrls(product).stream().findFirst().orElse(null);
         return ProductDTO.EventResponse.builder()
                 .id(event.getId())
                 .name(product.getName())
-                .thumbnailUrl(product.getThumbnailUrl())
+                .thumbnailUrl(productImage)
                 .investCount(investCount)
                 .reqTickets(product.getReqTickets())
                 .build();
@@ -23,10 +28,12 @@ public class ProductConverter {
 
     // 검색/카테고리 결과 목록 형식
     public static ProductDTO.SearchResponse toSearch(Event event, Product product, int dDay) {
+        // 시제품 이미지의 첫번째 이미지
+        String productImage = getProductImageUrls(product).stream().findFirst().orElse(null);
         return ProductDTO.SearchResponse.builder()
                 .id(event.getId())
                 .name(product.getName())
-                .thumbnailUrl(product.getThumbnailUrl())
+                .thumbnailUrl(productImage)
                 .dDay(dDay)
                 .reqTickets(product.getReqTickets())
                 .build();
@@ -36,6 +43,8 @@ public class ProductConverter {
      public static ProductDTO.EventDetailsResponse toEventDetails(Event event, Investment investment) {
          // 이벤트의 시제품 정보 가져옴
          Product product = event.getProduct();
+         // 시제품 이미지 가져옴
+         List<String> productImages = getProductImageUrls(product);
          // 날짜 정보 DTO 객체 생성
          ProductDTO.DateInfo dateInfo = toDateInfo(event);
          // 유저 투자 정보 DTO 객체 생성
@@ -47,6 +56,9 @@ public class ProductConverter {
                  .enterprise(product.getEnterprise().getName())
                  .category(product.getCategory())
                  .reqTickets(product.getReqTickets())
+                 .imageUrls(productImages)
+                 .notes(product.getNotes())
+                 .contents(product.getContents())
                  .dateInfo(dateInfo)
                  .investInfo(investInfo)
                  .build();
@@ -82,5 +94,12 @@ public class ProductConverter {
                 .transportNum(investment.getTransportNum())
                 .penalty(isWritten)
                 .build();
+    }
+
+    private static List<String> getProductImageUrls(Product product) {
+        return product.getProductImageList().stream()
+                .map(ProductImage::getImageUrl) // ProductImage url 추출
+                .limit(3)                // 최대 3장으로 제한
+                .collect(Collectors.toList());
     }
 }
