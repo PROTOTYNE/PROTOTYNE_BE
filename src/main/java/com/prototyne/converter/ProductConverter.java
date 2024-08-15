@@ -1,9 +1,8 @@
 package com.prototyne.converter;
 
-import com.prototyne.domain.Event;
-import com.prototyne.domain.Investment;
-import com.prototyne.domain.Product;
-import com.prototyne.domain.ProductImage;
+import com.prototyne.domain.*;
+import com.prototyne.domain.mapping.Heart;
+import com.prototyne.repository.HeartRepository;
 import com.prototyne.web.dto.ProductDTO;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +39,7 @@ public class ProductConverter {
     }
 
     // 이벤트 시제품 상세 정보 형식
-     public static ProductDTO.EventDetailsResponse toEventDetails(Event event, Investment investment) {
+     public static ProductDTO.EventDetailsResponse toEventDetails(Event event, Investment investment, Boolean isBookmarked ) {
          // 이벤트의 시제품 정보 가져옴
          Product product = event.getProduct();
          // 시제품 이미지 가져옴
@@ -49,6 +48,7 @@ public class ProductConverter {
          ProductDTO.DateInfo dateInfo = toDateInfo(event);
          // 유저 투자 정보 DTO 객체 생성
          ProductDTO.InvestInfo investInfo = toInvestInfo(investment);
+         // Heart(북마크)목록에서 제품에 대한 사용자의 북마크 존재여부로 판단
 
          return  ProductDTO.EventDetailsResponse.builder()
                  .id(event.getId())
@@ -61,6 +61,7 @@ public class ProductConverter {
                  .contents(product.getContents())
                  .dateInfo(dateInfo)
                  .investInfo(investInfo)
+                 .isBookmarked(isBookmarked)
                  .build();
      }
 
