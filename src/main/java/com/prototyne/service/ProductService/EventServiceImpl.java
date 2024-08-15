@@ -46,8 +46,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<ProductDTO.EventResponse> getEventsByType(Long userId, String type) {
-//        // 유저 아이디 객체 가져옴
-//        Long userId = jwtManager.validateJwt(accessToken);
 
         LocalDateTime now = LocalDateTime.now();
         List<Event> events = switch (type) {
@@ -83,7 +81,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<ProductDTO.SearchResponse> getEventsBySearch(String name) {
+    public List<ProductDTO.SearchResponse> getEventsBySearch(String accessToken, String name) {
+        // 유저 아이디 객체 가져옴
+        Long userId = jwtManager.validateJwt(accessToken);
+
         // 신청 진행 중인 시제품 이벤트만 가져옴
         LocalDateTime now = LocalDateTime.now();
         List<Event> events = eventRepository.findAllByProductNameContaining(name).stream()
@@ -94,16 +95,19 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
-                    return ProductConverter.toSearch(event, product, dDay);
+                    // 북마크 상태 확인
+                    boolean isBookmarked = heartRepository.existsByUserIdAndEventId(userId, event.getId());
+                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDTO.SearchResponse> getEventsByCategory(String category) {
+    public List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category) {
+        // 유저 아이디 객체 가져옴
+        Long userId = jwtManager.validateJwt(accessToken);
         // 카테고리 타입 변환 (String -> Enum)
         ProductCategory productCategory = changeToProductCategory(category);
-
         // 신청 진행 중인 시제품 이벤트만 가져옴
         LocalDateTime now = LocalDateTime.now();
         List<Event> events = eventRepository.findByProductCategory(productCategory).stream()
@@ -115,7 +119,9 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
-                    return ProductConverter.toSearch(event, product, dDay);
+                    // 북마크 상태 확인
+                    boolean isBookmarked = heartRepository.existsByUserIdAndEventId(userId, event.getId());
+                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
     }
@@ -130,7 +136,6 @@ public class EventServiceImpl implements EventService {
         Long userId = jwtManager.validateJwt(accessToken);
         Investment investment = investmentRepository.findByUserIdAndEventId(userId, eventId)
                 .orElse(null);
-
 
         // DTO로 변환
         return ProductConverter.toEventDetails(event, investment);

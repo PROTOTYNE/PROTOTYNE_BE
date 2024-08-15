@@ -51,11 +51,14 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    @Operation(summary = "시제품 검색 조회 API",
-            description = "검색어 입력 - 인증 필요")
+    @Operation(summary = "시제품 검색 조회 API - 인증 필요",
+            description = "검색어 입력",
+            security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.SearchResponse>> getSearchesList(
+            HttpServletRequest token,
             @RequestParam("name") String name) {
-        List<ProductDTO.SearchResponse> searchList = eventService.getEventsBySearch(name);
+        String oauthToken = jwtManager.getToken(token);
+        List<ProductDTO.SearchResponse> searchList = eventService.getEventsBySearch(oauthToken, name);
         return ApiResponse.onSuccess(searchList);
     }
 
@@ -72,13 +75,16 @@ public class ProductController {
     }
 
     @GetMapping("/select")
-    @Operation(summary = "시제품 카테고리 선택 조회 API",
+    @Operation(summary = "시제품 카테고리 선택 조회 API - 인증 필요",
             description = """
                 카테고리 입력 ("" 없이 입력) \n
-                category = "뷰티" | "스포츠" | "식품" | "의류" | "전자기기" | "장난감" \n""")
+                category = "뷰티" | "스포츠" | "식품" | "의류" | "전자기기" | "장난감" \n""",
+            security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.SearchResponse>> getCategoriesList(
+            HttpServletRequest token,
             @RequestParam(value = "category") String category) {
-        List<ProductDTO.SearchResponse> categoriesList = eventService.getEventsByCategory(category);
+        String oauthToken = jwtManager.getToken(token);
+        List<ProductDTO.SearchResponse> categoriesList = eventService.getEventsByCategory(oauthToken, category);
         return ApiResponse.onSuccess(categoriesList);
     }
 }

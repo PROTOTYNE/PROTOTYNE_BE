@@ -37,7 +37,8 @@ public class ProductConverter {
     }
 
     // 검색/카테고리 결과 목록 형식
-    public static ProductDTO.SearchResponse toSearch(Event event, Product product, int dDay) {
+    public static ProductDTO.SearchResponse toSearch(Event event, Product product,
+                                                     int dDay, Boolean isBookmarked) {
         // 시제품 이미지의 첫번째 이미지
         String productImage = getProductImageUrls(product).stream().findFirst().orElse(null);
         return ProductDTO.SearchResponse.builder()
@@ -46,6 +47,7 @@ public class ProductConverter {
                 .thumbnailUrl(productImage)
                 .dDay(dDay)
                 .reqTickets(product.getReqTickets())
+                .bookmark(isBookmarked)
                 .build();
     }
 
