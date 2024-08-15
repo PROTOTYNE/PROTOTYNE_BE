@@ -6,10 +6,12 @@ import com.prototyne.converter.ProductConverter;
 import com.prototyne.domain.Event;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.Product;
+import com.prototyne.domain.User;
 import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.repository.EventRepository;
 import com.prototyne.repository.HeartRepository;
 import com.prototyne.repository.InvestmentRepository;
+import com.prototyne.repository.UserRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final InvestmentRepository investmentRepository;
+    private final UserRepository userRepository;
     private final JwtManager jwtManager;
     private final HeartRepository heartRepository;
 
@@ -60,7 +63,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<ProductDTO.SearchResponse> getEventsBySearch(String name) {
+    public List<ProductDTO.SearchResponse> getEventsBySearch(String name, String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        addSearchTerm(user, name);
+
         // 신청 진행 중인 시제품 이벤트만 가져옴
         LocalDateTime now = LocalDateTime.now();
         List<Event> events = eventRepository.findAllByProductNameContaining(name).stream()
@@ -75,6 +84,49 @@ public class EventServiceImpl implements EventService {
                 })
                 .collect(Collectors.toList());
     }
+
+    private void addSearchTerm(User user, String searchTerm){
+        List<String> recentSearchList = user.getRecentSearchList();
+        recentSearchList.remove(searchTerm);
+        recentSearchList.add(0, searchTerm);
+
+        if(recentSearchList.size() > 10){
+            recentSearchList.remove(recentSearchList.size());
+        }
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<String> getRecentSearches(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        return user.getRecentSearchList();
+    }
+
+    @Override
+    public List<String> deleteSearchHistory(String searchTerm, String accessToken){
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        user.getRecentSearchList().remove(searchTerm);
+        userRepository.save(user);
+        return user.getRecentSearchList(); // 업데이트된 최근검색어 목록 10개 반환
+    }
+
+    @Override
+    public List<String> deleteAllSearchHistory(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        user.getRecentSearchList().clear();
+        userRepository.save(user);
+        return user.getRecentSearchList();
+    }
+
 
     @Override
     public List<ProductDTO.SearchResponse> getEventsByCategory(String category) {

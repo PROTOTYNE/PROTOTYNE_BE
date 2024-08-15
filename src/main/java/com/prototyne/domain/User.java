@@ -66,6 +66,9 @@ public class User extends BaseEntity {
     @Column(length = 200)
     private String deliveryAddress;
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<String> recentSearchList = new ArrayList<>(); // 최근 검색어 10개 저장
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Investment> investmentList = new ArrayList<>();
 
