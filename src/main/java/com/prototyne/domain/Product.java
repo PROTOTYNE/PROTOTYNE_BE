@@ -28,6 +28,8 @@ public class Product extends BaseEntity {
     @Column(nullable = false, length = 512)
     private String contents;
 
+    private String thumbnailUrl;
+
     private Integer reqTickets;
 
     @Column(nullable = true, length = 100)
@@ -54,7 +56,7 @@ public class Product extends BaseEntity {
     private Enterprise enterprise;
 
     @OneToMany(mappedBy ="product",cascade=CascadeType.ALL)
-    private List<Event> eventList=new ArrayList<>();
+    private List<Event> eventList2=new ArrayList<>();
 
     @OneToMany(mappedBy ="product",cascade=CascadeType.ALL)
     private List<ProductImage> productImageList = new ArrayList<>();

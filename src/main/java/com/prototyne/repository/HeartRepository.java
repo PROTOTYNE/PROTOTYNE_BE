@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface HeartRepository extends JpaRepository<Heart, Long> {
     List<Heart> findByUser(User user); // 사용자가 누른 좋아요 목록 조회
     Optional<Heart> findByUserAndEvent(User user, Event event);
-
+    Optional<Heart> findByUserIdAndEvent(Long userId, Event event);
     @Query("SELECT COUNT(h) FROM Heart h WHERE h.event.product.id = :productId")
     Long countByProductId(@Param("productId") Long productId);
 }
