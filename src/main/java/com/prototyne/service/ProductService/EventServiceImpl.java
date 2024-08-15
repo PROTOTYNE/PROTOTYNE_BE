@@ -8,6 +8,7 @@ import com.prototyne.domain.Investment;
 import com.prototyne.domain.Product;
 import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.repository.EventRepository;
+import com.prototyne.repository.HeartRepository;
 import com.prototyne.repository.InvestmentRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.ProductDTO;
@@ -25,6 +26,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final InvestmentRepository investmentRepository;
     private final JwtManager jwtManager;
+    private final HeartRepository heartRepository;
 
     public List<ProductDTO.EventResponse> getEventsByType(String type) {
         LocalDateTime now = LocalDateTime.now();
@@ -105,10 +107,10 @@ public class EventServiceImpl implements EventService {
         Long userId = jwtManager.validateJwt(accessToken);
         Investment investment = investmentRepository.findByUserIdAndEventId(userId, eventId)
                 .orElse(null);
-
+        Boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
 
         // DTO로 변환
-        return ProductConverter.toEventDetails(event, investment);
+        return ProductConverter.toEventDetails(event, investment, isBookmarked);
     }
 
     // Enum에 category 없으면 오류 처리
