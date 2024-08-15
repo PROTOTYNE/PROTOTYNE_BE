@@ -2,6 +2,7 @@ package com.prototyne.web.controller;
 
 
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.repository.HeartRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.service.ProductService.EventService;
 import com.prototyne.web.dto.ProductDTO;
@@ -22,6 +23,7 @@ public class ProductController {
 
     private final EventService eventService;
     private final JwtManager jwtManager;
+    private final HeartRepository heartRepository;
 
     @GetMapping("/home")
     @Operation(summary = "홈 화면 조회 API - 인증 필요",
@@ -69,6 +71,7 @@ public class ProductController {
     public ApiResponse<ProductDTO.EventDetailsResponse> getEventDetails(
             HttpServletRequest token,
             @PathVariable("eventId") Long eventId) {
+
         String oauthToken = jwtManager.getToken(token);
         ProductDTO.EventDetailsResponse eventDetails = eventService.getEventDetailsById(oauthToken, eventId);
         return ApiResponse.onSuccess(eventDetails);

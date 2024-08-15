@@ -1,15 +1,9 @@
 package com.prototyne.web.dto;
 
-import com.prototyne.domain.Event;
-import com.prototyne.domain.Investment;
 import com.prototyne.domain.enums.InvestmentShipping;
 import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.domain.enums.ProductCategory;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,6 +54,7 @@ public class ProductDTO {
         private List<String> imageUrls; // 시제품 이미지(최대 3장)
         private String notes;       // 제공 시제품 및 참고사항
         private String contents;    // 시제품 설명
+        private Boolean isBookmarked;   // 사용자의 북마크 여부
         private DateInfo dateInfo;  // 이벤트 날짜 정보
         private InvestInfo investInfo;  // 유저 투자 정보
     }
