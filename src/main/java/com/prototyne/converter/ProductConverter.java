@@ -13,8 +13,17 @@ import java.util.stream.Collectors;
 @Component
 public class ProductConverter {
 
+    // 홈 화면 형식
+    public static ProductDTO.HomeResponse toHome (List<ProductDTO.EventResponse> pL,
+                                                  List<ProductDTO.EventResponse> iL,
+                                                  List<ProductDTO.EventResponse> nL) {
+        return ProductDTO.HomeResponse.builder()
+                .popularList(pL).imminentList(iL).newList(nL).build();
+    }
+
     // 체험 진행 중인 시제품 목록 형식
-    public static ProductDTO.EventResponse toEvent(Event event, Product product, int investCount) {
+    public static ProductDTO.EventResponse toEvent(Event event, Product product,
+                                                   int investCount, Boolean isBookmarked) {
         // 시제품 이미지의 첫번째 이미지
         String productImage = getProductImageUrls(product).stream().findFirst().orElse(null);
         return ProductDTO.EventResponse.builder()
@@ -23,6 +32,7 @@ public class ProductConverter {
                 .thumbnailUrl(productImage)
                 .investCount(investCount)
                 .reqTickets(product.getReqTickets())
+                .bookmark(isBookmarked)
                 .build();
     }
 

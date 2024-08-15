@@ -16,7 +16,16 @@ import java.util.List;
 
 public class ProductDTO {
 
-    // 시제품 응답 형식
+    // 홈 화면 응답 형식
+    @Getter
+    @Builder
+    public static class HomeResponse {
+        List<EventResponse> popularList;
+        List<EventResponse> imminentList;
+        List<EventResponse> newList;
+    }
+
+    // 시제품 정렬 응답 형식
     @Getter
     @Builder
     public static class EventResponse{
@@ -25,6 +34,7 @@ public class ProductDTO {
         private String thumbnailUrl;    // 시제품 썸네일 (첫번째 사진)
         private Integer investCount;    // 신청한 사람 수 -> 투자 테이블 수
         private Integer reqTickets;     // 시제품 필요 티켓 수
+        private Boolean bookmark;       // 유저의 북마크 여부
     }
 
     // 시제품 검색/카테고리 응답 형식
@@ -36,6 +46,7 @@ public class ProductDTO {
         private String thumbnailUrl;    // 시제품 썸네일 (첫번째 사진)
         private Integer dDay;           // 디데이(신청마감 기준, 프론트 처리?)
         private Integer reqTickets;     // 시제품 필요 티켓 수
+        private Boolean bookmark;       // 북마크 여부
     }
 
     @Getter

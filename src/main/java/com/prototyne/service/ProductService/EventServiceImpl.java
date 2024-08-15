@@ -8,6 +8,7 @@ import com.prototyne.domain.Investment;
 import com.prototyne.domain.Product;
 import com.prototyne.domain.enums.ProductCategory;
 import com.prototyne.repository.EventRepository;
+import com.prototyne.repository.HeartRepository;
 import com.prototyne.repository.InvestmentRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.ProductDTO;
@@ -24,12 +25,32 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final InvestmentRepository investmentRepository;
+    private final HeartRepository heartRepository;
     private final JwtManager jwtManager;
 
-    public List<ProductDTO.EventResponse> getEventsByType(String type) {
+    @Override
+    public ProductDTO.HomeResponse getHomeById(String accessToken) {
+        // 유저 아이디 객체 가져옴
+        Long userId = jwtManager.validateJwt(accessToken);
+
+        List<ProductDTO.EventResponse> poluarList =  getEventsByType(userId, "popular")
+                .stream().limit(3).collect(Collectors.toList());
+
+        List<ProductDTO.EventResponse> imminentList =  getEventsByType(userId, "imminent")
+                .stream().limit(2).collect(Collectors.toList());
+
+        List<ProductDTO.EventResponse> newList =  getEventsByType(userId, "new")
+                .stream().limit(2).collect(Collectors.toList());
+        return ProductConverter.toHome(poluarList, imminentList, newList);
+    }
+
+    @Override
+    public List<ProductDTO.EventResponse> getEventsByType(Long userId, String type) {
+//        // 유저 아이디 객체 가져옴
+//        Long userId = jwtManager.validateJwt(accessToken);
+
         LocalDateTime now = LocalDateTime.now();
         List<Event> events = switch (type) {
-
             // 인기순
             case "popular" -> eventRepository.findAllActiveEventsByPopular(now);
 
@@ -52,7 +73,11 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int investCount = event.getInvestmentList().size();
-                    return ProductConverter.toEvent(event, product, investCount);
+
+                    // 북마크 상태 확인
+                    boolean isBookmarked = heartRepository.existsByUserIdAndEventId(userId, event.getId());
+
+                    return ProductConverter.toEvent(event, product, investCount, isBookmarked);
                 })
                 .collect(Collectors.toList());
     }
