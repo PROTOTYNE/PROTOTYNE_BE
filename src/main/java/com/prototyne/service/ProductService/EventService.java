@@ -9,4 +9,5 @@ public interface EventService {
     List<ProductDTO.SearchResponse> getEventsBySearch(String name, String accessToken);
     List<ProductDTO.SearchResponse> getEventsByCategory(String category);
     ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventId);
+    List<String> getRecentSearches(String accessToken);
 }

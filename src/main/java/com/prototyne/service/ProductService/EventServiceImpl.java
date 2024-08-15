@@ -95,6 +95,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<String> getRecentSearches(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        return user.getRecentSearchList();
+    }
+
+
+    @Override
     public List<ProductDTO.SearchResponse> getEventsByCategory(String category) {
         // 카테고리 타입 변환 (String -> Enum)
         ProductCategory productCategory = changeToProductCategory(category);
