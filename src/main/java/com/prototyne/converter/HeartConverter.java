@@ -29,7 +29,7 @@ public class HeartConverter {
                             .count(count)
                             .build();
                 })
-                .collect(Collectors.toList());
+                .collect(Collgectors.toList());
 
         return HeartDto.HeartResponseDTO.builder()
                 .userId(user.getId())

@@ -34,12 +34,14 @@ public class ProductController {
         return ApiResponse.onSuccess(eventsList);
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     @Operation(summary = "시제품 검색 조회 API",
-            description = "검색어 입력")
+            description = "검색어 입력",
+            security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.SearchResponse>> getSearchesList(
-            @RequestParam("name") String name) {
-        List<ProductDTO.SearchResponse> searchList = eventService.getEventsBySearch(name);
+            @RequestParam("name") String name,
+            @RequestHeader("Authorization") String accessToken) {
+        List<ProductDTO.SearchResponse> searchList = eventService.getEventsBySearch(name, accessToken);
         return ApiResponse.onSuccess(searchList);
     }
 
