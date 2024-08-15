@@ -1,15 +1,9 @@
 package com.prototyne.web.dto;
 
-import com.prototyne.domain.Event;
-import com.prototyne.domain.Investment;
 import com.prototyne.domain.enums.InvestmentShipping;
 import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.domain.enums.ProductCategory;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
