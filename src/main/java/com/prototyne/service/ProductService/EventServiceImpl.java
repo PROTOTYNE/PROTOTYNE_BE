@@ -103,6 +103,28 @@ public class EventServiceImpl implements EventService {
         return user.getRecentSearchList();
     }
 
+    @Override
+    public List<String> deleteSearchHistory(String searchTerm, String accessToken){
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        user.getRecentSearchList().remove(searchTerm);
+        userRepository.save(user);
+        return user.getRecentSearchList(); // 업데이트된 최근검색어 목록 10개 반환
+    }
+
+    @Override
+    public List<String> deleteAllSearchHistory(String accessToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        user.getRecentSearchList().clear();
+        userRepository.save(user);
+        return user.getRecentSearchList();
+    }
+
 
     @Override
     public List<ProductDTO.SearchResponse> getEventsByCategory(String category) {

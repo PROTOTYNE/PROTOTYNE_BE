@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @PostMapping("/search")
-    @Operation(summary = "시제품 검색 조회 & 유저 최근 검색어 리스트에 저장 API",
+    @Operation(summary = "시제품 검색 조회 & 유저 최근 검색어 리스트에 저장 API - 인증 필요",
             description = "검색어 입력",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.SearchResponse>> getSearchesList(
@@ -47,13 +47,36 @@ public class ProductController {
     }
 
     @GetMapping("/search/recent")
-    @Operation(summary = "최근 검색어 리스트 조회 API",
+    @Operation(summary = "최근 검색어 리스트 조회 API - 인증 필요",
             description = "사용자의 최근 검색어 리스트(10개 최신순)을 조회하는 API",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<String>> getRecentSearches(
             HttpServletRequest request) {
         String accessToken = jwtManager.getToken(request);
         List<String> recentSearchList = eventService.getRecentSearches(accessToken);
+        return ApiResponse.onSuccess(recentSearchList);
+    }
+
+    @DeleteMapping("/search")
+    @Operation(summary = "최근 검색어 1개 삭제 API - 인증 필요",
+            description = "사용자의 최근 검색어 목록 중 하나를 삭제하는 API, 반환 값 = 특정 검색어가 삭제된 최근 검색어 리스트",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<List<String>> deleteOneSearchHistory(
+            @RequestParam("name") String name,
+            HttpServletRequest request) {
+        String accessToken = jwtManager.getToken(request);
+        List<String> recentSearchList = eventService.deleteSearchHistory(name, accessToken);
+        return ApiResponse.onSuccess(recentSearchList);
+    }
+
+    @DeleteMapping("/search/all")
+    @Operation(summary = "최근 검색어 초기화 API - 인증 필요",
+            description = "사용자의 최근 검색어 목록을 모두 삭제하는 API, 반환 값 = 초기화된 최근 검색어 리스트(null이어야 함)",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<List<String>> deleteAllSearchHistory(
+            HttpServletRequest request) {
+        String accessToken = jwtManager.getToken(request);
+        List<String> recentSearchList = eventService.deleteAllSearchHistory(accessToken);
         return ApiResponse.onSuccess(recentSearchList);
     }
 

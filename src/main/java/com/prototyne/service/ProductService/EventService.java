@@ -10,4 +10,6 @@ public interface EventService {
     List<ProductDTO.SearchResponse> getEventsByCategory(String category);
     ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventId);
     List<String> getRecentSearches(String accessToken);
+    List<String> deleteSearchHistory(String searchTerm, String accessToken);
+    List<String> deleteAllSearchHistory(String accessToken);
 }
