@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface InvestmentRepository extends JpaRepository<Investment, Long> {
     Optional<Investment> findByUserIdAndEventId(Long userId, Long eventId);
 
+
 }
 

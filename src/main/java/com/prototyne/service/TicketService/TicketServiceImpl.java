@@ -2,6 +2,9 @@ package com.prototyne.service.TicketService;
 
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
+import com.prototyne.converter.TicketConverter;
+import com.prototyne.domain.Ticket;
+import com.prototyne.domain.User;
 import com.prototyne.repository.TicketRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.TicketDto;
@@ -22,6 +25,7 @@ public class TicketServiceImpl implements TicketService {
 
     private final JwtManager jwtManager;
     private final TicketRepository ticketRepository;
+    private final TicketConverter ticketConverter;
 
     @Override
     public List<TicketDto.TicketListDto> getTicketList(String accessToken) {
@@ -64,6 +68,15 @@ public class TicketServiceImpl implements TicketService {
         return TicketDto.TicketNumberDto.builder()
                 .ticketNumber(ticketNumber.get())
                 .build();
+    }
+
+    public void saveTicket(TicketDto.TicketListDto ticketListDto, User user) {
+
+        // Converter를 사용하여 DTO를 엔티티로 변환
+        Ticket ticket = ticketConverter.toEntity(ticketListDto, user);
+
+        // 변환된 엔티티를 저장
+        ticketRepository.save(ticket);
     }
 
 }

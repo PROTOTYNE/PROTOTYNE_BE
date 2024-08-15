@@ -9,5 +9,5 @@ import java.util.List;
 public interface FeedbackService {
     FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO);
 
-    FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long feedbackId, String directory, List<MultipartFile> feedbackImages);
+    FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long investmentId, String directory, List<MultipartFile> feedbackImages);
 }

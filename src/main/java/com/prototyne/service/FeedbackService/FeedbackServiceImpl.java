@@ -14,8 +14,6 @@ import com.prototyne.web.dto.FeedbackDTO;
 import com.prototyne.web.dto.FeedbackImageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +29,6 @@ public class FeedbackServiceImpl implements FeedbackService{
     private final JwtManager jwtManager;
     private final AmazonS3Manager s3Manager;
     private final FeedbackImageRepository feedbackImageRepository;
-    private static final Logger logger = LoggerFactory.getLogger(FeedbackService.class);
 
     @Override
     public FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO){
@@ -42,7 +39,7 @@ public class FeedbackServiceImpl implements FeedbackService{
         Investment investment = investmentRepository.findById(investmentId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
-        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId);
+        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.FEEDBACK_ERROR_ID));
 
         feedback.setAnswer1(feedbackDTO.getAnswer1());
         feedback.setAnswer2(feedbackDTO.getAnswer2());
@@ -57,13 +54,13 @@ public class FeedbackServiceImpl implements FeedbackService{
 
     }
 
-    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long feedbackId, String directory, List<MultipartFile> feedbackImages){
+    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long investmentId, String directory, List<MultipartFile> feedbackImages){
         Long id = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
-        Feedback feedback = feedbackRepository.findById(feedbackId)
-                .orElseThrow(()->new TempHandler(ErrorStatus.FEEDBACK_ERROR_ID));
+        Investment investment =investmentRepository.findById(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
+        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.FEEDBACK_ERROR_ID));
         // Amazon S3에 이미지 업로드
         List<String> imageUrls = s3Manager.uploadFile(directory, feedbackImages);
 
