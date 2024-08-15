@@ -21,6 +21,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
+    // 로그인하지 않은 사용자가 북마크 여부 변경시
+    HEART_ERROR_ID(HttpStatus.BAD_REQUEST, "HEART4001", "로그인이 필요합니다"),
+    // 존재하지 않는 이벤트의 북마크 여부 변경시
+    HEART_ERROR_EVENT(HttpStatus.BAD_REQUEST, "HEART4002", "잘못된 이벤트 접근입니다");
+
     DATE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "FORMAT4001", "잘못된 날짜 형식입니다. 올바른 형식: yyyy-MM-dd"),
 
     // 시제품 목록 조회 실패
@@ -29,6 +34,7 @@ public enum ErrorStatus implements BaseErrorCode {
     PRODUCT_ERROR_CATEGORY(HttpStatus.BAD_REQUEST, "PRODUCT4002", "존재하지 않는 카테고리입니다."),
     // 시제품 상세보기 조회 실패
     PRODUCT_ERROR_EVENT(HttpStatus.BAD_REQUEST, "PRODUCT4003", "존재하지 않는 이벤트입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
