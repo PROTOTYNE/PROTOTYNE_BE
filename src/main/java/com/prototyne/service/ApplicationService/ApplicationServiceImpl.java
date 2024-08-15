@@ -46,7 +46,8 @@ public class ApplicationServiceImpl implements ApplicationService{
             throw new TempHandler(ErrorStatus.DELIVERY_ERROR_NAME);
         }
 
-        int userTickets=user.getTickets();
+        //int userTickets=user.getTickets();
+        int userTickets=ticketService.getTicketNumber(accessToken).getTicketNumber();
         int reqTickets=product.getReqTickets();
 
         Boolean apply = userTickets >= reqTickets;
