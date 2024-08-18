@@ -29,24 +29,23 @@ public class ApplicationServiceImpl implements ApplicationService{
     private final TicketService ticketService;
 
     @Override
-    public InvestmentDTO.ApplicationResponse Application(String accessToken,Long productId, String ticketName, String ticketDesc) {
+    public InvestmentDTO.ApplicationResponse Application(String accessToken,Long investmentId,Long productId) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Product product =productRepository.findById(productId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
-        //List<Ticket> tickets=ticketRepository.findByUserId(userId);
 
         String deliveryName=user.getDeliveryName();
         String deliveryPhone=user.getDeliveryPhone();
         String deliveryAddress=user.getDeliveryAddress();
-        //Integer ticketChange=ticket.getTicketChange();
 
+        String ticketName=product.getName();
+        String ticketDesc="티켓 구매";
 
         if(deliveryName==null || deliveryPhone==null || deliveryAddress==null) {
             throw new TempHandler(ErrorStatus.DELIVERY_ERROR_NAME);
         }
 
-        //int userTickets=user.getTickets();
         int userTickets=ticketService.getTicketNumber(accessToken).getTicketNumber();
         int reqTickets=product.getReqTickets();
 
@@ -54,9 +53,7 @@ public class ApplicationServiceImpl implements ApplicationService{
 
 
         if(apply){
-            //tickets.setTicketChange(ticketChange-reqTickets);// 변경된 티켓 수를 설정
             // 변경된 ticket 객체를 저장소에 저장
-            //Ticket ticket=ticketConverter.toEntity(ticketListDto, user);
             TicketDto.TicketListDto ticketListDto = TicketDto.TicketListDto.builder()
                     .createdAt(LocalDateTime.now())
                     .name(ticketName)

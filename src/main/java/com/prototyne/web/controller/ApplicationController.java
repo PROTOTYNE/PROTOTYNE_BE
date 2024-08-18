@@ -24,11 +24,11 @@ public class ApplicationController {
     private final JwtManager jwtManager;
 
     @Tag(name = "${swagger.tag.product-etc}")
-    @PostMapping
+    @PostMapping("/{investmentId}")
     @Operation(summary="체험 신청 API",security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<InvestmentDTO.ApplicationResponse> Application(HttpServletRequest token, @PathVariable Long investmentId, Long productId, String ticketName, String ticketDesc){
+    public ApiResponse<InvestmentDTO.ApplicationResponse> Application(HttpServletRequest token, @PathVariable("investmentId") Long investmentId, Long productId){
         String aouthtoken = jwtManager.getToken(token);
-        InvestmentDTO.ApplicationResponse applicationResponse= applicationService.Application(aouthtoken, productId, ticketName, ticketDesc);
+        InvestmentDTO.ApplicationResponse applicationResponse= applicationService.Application(aouthtoken, investmentId, productId);
         return ApiResponse.onSuccess(applicationResponse);
         //컨트롤러 파라미터 값 TicketDto.TicketListDto ticketListDto ??
     }

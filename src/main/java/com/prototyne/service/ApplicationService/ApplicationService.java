@@ -4,5 +4,5 @@ import com.prototyne.web.dto.InvestmentDTO;
 import com.prototyne.web.dto.TicketDto;
 
 public interface ApplicationService {
-    InvestmentDTO.ApplicationResponse Application(String accessToken,Long productId, String ticketName, String ticketDesc);
+    InvestmentDTO.ApplicationResponse Application(String accessToken,Long investmentId, Long productId);
 }
