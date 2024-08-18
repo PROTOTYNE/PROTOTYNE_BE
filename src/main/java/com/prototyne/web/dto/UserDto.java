@@ -150,6 +150,7 @@ public class UserDto {
     @Data
     @Builder
     public static class UserDetailResponse {
+        private final String username;
         private DetailInfo detailInfo;
         private AddInfo addInfo;
     }
