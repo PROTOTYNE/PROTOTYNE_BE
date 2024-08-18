@@ -36,7 +36,9 @@ public enum ErrorStatus implements BaseErrorCode {
 
     FEEDBACK_ERROR_ID(HttpStatus.BAD_REQUEST, "FEEDBACK4001","존재하지 않는 체험 후기입니다."),
 
-    DELIVERY_ERROR_NAME(HttpStatus.BAD_REQUEST, "DELIVERY4001","배송지가 존재하지 않습니다.");
+    DELIVERY_ERROR_NAME(HttpStatus.BAD_REQUEST, "DELIVERY4001","배송지가 존재하지 않습니다."),
+
+    INVALID_IMAGE_COUNT(HttpStatus.BAD_REQUEST, "FEEDBACK IMAGE4001","이미지 개수의 범위를 벗어났습니다.");
 
 
     private final HttpStatus httpStatus;

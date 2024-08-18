@@ -58,6 +58,9 @@ public class FeedbackServiceImpl implements FeedbackService{
         Long id = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
+        if(feedbackImages.isEmpty()||feedbackImages.size()>3){
+            throw new TempHandler(ErrorStatus.INVALID_IMAGE_COUNT);
+        }
         Investment investment =investmentRepository.findById(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
         Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.FEEDBACK_ERROR_ID));
