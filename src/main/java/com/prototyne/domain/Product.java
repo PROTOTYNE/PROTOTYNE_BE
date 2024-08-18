@@ -3,7 +3,6 @@ package com.prototyne.domain;
 import com.prototyne.domain.common.BaseEntity;
 import com.prototyne.domain.enums.ProductCategory;
 import jakarta.persistence.*;
-import jdk.jfr.Category;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -28,6 +27,8 @@ public class Product extends BaseEntity {
     @Column(nullable = false, length = 512)
     private String contents;
 
+    private String thumbnailUrl;
+
     private Integer reqTickets;
 
     @Column(nullable = true, length = 100)
@@ -49,13 +50,13 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="enterprise_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;
 
-    @OneToMany(mappedBy ="product",cascade=CascadeType.ALL)
-    private List<Event> eventList=new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Event> eventList = new ArrayList<>();
 
-    @OneToMany(mappedBy ="product",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImage> productImageList = new ArrayList<>();
 }
