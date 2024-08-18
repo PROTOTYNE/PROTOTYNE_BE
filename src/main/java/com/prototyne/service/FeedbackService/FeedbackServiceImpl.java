@@ -39,7 +39,11 @@ public class FeedbackServiceImpl implements FeedbackService{
         Investment investment = investmentRepository.findById(investmentId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
-        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.FEEDBACK_ERROR_ID));
+        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseGet(() -> Feedback.builder()
+                .investment(investment)
+                .user(user)
+                .reYn((byte) 1)
+                .build());
 
         feedback.setAnswer1(feedbackDTO.getAnswer1());
         feedback.setAnswer2(feedbackDTO.getAnswer2());
@@ -63,7 +67,16 @@ public class FeedbackServiceImpl implements FeedbackService{
         }
         Investment investment =investmentRepository.findById(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
-        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.FEEDBACK_ERROR_ID));
+        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseGet(() -> {
+            Feedback newFeedback = Feedback.builder()
+                    .investment(investment)
+                    .user(user)
+                    .reYn((byte) 1)
+                    .build();
+
+            return feedbackRepository.save(newFeedback);
+        });
+
         // Amazon S3에 이미지 업로드
         List<String> imageUrls = s3Manager.uploadFile(directory, feedbackImages);
 
