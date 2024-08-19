@@ -33,13 +33,16 @@ public class ApplicationServiceImpl implements ApplicationService{
     private final EventService eventService;
 
     @Override
-    public InvestmentDTO.ApplicationResponse Application(String accessToken,Long eventId,Long productId) {
+    public InvestmentDTO.ApplicationResponse Application(String accessToken,Long eventId) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
+        Event event=eventRepository.findById(eventId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
+
+        Long productId=event.getProduct().getId();
         Product product =productRepository.findById(productId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
 
-        Event event=eventRepository.findById(eventId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
+
 
         String deliveryName=user.getDeliveryName();
         String deliveryPhone=user.getDeliveryPhone();
