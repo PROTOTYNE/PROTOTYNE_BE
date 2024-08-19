@@ -15,6 +15,7 @@ public class InvestmentConverter {
         return Investment.builder()
                 .user(user)
                 .event(event)
+                .apply(true)
                 .build();
     }
 }
