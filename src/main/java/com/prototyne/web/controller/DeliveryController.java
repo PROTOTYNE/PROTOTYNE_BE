@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/delivery")
+@Tag(name = "${swagger.tag.my-delivery}")
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
     private final JwtManager jwtManager;
 
-    @Tag(name = "${swagger.tag.my-etc}")
     @GetMapping
     @Operation(summary = "배송지 조회 API - 인증 필요",
             description = "유저 배송지 조회",
@@ -33,7 +33,6 @@ public class DeliveryController {
         return ApiResponse.onSuccess(deliveryDto);
     }
 
-    @Tag(name = "${swagger.tag.my-etc}")
     @PatchMapping
     @Operation(summary = "배송지 수정 API - 인증 필요",
             description = "유저 배송지 수정",

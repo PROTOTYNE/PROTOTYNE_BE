@@ -26,15 +26,32 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final InvestmentRepository investmentRepository;
     private final UserRepository userRepository;
-    private final JwtManager jwtManager;
+    private final InvestmentRepository investmentRepository;
     private final HeartRepository heartRepository;
+    private final JwtManager jwtManager;
 
-    public List<ProductDTO.EventResponse> getEventsByType(String type) {
+    @Override
+    public ProductDTO.HomeResponse getHomeById(String accessToken) {
+        // 유저 아이디 객체 가져옴
+        Long userId = jwtManager.validateJwt(accessToken);
+
+        List<ProductDTO.EventResponse> poluarList =  getEventsByType(userId, "popular")
+                .stream().limit(3).collect(Collectors.toList());
+
+        List<ProductDTO.EventResponse> imminentList =  getEventsByType(userId, "imminent")
+                .stream().limit(2).collect(Collectors.toList());
+
+        List<ProductDTO.EventResponse> newList =  getEventsByType(userId, "new")
+                .stream().limit(2).collect(Collectors.toList());
+        return ProductConverter.toHome(poluarList, imminentList, newList);
+    }
+
+    @Override
+    public List<ProductDTO.EventResponse> getEventsByType(Long userId, String type) {
+
         LocalDateTime now = LocalDateTime.now();
         List<Event> events = switch (type) {
-
             // 인기순
             case "popular" -> eventRepository.findAllActiveEventsByPopular(now);
 
@@ -57,18 +74,21 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int investCount = event.getInvestmentList().size();
-                    return ProductConverter.toEvent(event, product, investCount);
+                    // 북마크 상태 확인
+                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toEvent(event, product, investCount, isBookmarked);
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDTO.SearchResponse> getEventsBySearch(String name, String accessToken) {
+    public List<ProductDTO.SearchResponse> getEventsBySearch(String accessToken, String name) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
 
         addSearchTerm(user, name);
+
 
         // 신청 진행 중인 시제품 이벤트만 가져옴
         LocalDateTime now = LocalDateTime.now();
@@ -80,7 +100,9 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
-                    return ProductConverter.toSearch(event, product, dDay);
+                    // 북마크 상태 확인
+                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
     }
@@ -129,10 +151,11 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<ProductDTO.SearchResponse> getEventsByCategory(String category) {
+    public List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category) {
+        // 유저 아이디 객체 가져옴
+        Long userId = jwtManager.validateJwt(accessToken);
         // 카테고리 타입 변환 (String -> Enum)
         ProductCategory productCategory = changeToProductCategory(category);
-
         // 신청 진행 중인 시제품 이벤트만 가져옴
         LocalDateTime now = LocalDateTime.now();
         List<Event> events = eventRepository.findByProductCategory(productCategory).stream()
@@ -144,7 +167,9 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
-                    return ProductConverter.toSearch(event, product, dDay);
+                    // 북마크 상태 확인
+                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
     }
@@ -159,7 +184,9 @@ public class EventServiceImpl implements EventService {
         Long userId = jwtManager.validateJwt(accessToken);
         Investment investment = investmentRepository.findByUserIdAndEventId(userId, eventId)
                 .orElse(null);
+
         Boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+
 
         // DTO로 변환
         return ProductConverter.toEventDetails(event, investment, isBookmarked);
@@ -178,5 +205,9 @@ public class EventServiceImpl implements EventService {
     private Integer calculateDDay(LocalDateTime now, LocalDateTime endDate) {
         long daysBetween = java.time.Duration.between(now, endDate).toDays();
         return (int) daysBetween;
+    }
+
+    public void saveInvestment(Investment investment){
+        investmentRepository.save(investment);
     }
 }
