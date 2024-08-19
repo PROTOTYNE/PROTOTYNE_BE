@@ -1,6 +1,5 @@
 package com.prototyne.web.dto;
 
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -27,6 +26,8 @@ public class InvestmentDTO {
 
         private String deliveryPhone;
 
-        private String deliveryAddress;
+        private String BaseAddress;
+
+        private String DetailAddress;
     }
 }

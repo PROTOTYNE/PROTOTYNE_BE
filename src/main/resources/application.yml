@@ -103,7 +103,7 @@ swagger:
     product-etc: '07. 시제품 - 신청/리뷰'
     product-search: '08. 시제품 - 최근 검색어'
     like: '09. 좋아요(북마크)'
-    alerm: '10. 알림'
+    alarm: '10. 알림'
     test: 'A. Test API'
 
 spring-doc:
