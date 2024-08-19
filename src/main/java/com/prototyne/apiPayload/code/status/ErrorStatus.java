@@ -33,7 +33,18 @@ public enum ErrorStatus implements BaseErrorCode {
     // 시제품 카테고리 조회 실패
     PRODUCT_ERROR_CATEGORY(HttpStatus.BAD_REQUEST, "PRODUCT4002", "존재하지 않는 카테고리입니다."),
     // 시제품 상세보기 조회 실패
-    PRODUCT_ERROR_EVENT(HttpStatus.BAD_REQUEST, "PRODUCT4003", "존재하지 않는 이벤트입니다.");
+    PRODUCT_ERROR_EVENT(HttpStatus.BAD_REQUEST, "PRODUCT4003", "존재하지 않는 이벤트입니다."),
+
+    PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4004","존재하지 않는 시제품입니다."),
+
+    INVESTMENT_ERROR_ID(HttpStatus.BAD_REQUEST, "INVESTMENT4001","존재하지 않는 나의 시제품입니다."),
+
+    FEEDBACK_ERROR_ID(HttpStatus.BAD_REQUEST, "FEEDBACK4001","존재하지 않는 체험 후기입니다."),
+
+    DELIVERY_ERROR_NAME(HttpStatus.BAD_REQUEST, "DELIVERY4001","배송지가 존재하지 않습니다."),
+
+    INVALID_IMAGE_COUNT(HttpStatus.BAD_REQUEST, "FEEDBACK IMAGE4001","이미지 개수의 범위를 벗어났습니다.");
+
 
 
     private final HttpStatus httpStatus;

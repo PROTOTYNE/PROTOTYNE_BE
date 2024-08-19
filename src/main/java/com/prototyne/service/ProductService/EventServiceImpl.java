@@ -206,4 +206,8 @@ public class EventServiceImpl implements EventService {
         long daysBetween = java.time.Duration.between(now, endDate).toDays();
         return (int) daysBetween;
     }
+
+    public void saveInvestment(Investment investment){
+        investmentRepository.save(investment);
+    }
 }
