@@ -68,7 +68,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                     .ticketChange(-reqTickets)
                     .build();
 
-            Investment investment = investmentConverter.toInvestment(user, event);
+            Investment investment = investmentConverter.toInvestment(user, event, apply);
 
             // TicketService를 사용하여 티켓 저장
             ticketService.saveTicket(ticketListDto, user);
