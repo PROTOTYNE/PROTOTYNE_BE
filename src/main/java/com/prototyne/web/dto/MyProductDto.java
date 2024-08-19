@@ -30,7 +30,7 @@ public class MyProductDto {
     @AllArgsConstructor
     public static class AppliedDto {    // 신청 중인 체험
         private CommonDto commonInfo;
-        private Integer dDayToOngoing;    // 당첨 발표일 D-n (releaseStart - 현재날짜)
+        private Integer dDayToSelected;    // 당첨 발표일 D-n (releaseStart - 현재날짜)
     }
 
     @Builder
@@ -50,7 +50,7 @@ public class MyProductDto {
     public static class ReviewedDto {           // 후기 작성란 체험
         private CommonDto commonInfo;
         private LocalDateTime judgeEnd;         // 심사 마감시간 (Event)
-        private Integer dDayToComplete;           // 심사 발표일 D-n (judgeEnd - 현재날짜)
+        private Integer dDayToComplete;         // 심사 발표일 D-n (judgeEnd - 현재날짜)
     }
 
     @Builder

@@ -24,7 +24,7 @@ public class MyProductConverter {
 
         if(investment.getStatus()== InvestmentStatus.신청){
             if(releaseStart.isBefore(now)) {
-                 calculatedStatus = "미당첨";
+                calculatedStatus = "미당첨";
             } else {
                 long dDayToOngoing = (int) ChronoUnit.DAYS.between(now.toLocalDate(), releaseStart.toLocalDate());
                 calculatedStatus = String.valueOf(dDayToOngoing);
@@ -54,7 +54,7 @@ public class MyProductConverter {
 
         return MyProductDto.AppliedDto.builder()
                 .commonInfo(commonInfo)
-                .dDayToOngoing((int) dDayToOngoing)
+                .dDayToSelected((int) dDayToOngoing)
                 .build();
     }
 
