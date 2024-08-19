@@ -35,7 +35,7 @@ spring:
 
 server:
   port: 8080
-  
+
 ---
 
 spring:
@@ -97,10 +97,13 @@ swagger:
     auth: '01. 로그인/회원가입'
     my: '02. 내 정보 - 기본'
     my-product: '03. 내 정보 - 체험 내역'
-    my-etc: '04. 내 정보 - 배송지/티켓'
-    product: '05. 시제품 - 기본'
-    product-etc: '06. 시제품 - 신청/리뷰'
-    like: '07. 좋아요(북마크)'
+    my-delivery: '04. 내 정보 - 배송지'
+    my-ticket: '05. 내 정보 - 티켓'
+    product: '06. 시제품 - 기본'
+    product-etc: '07. 시제품 - 신청/리뷰'
+    product-search: '08. 시제품 - 최근 검색어'
+    like: '09. 좋아요(북마크)'
+    alerm: '10. 알림'
     test: 'A. Test API'
 
 spring-doc:
