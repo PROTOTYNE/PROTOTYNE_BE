@@ -13,4 +13,7 @@ public interface TicketService {
     List<TicketDto.TicketListDto> getTicketDateList(String accessToken, String startDate, String endDate, boolean used);
 
     void saveTicket(TicketDto.TicketListDto ticketListDto, User user);
+
+    void buyTicket(String accessToken, int ticketNumber);
+
 }

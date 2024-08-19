@@ -1,22 +1,25 @@
 package com.prototyne.web.dto;
 
-import com.prototyne.domain.Event;
-import com.prototyne.domain.Investment;
 import com.prototyne.domain.enums.InvestmentShipping;
 import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.domain.enums.ProductCategory;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class ProductDTO {
 
-    // 시제품 응답 형식
+    // 홈 화면 응답 형식
+    @Getter
+    @Builder
+    public static class HomeResponse {
+        List<EventResponse> popularList;
+        List<EventResponse> imminentList;
+        List<EventResponse> newList;
+    }
+
+    // 시제품 정렬 응답 형식
     @Getter
     @Builder
     public static class EventResponse{
@@ -25,6 +28,7 @@ public class ProductDTO {
         private String thumbnailUrl;    // 시제품 썸네일 (첫번째 사진)
         private Integer investCount;    // 신청한 사람 수 -> 투자 테이블 수
         private Integer reqTickets;     // 시제품 필요 티켓 수
+        private Boolean bookmark;       // 유저의 북마크 여부
     }
 
     // 시제품 검색/카테고리 응답 형식
@@ -36,6 +40,7 @@ public class ProductDTO {
         private String thumbnailUrl;    // 시제품 썸네일 (첫번째 사진)
         private Integer dDay;           // 디데이(신청마감 기준, 프론트 처리?)
         private Integer reqTickets;     // 시제품 필요 티켓 수
+        private Boolean bookmark;       // 북마크 여부
     }
 
     @Getter
@@ -49,6 +54,7 @@ public class ProductDTO {
         private List<String> imageUrls; // 시제품 이미지(최대 3장)
         private String notes;       // 제공 시제품 및 참고사항
         private String contents;    // 시제품 설명
+        private Boolean isBookmarked;   // 사용자의 북마크 여부
         private DateInfo dateInfo;  // 이벤트 날짜 정보
         private InvestInfo investInfo;  // 유저 투자 정보
     }

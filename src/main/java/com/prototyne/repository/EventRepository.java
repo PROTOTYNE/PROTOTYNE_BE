@@ -1,6 +1,7 @@
 package com.prototyne.repository;
 
 import com.prototyne.domain.Event;
+
 import com.prototyne.domain.enums.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

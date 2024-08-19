@@ -74,6 +74,7 @@ public class UserConverter {
 
         // UserDetailResponse 생성
         return UserDto.UserDetailResponse.builder()
+                .username(user.getUsername())
                 .detailInfo(detailInfo)
                 .addInfo(addInfo)
                 .build();
