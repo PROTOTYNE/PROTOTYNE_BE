@@ -17,5 +17,7 @@ public class DeliveryDto {
     @Size(min = 5, max = 20)
     private String deliveryPhone;
     @Size(min = 5, max = 100)
-    private String deliveryAddress;
+    private String baseAddress;
+    @Size(min = 5, max = 100)
+    private String detailAddress;
 }
