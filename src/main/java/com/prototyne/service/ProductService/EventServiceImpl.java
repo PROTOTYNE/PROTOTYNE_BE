@@ -36,38 +36,46 @@ public class EventServiceImpl implements EventService {
         // 유저 아이디 객체 가져옴
         Long userId = jwtManager.validateJwt(accessToken);
 
-        List<ProductDTO.EventResponse> poluarList =  getEventsByType(userId, "popular")
-                .stream().limit(3).collect(Collectors.toList());
+        LocalDateTime now = LocalDateTime.now();
+        List<ProductDTO.EventResponse> poluarList =  getEvents(now, "popular")
+                .stream().limit(2)
+                .map(event -> {
+                    Product product = event.getProduct();
+                    int investCount = event.getInvestmentList().size();
+                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toEvent(event, product, investCount, isBookmarked);
+                })
+                .collect(Collectors.toList());
 
-        List<ProductDTO.EventResponse> imminentList =  getEventsByType(userId, "imminent")
-                .stream().limit(2).collect(Collectors.toList());
+        List<ProductDTO.SearchResponse> imminentList =  getEvents(now, "imminent")
+                .stream().limit(3)
+                .map(event -> {
+                    Product product = event.getProduct();
+                    int dDay = calculateDDay(now, event.getEventEnd());
+                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
+                })
+                .collect(Collectors.toList());
 
-        List<ProductDTO.EventResponse> newList =  getEventsByType(userId, "new")
-                .stream().limit(2).collect(Collectors.toList());
+        List<ProductDTO.SearchResponse> newList =  getEvents(now, "new")
+                .stream().limit(3)
+                .map(event -> {
+                    Product product = event.getProduct();
+                    int dDay = calculateDDay(now, event.getEventEnd());
+                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
+                })
+                .collect(Collectors.toList());
+
         return ProductConverter.toHome(poluarList, imminentList, newList);
     }
 
     @Override
     public List<ProductDTO.EventResponse> getEventsByType(Long userId, String type) {
-
         LocalDateTime now = LocalDateTime.now();
-        List<Event> events = switch (type) {
-            // 인기순
-            case "popular" -> eventRepository.findAllActiveEventsByPopular(now);
 
-            // 마감 임박순 (3일)
-            case "imminent" -> eventRepository.findAllEventsByImminent(now).stream()
-                    .filter(event -> event.getEventEnd().isBefore(now.plusDays(3)))
-                    .collect(Collectors.toList());
-
-            // 최신 등록순 (일주일)
-            case "new" -> eventRepository.findAllEventsByNew(now).stream()
-                    .filter(event -> event.getEventStart().isAfter(now.minusWeeks(1)))
-                    .collect(Collectors.toList());
-
-            // 그 외 예외처리
-            default -> throw new TempHandler(ErrorStatus.PRODUCT_ERROR_TYPE);
-        };
+        // 타입별 신청 진행 중인 시제품 이벤트만 가져옴
+        List<Event> events = getEvents(now, type);
 
         // DTO 변환
         return events.stream()
@@ -190,6 +198,20 @@ public class EventServiceImpl implements EventService {
 
         // DTO로 변환
         return ProductConverter.toEventDetails(event, investment, isBookmarked);
+    }
+
+    // 타입별 이벤트 가져옴
+    private List<Event> getEvents(LocalDateTime now, String type) {
+        return switch (type) {
+            case "popular" -> eventRepository.findAllActiveEventsByPopular(now);
+            case "imminent" -> eventRepository.findAllEventsByImminent(now).stream()
+                    .filter(event -> event.getEventEnd().isBefore(now.plusDays(3)))
+                    .collect(Collectors.toList());
+            case "new" -> eventRepository.findAllEventsByNew(now).stream()
+                    .filter(event -> event.getEventStart().isAfter(now.minusWeeks(1)))
+                    .collect(Collectors.toList());
+            default -> throw new TempHandler(ErrorStatus.PRODUCT_ERROR_TYPE);
+        };
     }
 
     // Enum에 category 없으면 오류 처리
