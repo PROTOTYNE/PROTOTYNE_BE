@@ -31,7 +31,7 @@ public class UserConverter {
                 .build();
     }
 
-    public static User toSignedUser(User user, UserDto.UserDetailRequest userDetailRequest){
+    public static User toSignedUser(User user, UserDto.UserDetailRequest userDetailRequest) {
         return User.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -49,7 +49,8 @@ public class UserConverter {
         return DeliveryDto.builder()
                 .deliveryName(user.getDeliveryName())
                 .deliveryPhone(user.getDeliveryPhone())
-                .deliveryAddress(user.getDeliveryAddress())
+                .baseAddress(user.getBaseAddress())
+                .detailAddress(user.getDetailAddress())
                 .build();
     }
 
@@ -74,6 +75,7 @@ public class UserConverter {
 
         // UserDetailResponse 생성
         return UserDto.UserDetailResponse.builder()
+                .username(user.getUsername())
                 .detailInfo(detailInfo)
                 .addInfo(addInfo)
                 .build();

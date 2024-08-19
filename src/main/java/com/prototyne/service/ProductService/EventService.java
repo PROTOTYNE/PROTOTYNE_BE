@@ -5,8 +5,12 @@ import com.prototyne.web.dto.ProductDTO;
 import java.util.List;
 
 public interface EventService {
-    List<ProductDTO.EventResponse> getEventsByType(String type);
-    List<ProductDTO.SearchResponse> getEventsBySearch(String name);
-    List<ProductDTO.SearchResponse> getEventsByCategory(String category);
-    ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventIdzz);
+    ProductDTO.HomeResponse getHomeById(String accessToken);
+    List<ProductDTO.EventResponse> getEventsByType(Long userId, String type);
+    List<ProductDTO.SearchResponse> getEventsBySearch(String accessToken, String name);
+    List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category);
+    ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventId);
+    List<String> getRecentSearches(String accessToken);
+    List<String> deleteSearchHistory(String searchTerm, String accessToken);
+    List<String> deleteAllSearchHistory(String accessToken);
 }
