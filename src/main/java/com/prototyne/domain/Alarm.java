@@ -28,11 +28,14 @@ public class Alarm extends BaseEntity {
     @ColumnDefault("false")
     private Boolean checked;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private LocalDateTime StartReview; //후기 작성해야 하는 기간에 알람
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @Column
+    private String thumbnailUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
 }
