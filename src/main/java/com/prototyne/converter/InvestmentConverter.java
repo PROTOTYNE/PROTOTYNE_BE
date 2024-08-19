@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Builder
 public class InvestmentConverter {
-    public Investment toInvestment(User user, Event event)
+    public Investment toInvestment(User user, Event event, Boolean apply)
     {
         return Investment.builder()
                 .user(user)
                 .event(event)
+                .apply(apply)
                 .build();
     }
 }
