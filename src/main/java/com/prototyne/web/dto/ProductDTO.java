@@ -15,8 +15,8 @@ public class ProductDTO {
     @Builder
     public static class HomeResponse {
         List<EventResponse> popularList;
-        List<EventResponse> imminentList;
-        List<EventResponse> newList;
+        List<SearchResponse> imminentList;
+        List<SearchResponse> newList;
     }
 
     // 시제품 정렬 응답 형식

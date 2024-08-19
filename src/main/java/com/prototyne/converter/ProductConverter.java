@@ -14,8 +14,8 @@ public class ProductConverter {
 
     // 홈 화면 형식
     public static ProductDTO.HomeResponse toHome (List<ProductDTO.EventResponse> pL,
-                                                  List<ProductDTO.EventResponse> iL,
-                                                  List<ProductDTO.EventResponse> nL) {
+                                                  List<ProductDTO.SearchResponse> iL,
+                                                  List<ProductDTO.SearchResponse> nL) {
         return ProductDTO.HomeResponse.builder()
                 .popularList(pL).imminentList(iL).newList(nL).build();
     }

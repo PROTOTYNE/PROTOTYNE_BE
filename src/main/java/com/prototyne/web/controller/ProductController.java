@@ -29,7 +29,7 @@ public class ProductController {
     @Operation(summary = "홈 화면 조회 API - 인증 필요",
             description = """
                 홈 화면 조회 \n
-                인기순(3), 마감 임박(2), 신규 등록(2) \n""",
+                인기순 2개, 마감 임박순 3개, 신규 등록순 3개 \n""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<ProductDTO.HomeResponse> getHome(HttpServletRequest token) {
         String oauthToken = jwtManager.getToken(token);
@@ -40,8 +40,11 @@ public class ProductController {
     @GetMapping("/list")
     @Operation(summary = "시제품 목록 조회 API - 인증 필요" ,
             description = """
-                정렬 타입 입력 ("" 없이 입력)\n
-                type = "popular"(인기순, 기본) | "imminent"(마감 임박순) | "new"(최신 등록순) \n""",
+                정렬 타입 입력 ("" 없이 입력) \n
+                type = "popular"(인기순, 기본) | "imminent"(마감 임박순) | "new"(최신 등록순) \n
+                ** 인기순: 북마크 수 + 투자 수의 평균으로 \n
+                ** 마감 임박순: 신청 마감이 3일 남은 시제품만 \n
+                ** 최신 등록순: 해당 주에 등록된 시제품만""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.EventResponse>> getEventsList(
             HttpServletRequest token,
