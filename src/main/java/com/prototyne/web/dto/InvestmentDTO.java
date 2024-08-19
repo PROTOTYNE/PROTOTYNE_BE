@@ -22,5 +22,11 @@ public class InvestmentDTO {
     public static class ApplicationResponse {
 
         private Boolean apply;
+
+        private String deliveryName;
+
+        private String deliveryPhone;
+
+        private String deliveryAddress;
     }
 }

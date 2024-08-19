@@ -2,10 +2,12 @@ package com.prototyne.service.ApplicationService;
 
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
+import com.prototyne.converter.InvestmentConverter;
 import com.prototyne.converter.TicketConverter;
 import com.prototyne.domain.*;
 import com.prototyne.repository.*;
 import com.prototyne.service.LoginService.JwtManager;
+import com.prototyne.service.ProductService.EventService;
 import com.prototyne.service.TicketService.TicketService;
 import com.prototyne.web.dto.InvestmentDTO;
 import com.prototyne.web.dto.TicketDto;
@@ -14,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -27,24 +28,26 @@ public class ApplicationServiceImpl implements ApplicationService{
     private final TicketRepository ticketRepository;
     private final TicketConverter ticketConverter;
     private final TicketService ticketService;
+    private final EventRepository eventRepository;
+    private final InvestmentConverter investmentConverter;
+    private final EventService eventService;
 
     @Override
-    public InvestmentDTO.ApplicationResponse Application(String accessToken,Long investmentId,Long productId) {
+    public InvestmentDTO.ApplicationResponse Application(String accessToken,Long eventId,Long productId) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Product product =productRepository.findById(productId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
+
+        Event event=eventRepository.findById(eventId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
 
         String deliveryName=user.getDeliveryName();
         String deliveryPhone=user.getDeliveryPhone();
         String deliveryAddress=user.getDeliveryAddress();
 
         String ticketName=product.getName();
-        String ticketDesc="티켓 구매";
+        String ticketDesc=product.getEnterprise().getName();
 
-        if(deliveryName==null || deliveryPhone==null || deliveryAddress==null) {
-            throw new TempHandler(ErrorStatus.DELIVERY_ERROR_NAME);
-        }
 
         int userTickets=ticketService.getTicketNumber(accessToken).getTicketNumber();
         int reqTickets=product.getReqTickets();
@@ -60,11 +63,19 @@ public class ApplicationServiceImpl implements ApplicationService{
                     .ticketDesc(ticketDesc)
                     .ticketChange(-reqTickets)
                     .build();
+
+            Investment investment = investmentConverter.toInvestment(user,event);
+
             // TicketService를 사용하여 티켓 저장
             ticketService.saveTicket(ticketListDto, user);
+
+            eventService.saveInvestment(investment);
         }
         return InvestmentDTO.ApplicationResponse.builder()
                 .apply(apply)
+                .deliveryName(deliveryName)
+                .deliveryPhone(deliveryPhone)
+                .deliveryAddress(deliveryAddress)
                 .build();
 
     }

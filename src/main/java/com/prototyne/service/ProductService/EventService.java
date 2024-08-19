@@ -1,5 +1,6 @@
 package com.prototyne.service.ProductService;
 
+import com.prototyne.domain.Investment;
 import com.prototyne.web.dto.ProductDTO;
 
 import java.util.List;
@@ -9,4 +10,5 @@ public interface EventService {
     List<ProductDTO.SearchResponse> getEventsBySearch(String name);
     List<ProductDTO.SearchResponse> getEventsByCategory(String category);
     ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventId);
+    public void saveInvestment(Investment investment);
 }
