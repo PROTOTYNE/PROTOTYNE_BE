@@ -26,5 +26,10 @@ public class TicketDto {
     @AllArgsConstructor
     public static class TicketNumberDto {
         private Integer ticketNumber;
+        private Integer usedTicket;
+        private Integer appliedNum;
+        private Integer selectedNum;
+        private Integer ongoingNum;
+        private Integer completedNum;
     }
 }

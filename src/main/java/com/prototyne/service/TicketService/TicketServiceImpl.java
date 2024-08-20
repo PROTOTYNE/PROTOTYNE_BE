@@ -6,6 +6,9 @@ import com.prototyne.converter.TicketConverter;
 
 import com.prototyne.domain.Ticket;
 import com.prototyne.domain.User;
+import com.prototyne.domain.enums.InvestmentStatus;
+import com.prototyne.repository.FeedbackRepository;
+import com.prototyne.repository.MyProductRepository;
 import com.prototyne.repository.TicketRepository;
 import com.prototyne.repository.UserRepository;
 import com.prototyne.service.LoginService.JwtManager;
@@ -15,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,7 +33,8 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final TicketConverter ticketConverter;
     private final UserRepository userRepository;
-
+    private final MyProductRepository myProductRepository;
+    private final FeedbackRepository feedbackRepository;
 
     @Override
     public List<TicketDto.TicketListDto> getTicketList(String accessToken) {
@@ -69,8 +74,43 @@ public class TicketServiceImpl implements TicketService {
     public TicketDto.TicketNumberDto getTicketNumber(String accessToken) {
         AtomicReference<Integer> ticketNumber = new AtomicReference<>(0);
         getTicketList(accessToken).forEach(ticket -> ticketNumber.updateAndGet(v -> v + ticket.getTicketChange()));
+
+        Long userId = jwtManager.validateJwt(accessToken);
+        LocalDateTime now = LocalDateTime.now();
+
+        // usedTicket
+        Integer usedTicket = (int) getTicketList(accessToken).stream()
+                .filter(ticket -> ticket.getCreatedAt().isBefore(now) && ticket.getTicketChange() < 0)
+                .count();
+
+        // appliedNum
+        Integer appliedNum = (int) myProductRepository.findByUserId(userId).stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.신청)
+                .filter(investment -> investment.getEvent().getReleaseStart().isAfter(now))
+                .count();
+
+        // selectedNum
+        Integer selectedNum = (int) myProductRepository.findByUserId(userId).stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.후기작성)
+                .count();
+
+        // ongoingNum
+        Integer ongoingNum = (int) myProductRepository.findByUserId(userId).stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.당첨)
+                .count();
+
+        // completedNum
+        Integer completedNum = (int) feedbackRepository.findByUserId(userId).stream()
+                .filter(feedback -> feedback.getInvestment().getStatus() == InvestmentStatus.종료)
+                .count();
+
         return TicketDto.TicketNumberDto.builder()
                 .ticketNumber(ticketNumber.get())
+                .usedTicket(usedTicket)
+                .appliedNum(appliedNum)
+                .selectedNum(selectedNum)
+                .ongoingNum(ongoingNum)
+                .completedNum(completedNum)
                 .build();
     }
 
