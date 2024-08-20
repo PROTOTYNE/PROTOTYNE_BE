@@ -115,8 +115,8 @@ cloud:
   aws:
     s3:
       bucket: prototyne
-      path: # 이미지 디렉터리 (가게, 상품, 피드백 ..)
-        test: test
+      path:
+      # 이미지 디렉터리 (가게, 상품, 피드백 ..)
     region:
       static: ap-northeast-2
     stack:
