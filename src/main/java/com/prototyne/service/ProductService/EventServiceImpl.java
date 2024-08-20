@@ -42,7 +42,7 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int investCount = event.getInvestmentList().size();
-                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
                     return ProductConverter.toEvent(event, product, investCount, isBookmarked);
                 })
                 .collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
-                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
                     return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class EventServiceImpl implements EventService {
                 .map(event -> {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
-                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
                     return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
@@ -83,7 +83,7 @@ public class EventServiceImpl implements EventService {
                     Product product = event.getProduct();
                     int investCount = event.getInvestmentList().size();
                     // 북마크 상태 확인
-                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
                     return ProductConverter.toEvent(event, product, investCount, isBookmarked);
                 })
                 .collect(Collectors.toList());
@@ -109,7 +109,7 @@ public class EventServiceImpl implements EventService {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
                     // 북마크 상태 확인
-                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
                     return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
@@ -176,7 +176,7 @@ public class EventServiceImpl implements EventService {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
                     // 북마크 상태 확인
-                    boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
                     return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
@@ -193,7 +193,7 @@ public class EventServiceImpl implements EventService {
         Investment investment = investmentRepository.findByUserIdAndEventId(userId, eventId)
                 .orElse(null);
 
-        Boolean isBookmarked = heartRepository.findByUserIdAndEvent(userId, event).isPresent();
+        Boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
 
 
         // DTO로 변환
