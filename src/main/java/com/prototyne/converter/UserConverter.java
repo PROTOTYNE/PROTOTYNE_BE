@@ -25,7 +25,6 @@ public class UserConverter {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .profileUrl(user.getProfileUrl())
-                .tickets(user.getTickets())
                 .gender(user.getGender())
                 .birth(user.getBirth())
                 .build();
@@ -38,7 +37,6 @@ public class UserConverter {
                 .email(user.getEmail())
                 .profileUrl(user.getProfileUrl())
                 .signupComplete(true)
-                .tickets(0)
                 .gender(userDetailRequest.getGender())
                 .birth(LocalDate.from(userDetailRequest.getBirth()))
                 .familyMember(userDetailRequest.getFamilyMember())
