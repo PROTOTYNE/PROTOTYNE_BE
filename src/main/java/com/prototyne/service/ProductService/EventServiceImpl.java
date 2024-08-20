@@ -121,7 +121,7 @@ public class EventServiceImpl implements EventService {
         recentSearchList.add(0, searchTerm);
 
         if(recentSearchList.size() > 10){
-            recentSearchList.remove(recentSearchList.size());
+            recentSearchList.remove(recentSearchList.size()-1);
         }
         userRepository.save(user);
     }
