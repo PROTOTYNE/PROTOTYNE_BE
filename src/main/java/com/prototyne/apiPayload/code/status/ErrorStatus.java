@@ -19,6 +19,11 @@ public enum ErrorStatus implements BaseErrorCode {
     TOKEN_UNVALID(HttpStatus.UNAUTHORIZED, "TOKEN4001", "유효하지 않은 토큰입니다"),
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN4002", "인증이 필요한 요청입니다"),
 
+    // 이미 회원가입을 완료한 사용자가 다시 회원가입을 시도했을 시
+    SIGNUP_DUPLICATE(HttpStatus.BAD_REQUEST, "LOGIN4001", "이미 회원가입을 완료한 유저입니다"),
+    // 회원가입 시도 시에는 이미 카카오 로그인을 한 상태여야 하는데, 해당 상태를 만족하지 못했을 시
+    SIGNUP_LOGIN_ERROR(HttpStatus.BAD_REQUEST, "LOGIN4001", "회원가입 시에는 먼저 카카오 로그인을 진행해야 합니다"),
+
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
     // 로그인하지 않은 사용자가 북마크 여부 변경시
