@@ -3,6 +3,7 @@ package com.prototyne.converter;
 import com.prototyne.domain.Event;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.User;
+import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.web.dto.InvestmentDTO;
 import lombok.Builder;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ public class InvestmentConverter {
                 .user(user)
                 .event(event)
                 .apply(apply)
+                .status(InvestmentStatus.신청)
                 .build();
     }
 }
