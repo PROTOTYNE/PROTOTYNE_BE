@@ -4,10 +4,7 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.converter.InvestmentConverter;
 import com.prototyne.domain.*;
-import com.prototyne.repository.AlarmRespository;
-import com.prototyne.repository.EventRepository;
-import com.prototyne.repository.ProductRepository;
-import com.prototyne.repository.UserRepository;
+import com.prototyne.repository.*;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.service.ProductService.EventService;
 import com.prototyne.service.TicketService.TicketService;
@@ -32,6 +29,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final EventRepository eventRepository;
     private final InvestmentConverter investmentConverter;
     private final EventService eventService;
+    private final InvestmentRepository investmentRepository;
 
     @Override
     public InvestmentDTO.ApplicationResponse Application(String accessToken, Long eventId) {
@@ -39,6 +37,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
+
 
         Long productId = event.getProduct().getId();
         Product product = productRepository.findById(productId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
@@ -57,7 +56,9 @@ public class ApplicationServiceImpl implements ApplicationService {
         int reqTickets = product.getReqTickets();
 
         boolean apply = userTickets >= reqTickets;
-
+        if(investmentRepository.findByUserIdAndEventIdAndApply(userId, eventId,apply) != null){
+            throw new TempHandler(ErrorStatus.EVENT_USER_EXIST);
+        }
 
         if (apply) {
             // 변경된 ticket 객체를 저장소에 저장

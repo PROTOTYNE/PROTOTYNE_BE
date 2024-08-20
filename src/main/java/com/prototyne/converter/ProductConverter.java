@@ -63,7 +63,8 @@ public class ProductConverter {
          // Heart(북마크)목록에서 제품에 대한 사용자의 북마크 존재여부로 판단
 
          return  ProductDTO.EventDetailsResponse.builder()
-                 .id(event.getId())
+                 .eventId(event.getId())
+                 .productId(product.getId())
                  .name(product.getName())
                  .enterprise(product.getEnterprise().getName())
                  .category(product.getCategory())

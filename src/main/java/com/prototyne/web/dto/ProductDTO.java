@@ -46,7 +46,8 @@ public class ProductDTO {
     @Getter
     @Builder
      public static class EventDetailsResponse{
-        private Long id;                // 이벤트 시제품 아이디
+        private Long eventId;           // 이벤트 시제품 아이디
+        private Long productId;         // (시)제품 아이디
         private String name;            // 시제품 이름
         private String enterprise;      // 시제품 기업
         private ProductCategory category;   // 시제품 카테고리
