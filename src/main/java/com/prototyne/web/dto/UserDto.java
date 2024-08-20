@@ -2,11 +2,15 @@ package com.prototyne.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.enums.Gender;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 public class UserDto {
@@ -177,6 +181,64 @@ public class UserDto {
         private List<String> phones;
         private Integer healthStatus;
 
+        private static final List<String> ALLOWED_OCCUPATION = Arrays.asList("STUDENT", "OFFICE", "PROFESSIONAL", "SELFEMPLOYED", "OTHER");
+        private static final List<Integer> ALLOWED_INCOMES = Arrays.asList(2000, 4000, 6000, 8000, 9999);
+        private static final List<String> ALLOWED_INTERESTS = Arrays.asList("FITNESS", "TRAVEL", "READING&MOVIES", "COOKING", "GAMES");
+        private static final List<String> ALLOWED_FAMILY_COMPOSITIONS = Arrays.asList("1", "COUPLE", "COUPLE&CHILDREN", "PARENTS&CHILDREN", "EXTENDFAMILY");
+        private static final List<String> ALLOWED_PRODUCT_TYPES = Arrays.asList("ELECTRONIC", "FASHION&BEAUTY", "FOOD", "HOUSEHOLD", "HEALTH");
+        private static List<String> ALLOWED_PHONES = Arrays.asList("SMARTPHONE1", "SMARTPHONE2", "SMARTPHONE9", "TABLET", "SMARTWATCH");
+
+        public void setOccupation(String occupation) {
+            if (ALLOWED_OCCUPATION.contains(occupation)) {
+                this.occupation = occupation;
+            } else {
+                throw new TempHandler(ErrorStatus.OCCUPATION_FORMAT_ERROR);
+            }
+        }
+
+        public void setIncome(Integer income) {
+            if (ALLOWED_INCOMES.contains(income)) {
+                this.income = income;
+            } else {
+                throw new TempHandler(ErrorStatus.INCOME_FORMAT_ERROR);
+            }
+        }
+
+        public void setInterests(List<String> interests) {
+            validateList(interests, ALLOWED_INTERESTS, ErrorStatus.INTEREST_FORMAT_ERROR);
+            this.interests = interests;
+        }
+
+        public void setFamilyComposition(String familyComposition) {
+            if (!ALLOWED_FAMILY_COMPOSITIONS.contains(familyComposition)) {
+                throw new TempHandler(ErrorStatus.FAMILY_FORMAT_ERROR);
+            }
+            this.familyComposition = familyComposition;
+        }
+
+        public void setProductTypes(List<String> productTypes) {
+            validateList(productTypes, ALLOWED_PRODUCT_TYPES, ErrorStatus.PRODUCTTYPES_FORMAT_ERROR);
+            this.productTypes = productTypes;
+        }
+
+        public void setPhones(List<String> phones) {
+            validateList(phones, ALLOWED_PHONES, ErrorStatus.PHONES_FORMAT_ERROR);
+            this.phones = phones;
+        }
+
+        public void setHealthStatus(Integer healthStatus) {
+            if (healthStatus < 1 || healthStatus > 5) {
+                throw new TempHandler(ErrorStatus.INVALID_HEALTHSTATUS);
+            }
+            this.healthStatus = healthStatus;
+        }
+
+        private void validateList(List<String> items, List<String> allowedItems, ErrorStatus errorStatus) {
+            if (!new HashSet<>(allowedItems).containsAll(items)) {
+                throw new TempHandler(errorStatus);
+            }
+        }
     }
+
 
 }

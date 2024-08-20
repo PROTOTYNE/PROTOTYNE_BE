@@ -24,11 +24,20 @@ public enum ErrorStatus implements BaseErrorCode {
     // 회원가입 시도 시에는 이미 카카오 로그인을 한 상태여야 하는데, 해당 상태를 만족하지 못했을 시
     SIGNUP_LOGIN_ERROR(HttpStatus.BAD_REQUEST, "LOGIN4001", "회원가입 시에는 먼저 카카오 로그인을 진행해야 합니다"),
 
+    FAMILY_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 familyComposition 형식입니다."),
+    PRODUCTTYPES_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 productType 형식입니다."),
+    INVALID_HEALTHSTATUS(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 healthStatus 형식입니다."),
+    INCOME_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 income 형식입니다."),
+    INTEREST_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001","잘못된 interests 형식입니다." ),
+    OCCUPATION_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 occupation 형식입니다."),
+    PHONES_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 phones 형식입니다."),
+
+
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
     // 로그인하지 않은 사용자가 북마크 여부 변경시
     HEART_ERROR_ID(HttpStatus.BAD_REQUEST, "HEART4001", "로그인이 필요합니다"),
-    // 존재하지 않는 이벤트의 북마크 여부 변경시
+    // 존재하지 않는 이gi벤트의 북마크 여부 변경시
     HEART_ERROR_EVENT(HttpStatus.BAD_REQUEST, "HEART4002", "잘못된 이벤트 접근입니다"),
 
     DATE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "FORMAT4001", "잘못된 날짜 형식입니다. 올바른 형식: yyyy-MM-dd"),

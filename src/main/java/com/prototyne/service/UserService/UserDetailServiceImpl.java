@@ -122,7 +122,7 @@ public class UserDetailServiceImpl implements UserDetailService {
             updateAddSetInfo(user, AddsetTitle.관심사, String.join(",", addInfo.getInterests()));
         }
         if (addInfo.getFamilyComposition() != null) {
-            updateAddSetInfo(user, AddsetTitle.가족구성, addInfo.getFamilyComposition());
+            updateAddSetInfo(user, AddsetTitle.가족구성, addInfo.getFamilyComposition().toString());
         }
         if (addInfo.getProductTypes() != null) {
             updateAddSetInfo(user, AddsetTitle.관심제품유형, String.join(",", addInfo.getProductTypes()));
