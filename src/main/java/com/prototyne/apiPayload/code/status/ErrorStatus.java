@@ -50,7 +50,9 @@ public enum ErrorStatus implements BaseErrorCode {
 
     INVALID_IMAGE_COUNT(HttpStatus.BAD_REQUEST, "FEEDBACK IMAGE4001", "이미지 개수의 범위를 벗어났습니다."),
 
-    TiCKET_LACK_ERROR(HttpStatus.BAD_REQUEST, "TiCKET4001", "티켓이 부족합니다.");
+    TiCKET_LACK_ERROR(HttpStatus.BAD_REQUEST, "TiCKET4001", "티켓이 부족합니다."),
+
+    EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다.");
 
 
     private final HttpStatus httpStatus;
