@@ -77,7 +77,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             // 알람 추가
             Alarm alarm = Alarm.builder()
                     .user(user)
-                    .title("시제품명" + product.getName())
+                    .title("[시제품명] " + product.getName())
                     .contents("제품 후기 작성 마감 하루 전입니다!")
                     .thumbnailUrl(product.getThumbnailUrl())
                     .StartReview(event.getFeedbackEnd().minusDays(1))
