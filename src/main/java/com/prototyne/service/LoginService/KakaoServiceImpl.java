@@ -49,11 +49,10 @@ public class KakaoServiceImpl implements KakaoService {
                 .block();
         UserDto.UserInfoResponse userinfo = getKakaoInfo(Objects.requireNonNull(kakaotokenresponse).getAccessToken());
         User user = userRepository.findByEmail(userinfo.getKakaoAccount().getEmail());
-        kakaotokenresponse.setSignupComplete(user == null);
         if (user == null) {
             user = userRepository.save(UserConverter.toUser(userinfo));
-        } else if (!user.getSignupComplete()) {
-            kakaotokenresponse.setSignupComplete(false);
+        } else {
+            kakaotokenresponse.setSignupComplete(user.getSignupComplete());
         }
         Long id = user.getId();
         String token = jwtManager.createJwt(id);
@@ -63,6 +62,7 @@ public class KakaoServiceImpl implements KakaoService {
 
     @Override
     public UserDto.UserInfoResponse getKakaoInfo(String accessToken) {
+        System.out.println(accessToken);
         return WebClient.create("https://kapi.kakao.com")
                 .get()
                 .uri(uriBuilder -> uriBuilder

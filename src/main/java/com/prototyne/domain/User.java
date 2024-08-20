@@ -44,11 +44,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Integer tickets;
-
+    
     @Column(nullable = false)
     @ColumnDefault("0")
     private Integer familyMember;
