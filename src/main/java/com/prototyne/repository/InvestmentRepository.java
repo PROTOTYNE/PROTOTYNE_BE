@@ -9,6 +9,7 @@ import java.util.Optional;
 @Repository
 public interface InvestmentRepository extends JpaRepository<Investment, Long> {
     Optional<Investment> findByUserIdAndEventId(Long userId, Long eventId);
+    Optional<Investment> findByUserIdAndId(Long userId, Long InvestmentId);
 
 
 }
