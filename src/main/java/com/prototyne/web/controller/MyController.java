@@ -55,18 +55,18 @@ public class MyController {
     @PatchMapping("/addinfo")
     @Operation(summary = "추가 정보 수정 API - 인증 필요",
             description = """
-                    유저의 추가 정보를 수정합니다. - 수정 필요한 key-value 만 입력
-                    \s
-                    [body] \s
-                    occupation: 직업(string) - | "STUDENT" | "OFFICE" | "PROFESSIONAL" | "SELFEMPLOYED" | "OTHER", \s
-                    income: 수입(int) - | 2000 | 4000 | 6000 | 8000 | 9999, \s
-                    interests: 관심사(string[]) - | 1 | "COUPLE" | "COUPLE&CHILDREN" | "PARENTS&CHILDREN" | "EXTENDFAMILY", \s
-                    familyComposition: 가족 구성(string), - | 1 | "COUPLE" | "COUPLE&CHILDREN" | "PARENTS&CHILDREN" | "EXTENDFAMILY" \s
-                    productTypes: 관심 상품(string[]) - | "ELECTRONIC" | "FASHION&BEAUTY" | "FOOD" | "HOUSEHOLD" | "HEALTH", \s
-                    phones: 휴대폰 종류(string[]) - | "SMARTPHONE1" | "SMARTPHONE2" | "SMARTPHONE9" | "TABLET" | "SMARTWATCH", \s
-                    healthStatus: 건강 상태(int) - | 1 | 2 | 3 | 4 | 5
-                    \s
-                   \s""",
+                     유저의 추가 정보를 수정합니다. - 수정 필요한 key-value 만 입력
+                     \s
+                     [body] \s
+                     occupation: 직업(string) - | "STUDENT" | "OFFICE" | "PROFESSIONAL" | "SELFEMPLOYED" | "OTHER", \s
+                     income: 수입(Integer) - | 2000 | 4000 | 6000 | 8000 | 9999, \s
+                     interests: 관심사(string[]) -  | "FITNESS" | "TRAVEL" | "READING&MOVIES"  | "COOKING"  | "GAMES", \s
+                     familyComposition: 가족 구성(string), - | 1 | "COUPLE" | "COUPLE&CHILDREN" | "PARENTS&CHILDREN" | "EXTENDFAMILY" \s
+                     productTypes: 관심 상품(string[]) - | "ELECTRONIC" | "FASHION&BEAUTY" | "FOOD" | "HOUSEHOLD" | "HEALTH", \s
+                     phones: 휴대폰 종류(string[]) - | "SMARTPHONE1" | "SMARTPHONE2" | "SMARTPHONE9" | "TABLET" | "SMARTWATCH", \s
+                     healthStatus: 건강 상태(Integer) - | 1 | 2 | 3 | 4 | 5
+                     \s
+                    \s""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<UserDto.AddInfo> updateAddInfo(HttpServletRequest request, @RequestBody @Valid UserDto.AddInfo addInfo) throws UserPrincipalNotFoundException {
         String accessToken = jwtManager.getToken(request);
