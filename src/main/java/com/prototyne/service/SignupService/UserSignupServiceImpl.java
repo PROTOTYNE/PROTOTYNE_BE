@@ -1,5 +1,7 @@
 package com.prototyne.service.SignupService;
 
+import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.ADD_set;
 import com.prototyne.domain.User;
 import com.prototyne.domain.enums.AddsetTitle;
@@ -35,9 +37,9 @@ public class UserSignupServiceImpl implements UserSignupService {
         User existingUser = userRepository.findById(userId).orElse(null);
 
         if(existingUser != null && existingUser.getSignupComplete()) {
-            throw new RuntimeException("이미 회원가입이 완료된 사용자입니다.");
+            throw new TempHandler(ErrorStatus.SIGNUP_DUPLICATE);
         }else if(existingUser == null){
-            throw new RuntimeException("카카오 로그인을 먼저 진행해주세요.");
+            throw new TempHandler(ErrorStatus.SIGNUP_LOGIN_ERROR);
         }
 
         // 회원가입 로직: 카카오 로그인 -> 필수 정보 입력 -> 추가 정보 입력 -> 그 후에 회원가입 완료(db에 저장)
