@@ -3,14 +3,11 @@ package com.prototyne.service.TicketService;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.converter.TicketConverter;
-
+import com.prototyne.domain.Alarm;
 import com.prototyne.domain.Ticket;
 import com.prototyne.domain.User;
 import com.prototyne.domain.enums.InvestmentStatus;
-import com.prototyne.repository.FeedbackRepository;
-import com.prototyne.repository.MyProductRepository;
-import com.prototyne.repository.TicketRepository;
-import com.prototyne.repository.UserRepository;
+import com.prototyne.repository.*;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.TicketDto;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +29,7 @@ public class TicketServiceImpl implements TicketService {
     private final JwtManager jwtManager;
     private final TicketRepository ticketRepository;
     private final TicketConverter ticketConverter;
+    private final AlarmRespository alarmRespository;
     private final UserRepository userRepository;
     private final MyProductRepository myProductRepository;
     private final FeedbackRepository feedbackRepository;
@@ -132,6 +130,12 @@ public class TicketServiceImpl implements TicketService {
                 .name("프로토타인")
                 .ticketDesc("티켓 구매")
                 .ticketChange(ticketNumber)
+                .build());
+        alarmRespository.save(Alarm.builder()
+                .user(user)
+                .title("티켓 구매")
+                .contents("티켓 " + ticketNumber + "개 구매 완료")
+                .StartReview(LocalDateTime.now())
                 .build());
     }
 
