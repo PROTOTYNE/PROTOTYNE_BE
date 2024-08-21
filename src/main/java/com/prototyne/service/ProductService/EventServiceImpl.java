@@ -37,7 +37,7 @@ public class EventServiceImpl implements EventService {
         Long userId = jwtManager.validateJwt(accessToken);
 
         LocalDateTime now = LocalDateTime.now();
-        List<ProductDTO.EventResponse> poluarList =  getEvents(now, "popular")
+        List<ProductDTO.EventResponse> poluarList = getEvents(now, "popular")
                 .stream().limit(2)
                 .map(event -> {
                     Product product = event.getProduct();
@@ -47,7 +47,7 @@ public class EventServiceImpl implements EventService {
                 })
                 .collect(Collectors.toList());
 
-        List<ProductDTO.SearchResponse> imminentList =  getEvents(now, "imminent")
+        List<ProductDTO.SearchResponse> imminentList = getEvents(now, "imminent")
                 .stream().limit(3)
                 .map(event -> {
                     Product product = event.getProduct();
@@ -57,7 +57,7 @@ public class EventServiceImpl implements EventService {
                 })
                 .collect(Collectors.toList());
 
-        List<ProductDTO.SearchResponse> newList =  getEvents(now, "new")
+        List<ProductDTO.SearchResponse> newList = getEvents(now, "new")
                 .stream().limit(3)
                 .map(event -> {
                     Product product = event.getProduct();
@@ -115,13 +115,13 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
     }
 
-    private void addSearchTerm(User user, String searchTerm){
+    private void addSearchTerm(User user, String searchTerm) {
         List<String> recentSearchList = user.getRecentSearchList();
         recentSearchList.remove(searchTerm);
         recentSearchList.add(0, searchTerm);
 
-        if(recentSearchList.size() > 10){
-            recentSearchList.remove(recentSearchList.size()-1);
+        if (recentSearchList.size() > 10) {
+            recentSearchList.remove(recentSearchList.size() - 1);
         }
         userRepository.save(user);
     }
@@ -136,7 +136,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<String> deleteSearchHistory(String searchTerm, String accessToken){
+    public List<String> deleteSearchHistory(String searchTerm, String accessToken) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
@@ -190,7 +190,7 @@ public class EventServiceImpl implements EventService {
 
         // 유저 아이디와 이벤트 아이디로 투자 객체 가져옴
         Long userId = jwtManager.validateJwt(accessToken);
-        Investment investment = investmentRepository.findByUserIdAndEventId(userId, eventId)
+        Investment investment = investmentRepository.findFirstByUserIdAndEventId(userId, eventId)
                 .orElse(null);
 
         Boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
@@ -229,7 +229,7 @@ public class EventServiceImpl implements EventService {
         return (int) daysBetween;
     }
 
-    public void saveInvestment(Investment investment){
+    public void saveInvestment(Investment investment) {
         investmentRepository.save(investment);
     }
 }

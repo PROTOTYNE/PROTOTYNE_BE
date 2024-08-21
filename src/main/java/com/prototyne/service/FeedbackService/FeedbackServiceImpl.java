@@ -8,7 +8,10 @@ import com.prototyne.domain.Feedback;
 import com.prototyne.domain.FeedbackImage;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.User;
-import com.prototyne.repository.*;
+import com.prototyne.repository.FeedbackImageRepository;
+import com.prototyne.repository.FeedbackRepository;
+import com.prototyne.repository.InvestmentRepository;
+import com.prototyne.repository.UserRepository;
 import com.prototyne.service.LoginService.JwtManager;
 import com.prototyne.web.dto.FeedbackDTO;
 import com.prototyne.web.dto.FeedbackImageDTO;
@@ -22,7 +25,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FeedbackServiceImpl implements FeedbackService{
+public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final UserRepository userRepository;
     private final InvestmentRepository investmentRepository;
@@ -31,12 +34,12 @@ public class FeedbackServiceImpl implements FeedbackService{
     private final FeedbackImageRepository feedbackImageRepository;
 
     @Override
-    public FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO){
+    public FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO) {
 
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
-        Investment investment = investmentRepository.findByUserIdAndId(userId,investmentId)
+        Investment investment = investmentRepository.findFirstByUserIdAndId(userId, investmentId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
         Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseGet(() -> Feedback.builder()
@@ -54,18 +57,18 @@ public class FeedbackServiceImpl implements FeedbackService{
 
         feedbackRepository.save(feedback);
 
-        return FeedbackConverter.toFeedbackDto(feedback,investment);
+        return FeedbackConverter.toFeedbackDto(feedback, investment);
 
     }
 
-    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long investmentId, String directory, List<MultipartFile> feedbackImages){
+    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long investmentId, String directory, List<MultipartFile> feedbackImages) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
-        if(feedbackImages.isEmpty()||feedbackImages.size()>3){
+        if (feedbackImages.isEmpty() || feedbackImages.size() > 3) {
             throw new TempHandler(ErrorStatus.INVALID_IMAGE_COUNT);
         }
-        Investment investment =investmentRepository.findByUserIdAndId(userId,investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
+        Investment investment = investmentRepository.findFirstByUserIdAndId(userId, investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
         Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseGet(() -> {
             Feedback newFeedback = Feedback.builder()
