@@ -56,7 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         int reqTickets = product.getReqTickets();
 
         boolean apply = userTickets >= reqTickets;
-        if(investmentRepository.findByUserIdAndEventIdAndApply(userId, eventId,apply) != null){
+        if (investmentRepository.findByUserIdAndEventIdAndApply(userId, eventId, apply) != null) {
             throw new TempHandler(ErrorStatus.EVENT_USER_EXIST);
         }
 
@@ -84,6 +84,13 @@ public class ApplicationServiceImpl implements ApplicationService {
                     .build();
 
             alarmRepository.save(alarm);
+            alarmRepository.save(Alarm.builder()
+                    .user(user)
+                    .title("티켓 사용")
+                    .contents("티켓 " + reqTickets + "개 사용 완료 - " + product.getName())
+                    .thumbnailUrl(product.getThumbnailUrl())
+                    .StartReview(LocalDateTime.now())
+                    .build());
 
             eventService.saveInvestment(investment);
         } else {
