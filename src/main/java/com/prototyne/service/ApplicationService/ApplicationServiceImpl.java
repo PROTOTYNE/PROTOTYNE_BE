@@ -56,7 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         int reqTickets = product.getReqTickets();
 
         boolean apply = userTickets >= reqTickets;
-        if (investmentRepository.findByUserIdAndEventIdAndApply(userId, eventId, apply) != null) {
+        if (investmentRepository.findFirstByUserIdAndEventId(userId, eventId).isPresent()) {
             throw new TempHandler(ErrorStatus.EVENT_USER_EXIST);
         }
 
