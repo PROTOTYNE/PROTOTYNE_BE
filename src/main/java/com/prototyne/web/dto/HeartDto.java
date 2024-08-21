@@ -28,6 +28,7 @@ public class HeartDto {
         @AllArgsConstructor
         public static class ProductInfo{
             private Long productId;
+            private Long eventId;
             private String name;
             private Integer reqTickets;
             private String thumbnailUrl;

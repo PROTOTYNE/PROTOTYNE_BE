@@ -23,6 +23,7 @@ public class HeartConverter {
 
                     return HeartDto.HeartResponseDTO.ProductInfo.builder()
                             .productId(product.getId())
+                            .eventId(event.getId())
                             .name(product.getName())
                             .reqTickets(product.getReqTickets())
                             .thumbnailUrl(product.getThumbnailUrl())
