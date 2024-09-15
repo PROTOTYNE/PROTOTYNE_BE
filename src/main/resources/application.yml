@@ -18,6 +18,7 @@ spring:
     password: ${MYSQL_PW}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+
   sql:
     init:
       mode: never
