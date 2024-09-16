@@ -94,6 +94,15 @@ jobs:
           max-attempts: 10  # 재시도 횟수를 10으로 증가
           retry-delay: 20s  # 지연 시간을 20초로 설정
 
+      - name: Check if nginxserver is running
+        run: |
+          if [ $(sudo docker ps -q -f name=nginxserver) ]; then
+            echo "nginxserver is already running";
+          else
+            echo "Starting nginxserver";
+            sudo docker start nginxserver;
+          fi
+    
       - name: Change nginx upstream
         uses: appleboy/ssh-action@master
         with:
