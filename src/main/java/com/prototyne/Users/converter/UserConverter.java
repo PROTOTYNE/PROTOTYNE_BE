@@ -47,6 +47,7 @@ public class UserConverter {
         return DeliveryDto.builder()
                 .deliveryName(user.getDeliveryName())
                 .deliveryPhone(user.getDeliveryPhone())
+                .postCode(user.getPostCode())
                 .baseAddress(user.getBaseAddress())
                 .detailAddress(user.getDetailAddress())
                 .build();

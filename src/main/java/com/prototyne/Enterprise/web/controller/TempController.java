@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/enterprise")
 public class TempController {
     @Tag(name = "${swagger.tag.test}")
-    @GetMapping("/tempTest")
+    @GetMapping("/api/tempTest")
     @Operation(summary = "health check API",
             description = "서버 상태 확인 API - 정상적으로 동작 중인지 확인")
     public ApiResponse<TempResponse.TempTestDTO> testAPI() {
