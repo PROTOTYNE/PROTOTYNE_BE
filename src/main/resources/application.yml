@@ -106,6 +106,7 @@ swagger:
     like: '09. 좋아요(북마크)'
     alarm: '10. 알림'
     enterprise-auth: '11. 기업 로그인/회원가입'
+    enterprise-product: '12. 기업 시제품 - 조회, 등록, 삭제'
     test: 'A. Test API'
 
 spring-doc:
