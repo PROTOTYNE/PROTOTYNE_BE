@@ -1,6 +1,7 @@
 package com.prototyne.domain;
 
 import com.prototyne.domain.common.BaseEntity;
+import com.prototyne.domain.enums.EnterpriseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,22 +19,30 @@ public class Enterprise extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
     @Column(nullable = false, length = 100)
     private String name;
 
     @Column(nullable = false, length = 50)
     private String regNumber;
 
-    @Column(nullable = true, length = 20)
     private String phone;
 
-    @Column(nullable = true, length = 20)
     private String email;
 
-    @Column(nullable = true, length = 512)
-    private String enterpriseDesc;
+    private String address;
 
-    private String thumbnailUrl;
+    private String category;
+
+    private String size;
+
+    @Enumerated(EnumType.STRING)
+    private EnterpriseStatus status;
 
     @OneToMany(mappedBy ="enterprise",cascade=CascadeType.ALL)
     private List<Product> productList=new ArrayList<>();
