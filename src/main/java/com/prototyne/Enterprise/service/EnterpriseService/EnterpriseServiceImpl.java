@@ -19,6 +19,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private final PasswordEncoder passwordEncoder;
     private final JwtManager jwtManager;
 
+
     @Override
     public EnterpriseDto.EnterpriseSignupResponse registerEnterprise(EnterpriseDto.EnterpriseSignupRequest enterpriseSignupRequest) {
         // 중복 사용자 체크

@@ -105,6 +105,7 @@ swagger:
     product-search: '08. 시제품 - 최근 검색어'
     like: '09. 좋아요(북마크)'
     alarm: '10. 알림'
+    enterprise-auth: '11. 기업 로그인/회원가입'
     test: 'A. Test API'
 
 spring-doc:
