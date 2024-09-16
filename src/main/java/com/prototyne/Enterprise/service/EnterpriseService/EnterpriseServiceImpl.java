@@ -53,7 +53,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
         // 비밀번호 확인
         if(!passwordEncoder.matches(enterpriseLoginRequest.getPassword(), enterprise.getPassword())){
-            throw new TempHandler(ErrorStatus.LOGIN_ERROR_ID); // 에러 status 변경하기
+            throw new TempHandler(ErrorStatus.LOGIN_ERROR_PW);
         }
 
         // JWT 토큰 생성
