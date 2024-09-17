@@ -16,6 +16,8 @@ public class DeliveryDto {
     private String deliveryName;
     @Size(min = 5, max = 20)
     private String deliveryPhone;
+    @Size(min = 2, max = 20)
+    private String postCode;
     @Size(min = 5, max = 100)
     private String baseAddress;
     @Size(min = 5, max = 100)

@@ -12,6 +12,7 @@ import com.prototyne.Users.service.LoginService.JwtManager;
 import com.prototyne.Users.web.dto.TicketDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -139,4 +140,18 @@ public class TicketServiceImpl implements TicketService {
                 .build());
     }
 
+    @Override
+    @Scheduled(cron = "0 0 0 1 * *")
+    public void provideMonthlyTicket(){
+        List<User> allUsers = userRepository.findAll();
+
+        for(User user: allUsers){
+            ticketRepository.save(Ticket.builder()
+                    .user(user)
+                    .name("무료 티켓")
+                    .ticketDesc("매월 무료 티켓 지급")
+                    .ticketChange((10))
+                    .build());
+        }
+    }
 }

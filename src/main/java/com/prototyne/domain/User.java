@@ -59,11 +59,14 @@ public class User extends BaseEntity {
     @Column(length = 20)
     private String deliveryPhone;
 
-    @Column(length = 50)
-    private String baseAddress;
+    @Column(length = 20)
+    private String postCode; // 우편 번호
 
     @Column(length = 50)
-    private String detailAddress;
+    private String baseAddress; // 기본 주소
+
+    @Column(length = 50)
+    private String detailAddress; // 상세 주소
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> recentSearchList = new ArrayList<>(); // 최근 검색어 10개 저장
