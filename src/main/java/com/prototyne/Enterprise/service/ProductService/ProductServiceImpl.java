@@ -18,6 +18,7 @@ public class ProductServiceImpl implements ProductService {
     private final JwtManager jwtManager;
     private final ProductRepository productRepository;
 
+    // 시제품 목록 조회
     @Override
     public List<ProductDTO.ProductResponse> getProducts(String accessToken) {
         Long enterpriseId = jwtManager.validateJwt(accessToken);

@@ -38,11 +38,12 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime feedbackEnd;
 
+    // 심사 중 필드
     @Column(nullable = false)
     private LocalDateTime judgeStart;
-
     @Column(nullable = false)
     private LocalDateTime judgeEnd;
+    //
 
     @Column(nullable = false)
     private LocalDateTime endDate;

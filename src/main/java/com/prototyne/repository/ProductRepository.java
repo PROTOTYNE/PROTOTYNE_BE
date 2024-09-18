@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+    // 기업 ID로 모든 시제품 조회
     List<Product> findByEnterpriseId(Long enterpriseId);
 }

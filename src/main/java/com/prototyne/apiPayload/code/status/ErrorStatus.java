@@ -38,7 +38,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 로그인하지 않은 사용자가 북마크 여부 변경시
     HEART_ERROR_ID(HttpStatus.BAD_REQUEST, "HEART4001", "로그인이 필요합니다"),
-    // 존재하지 않는 이gi벤트의 북마크 여부 변경시
+    // 존재하지 않는 이벤트의 북마크 여부 변경시
     HEART_ERROR_EVENT(HttpStatus.BAD_REQUEST, "HEART4002", "잘못된 이벤트 접근입니다"),
 
     DATE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "FORMAT4001", "잘못된 날짜 형식입니다. 올바른 형식: yyyy-MM-dd"),
@@ -62,7 +62,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     TiCKET_LACK_ERROR(HttpStatus.BAD_REQUEST, "TiCKET4001", "티켓이 부족합니다."),
 
-    EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다.");
+    EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다."),
+
+    // 이벤트의 날짜가 null로 설정된 경우
+    EVENT_ERROR_DATE(HttpStatus.BAD_REQUEST,"EVENT4002","이벤트의 날짜가 null 입니다.");
 
 
     private final HttpStatus httpStatus;

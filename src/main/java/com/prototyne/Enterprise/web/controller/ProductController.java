@@ -27,11 +27,12 @@ public class ProductController {
     // 시제품 목록 조회
     @GetMapping("/products")
     @Operation(summary = "시제품 목록 조회 API - 인증 필수" ,
-            description = "시제품 체험 목록 > 시제품 목록 \n ** 기업 로그인 상태 필수 **",
+            description = "시제품 체험 목록 > 시제품 목록",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.ProductResponse>> getEventsList(HttpServletRequest token) {
         String oauthToken = jwtManager.getToken(token);
         List<ProductDTO.ProductResponse> productList =  productService.getProducts(oauthToken);
         return ApiResponse.onSuccess(productList);
     }
+
 }
