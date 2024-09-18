@@ -98,9 +98,12 @@ jobs:
         run: |
           if [ $(sudo docker ps -q -f name=nginxserver) ]; then
             echo "nginxserver is already running";
-          else
-            echo "Starting nginxserver";
+          elif [ $(sudo docker ps -a -q -f name=nginxserver) ]; then
+            echo "nginxserver container exists but is stopped. Starting it now.";
             sudo docker start nginxserver;
+          else
+            echo "nginxserver container does not exist, creating and starting it";
+            sudo docker run -d --name nginxserver -p 80:80 nginx;
           fi
     
       - name: Change nginx upstream
