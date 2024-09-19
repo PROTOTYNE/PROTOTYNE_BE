@@ -46,7 +46,7 @@ spring:
 
   server:
     port: 8080
-    serverAddress: 15.165.65.130
+    serverAddress: ${LIVE_SERVER_IP}
 
 serverName: blue_server
 
@@ -59,7 +59,7 @@ spring:
 
   server:
     port: 8081
-    serverAddress: 15.165.65.130
+    serverAddress: ${LIVE_SERVER_IP}
 
 serverName: green_server
 
@@ -105,9 +105,10 @@ swagger:
     product-search: '08. 시제품 - 최근 검색어'
     like: '09. 좋아요(북마크)'
     alarm: '10. 알림'
-    enterprise-auth: '11. 기업 로그인/회원가입'
-    enterprise-product: '12. 기업 시제품 - 조회, 등록, 삭제'
-    enterprise-event: '13. 기업 체험(이벤트) - 조회, 등록, 삭제'
+    pay: '11. 카카오페이 결제'
+    enterprise-auth: '12. 기업 로그인/회원가입'
+    enterprise-product: '13. 기업 시제품 - 조회, 등록, 삭제'
+    enterprise-event: '14. 기업 체험(이벤트) - 조회, 등록, 삭제'
     test: 'A. Test API'
 
 spring-doc:

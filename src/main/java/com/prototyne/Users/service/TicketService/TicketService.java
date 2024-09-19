@@ -16,4 +16,6 @@ public interface TicketService {
 
     void buyTicket(String accessToken, int ticketNumber);
 
+    void provideMonthlyTicket();
+
 }
