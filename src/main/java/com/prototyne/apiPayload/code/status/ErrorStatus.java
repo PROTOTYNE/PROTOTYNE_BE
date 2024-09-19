@@ -62,7 +62,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     TiCKET_LACK_ERROR(HttpStatus.BAD_REQUEST, "TiCKET4001", "티켓이 부족합니다."),
 
-    EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다.");
+    EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다."),
+
+    PAYMENT_NO_USER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4001", "존재하지 않는 사용자의 결제 요청입니다."),
+    PAYMENT_NO_ORDER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4002", "존재하지 않는 주문 건입니다.");
 
 
     private final HttpStatus httpStatus;

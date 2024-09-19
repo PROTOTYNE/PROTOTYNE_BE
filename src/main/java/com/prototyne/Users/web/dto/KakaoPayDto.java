@@ -26,14 +26,16 @@ public class KakaoPayDto {
         private String itemName;
         private int quantity;
         private int totalAmount;
+        private String ticketOption;
 
 
         public KakaoPayRequest(Long userId, TicketOption ticketOption){
             this.orderId = UUID.randomUUID().toString();
             this.userId = userId;
-            this.itemName = ticketOption.getTicketNumber() + " 티켓 구매";
+            this.itemName = "[프로토타인] "+ticketOption.getTicketNumber() + " 티켓 구매";
             this.quantity = 1;
             this.totalAmount = ticketOption.getPrice();
+            this.ticketOption = String.valueOf(ticketOption);
         }
 
         public MultiValueMap<String, String> toMultiValueMap(String cid, String approvalUrl, String cancelUrl, String failUrl) {
