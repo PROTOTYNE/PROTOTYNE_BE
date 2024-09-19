@@ -65,7 +65,9 @@ public enum ErrorStatus implements BaseErrorCode {
     EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다."),
 
     // 이벤트의 날짜가 null로 설정된 경우
-    EVENT_ERROR_DATE(HttpStatus.BAD_REQUEST,"EVENT4002","이벤트의 날짜가 null 입니다.");
+    EVENT_ERROR_DATE(HttpStatus.BAD_REQUEST,"EVENT4002","이벤트의 날짜가 null 입니다."),
+    // 존재하지 않은 기업일 경우
+    ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다.");
 
 
     private final HttpStatus httpStatus;
