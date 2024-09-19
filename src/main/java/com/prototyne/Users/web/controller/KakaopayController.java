@@ -32,10 +32,9 @@ public class KakaopayController {
     @PostMapping("/ready")
     public ApiResponse<KakaoPayDto.KakaoPayReadyResponse> readyPay(
             HttpServletRequest request, @RequestParam TicketOption ticketOption) {
+
         String accessToken = jwtManager.getToken(request);
         KakaoPayDto.KakaoPayReadyResponse response = kakaopayService.readyToPay(accessToken, ticketOption);
         return ApiResponse.onSuccess(response);
     }
-
-
 }

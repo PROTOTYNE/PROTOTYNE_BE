@@ -8,6 +8,7 @@ spring:
 
   server:
     env: blue
+    liveServerIp: 13.125.19.26
 
   config:
     import: optional:file:.env[.properties]

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
@@ -22,11 +23,9 @@ public class KakaopayServiceImpl implements KakaopayService {
     @Value("${spring.kakao.pay.cid}")
     private String cid;
 
-    public void printKakaoPaySettings() {
-        System.out.println("제발 되라ㅋㅋ");
-        System.out.println("KakaoPay Admin Key: " + adminKey);
-        System.out.println("KakaoPay CID: " + cid);
-    }
+    @Value("${spring.server.liveServerIp}")
+    private String serverAddress;
+
 
     @Autowired
     public KakaopayServiceImpl(WebClient.Builder webClientBuilder, JwtManager jwtManager) {
@@ -39,13 +38,34 @@ public class KakaopayServiceImpl implements KakaopayService {
         Long userId = jwtManager.validateJwt(accessToken);
 
         KakaoPayDto.KakaoPayRequest request = new KakaoPayDto.KakaoPayRequest(userId, ticketOption);
+        String approvalUrl = "http://" + serverAddress + "/payment/success";
+        String cancelUrl = "http://" + serverAddress + "/payment/cancel";
+        String failUrl = "http://" + serverAddress + "/payment/fail";
+
+        MultiValueMap<String, String> requestBody = request.toMultiValueMap(cid, approvalUrl, cancelUrl, failUrl);
+        System.out.println("Request Body: " + requestBody);
+
         return webClient.post()
                 .uri("https://kapi.kakao.com/v1/payment/ready")
                 .header("Authorization", "KakaoAK " + adminKey)
                 .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-                .bodyValue(request.toMutliValueMap())
-                .retrieve()
-                .bodyToMono(KakaoPayDto.KakaoPayReadyResponse.class)
+                .bodyValue(request.toMultiValueMap(cid, approvalUrl, cancelUrl, failUrl))
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is4xxClientError()) {
+                        // 클라이언트 오류 로그 출력
+                        return response.bodyToMono(String.class).map(body -> {
+                            throw new RuntimeException("4xx error: " + body);
+                        });
+                    } else if (response.statusCode().is5xxServerError()) {
+                        // 서버 오류 로그 출력
+                        return response.bodyToMono(String.class).map(body -> {
+                            throw new RuntimeException("5xx error: " + body);
+                        });
+                    } else {
+                        // 정상 응답 처리
+                        return response.bodyToMono(KakaoPayDto.KakaoPayReadyResponse.class);
+                    }
+                })
                 .block();
     }
 }

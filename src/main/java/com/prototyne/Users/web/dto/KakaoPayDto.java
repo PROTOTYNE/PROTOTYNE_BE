@@ -27,6 +27,7 @@ public class KakaoPayDto {
         private int quantity;
         private int totalAmount;
 
+
         public KakaoPayRequest(Long userId, TicketOption ticketOption){
             this.orderId = UUID.randomUUID().toString();
             this.userId = userId;
@@ -35,18 +36,18 @@ public class KakaoPayDto {
             this.totalAmount = ticketOption.getPrice();
         }
 
-        public MultiValueMap<String, String> toMutliValueMap() {
+        public MultiValueMap<String, String> toMultiValueMap(String cid, String approvalUrl, String cancelUrl, String failUrl) {
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-            map.add("cid", "TC0ONETIME");  // 테스트용 CID
+            map.add("cid", cid);  // 테스트용 CID
             map.add("partner_order_id", orderId);
             map.add("partner_user_id", userId.toString());
             map.add("item_name", itemName);
             map.add("quantity", String.valueOf(quantity));
             map.add("total_amount", String.valueOf(totalAmount));
             map.add("tax_free_amount", "0");
-            map.add("approval_url", "http://localhost:8080/payment/success");
-            map.add("cancel_url", "http://localhost:8080/payment/cancel");
-            map.add("fail_url", "http://localhost:8080/payment/fail");
+            map.add("approval_url", approvalUrl);
+            map.add("cancel_url", cancelUrl);
+            map.add("fail_url", failUrl);
             return map;
         }
     }
