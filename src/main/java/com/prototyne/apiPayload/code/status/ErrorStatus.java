@@ -52,6 +52,9 @@ public enum ErrorStatus implements BaseErrorCode {
 
     PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4004", "존재하지 않는 시제품입니다."),
 
+    // 시제품 삭제 시, 시제품에 연결된 eventList가 비어있지 않은 경우
+    PRODUCT_ERROR_EVENTLIST(HttpStatus.BAD_REQUEST, "PRODUCT4005", "시제품에 대한 체험이 존재합니다."),
+
     INVESTMENT_ERROR_ID(HttpStatus.BAD_REQUEST, "INVESTMENT4001", "존재하지 않는 나의 시제품입니다."),
 
     FEEDBACK_ERROR_ID(HttpStatus.BAD_REQUEST, "FEEDBACK4001", "존재하지 않는 체험 후기입니다."),
@@ -66,8 +69,12 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 이벤트의 날짜가 null로 설정된 경우
     EVENT_ERROR_DATE(HttpStatus.BAD_REQUEST,"EVENT4002","이벤트의 날짜가 null 입니다."),
+
     // 존재하지 않은 기업일 경우
-    ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다.");
+    ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다."),
+
+    // 기업이 가지지 않은 시제품을 조회했을 경우
+    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "존재하지 않는 기업의 시제품입니다.");
 
 
     private final HttpStatus httpStatus;

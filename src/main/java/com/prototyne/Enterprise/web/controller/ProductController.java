@@ -38,12 +38,36 @@ public class ProductController {
     // 시제품 등록
     @PostMapping("/products")
     @Operation(summary = "시제품 등록 API - 인증 필수",
-            description = "시제품 등록(추가)",
+            description = "시제품 등록(추가)" + """
+                    
+                    1. 시제품 명 (productName) - 공백 시 에러
+                    2. 설명 (contents - 공백 시 에러
+                    3. 티켓 갯수 (reqTickets)
+                    4. 추가 안내사항 (notes) - 공백 시 에러
+                    5. 카테고리 (category)
+                    6. 제품 사진 (최대 3장) - 아직 구현 x
+                    7. 질문 목록 (1~5)
+                    
+                    요청 성공 시, 시제품 아이디(product_id) 반환""",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<Long> create(HttpServletRequest token,
+    public ApiResponse<Long> createProduct(HttpServletRequest token,
                                     @Valid @RequestBody ProductDTO.CreateProductRequest productRequest){
         String oauthToken = jwtManager.getToken(token);
         Product newProduct = productService.createProduct(oauthToken, productRequest);
         return ApiResponse.onSuccess(newProduct.getId());
+    }
+
+    // 시제품 삭제
+    @DeleteMapping("/products/{productId}")
+    @Operation(summary = "시제품 등록 API - 인증 필수",
+            description = """
+                    시제품 삭제 \n
+                    productId 입력 \n
+                    시제품(product)에 연결된 체험(event)이 없어야 삭제 가능""",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<String> deleteProduct(HttpServletRequest token, @PathVariable Long productId) {
+        String oauthToken = jwtManager.getToken(token);
+        productService.deleteProduct(oauthToken, productId);
+        return ApiResponse.onSuccess("삭제 성공");
     }
 }
