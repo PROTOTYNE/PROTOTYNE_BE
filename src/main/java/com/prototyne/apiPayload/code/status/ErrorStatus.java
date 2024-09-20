@@ -33,7 +33,6 @@ public enum ErrorStatus implements BaseErrorCode {
     OCCUPATION_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 occupation 형식입니다."),
     PHONES_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 phones 형식입니다."),
 
-
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
     // 로그인하지 않은 사용자가 북마크 여부 변경시
@@ -74,7 +73,10 @@ public enum ErrorStatus implements BaseErrorCode {
     ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다."),
 
     // 기업이 가지지 않은 시제품을 조회했을 경우
-    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "존재하지 않는 기업의 시제품입니다.");
+    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "존재하지 않는 기업의 시제품입니다."),
+
+    // 업로드할 이미지 개수가 초과될 경우
+    IMAGE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "IMAGE4001", "업로드할 이미지 개수 초과");
 
 
     private final HttpStatus httpStatus;

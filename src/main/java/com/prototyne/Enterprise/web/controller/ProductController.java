@@ -6,12 +6,17 @@ import com.prototyne.Users.service.LoginService.JwtManager;
 import com.prototyne.apiPayload.ApiResponse;
 import com.prototyne.domain.Product;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,7 +41,7 @@ public class ProductController {
     }
 
     // 시제품 등록
-    @PostMapping("/products")
+    @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "시제품 등록 API - 인증 필수",
             description = "시제품 등록(추가)" + """
                     
@@ -45,15 +50,18 @@ public class ProductController {
                     3. 티켓 갯수 (reqTickets)
                     4. 추가 안내사항 (notes) - 공백 시 에러
                     5. 카테고리 (category)
-                    6. 제품 사진 (최대 3장) - 아직 구현 x
-                    7. 질문 목록 (1~5)
+                    6. 질문 목록 (1~5)
+                    7. imageFiles : 제품 사진 (최대 3장)
                     
                     요청 성공 시, 시제품 아이디(product_id) 반환""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<Long> createProduct(HttpServletRequest token,
-                                    @Valid @RequestBody ProductDTO.CreateProductRequest productRequest){
+                                    @Valid @RequestPart("productRequest") ProductDTO.CreateProductRequest productRequest,
+                                           @RequestPart(value = "imageFiles", required = false) List<MultipartFile> images){
+
+
         String oauthToken = jwtManager.getToken(token);
-        Product newProduct = productService.createProduct(oauthToken, productRequest);
+        Product newProduct = productService.createProduct(oauthToken, productRequest, images);
         return ApiResponse.onSuccess(newProduct.getId());
     }
 
