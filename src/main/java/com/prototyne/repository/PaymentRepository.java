@@ -10,4 +10,8 @@ import java.util.List;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByStatusAndCreatedAtBefore(PaymentStatus paymentStatus, LocalDateTime timeOutTime);
     Payment findByOrderId(String orderId);
+
+    Payment findByIdAndOrderId(Long id, String orderId);
+
+    Payment findByUserIdAndOrderId(Long userId, String tid);
 }

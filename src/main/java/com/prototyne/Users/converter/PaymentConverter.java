@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class PaymentConverter {
     public Payment toEntity(User user, KakaoPayDto.KakaoPayRequest request){
         return Payment.builder()
-                .orderId(request.getOrderId())
+                .orderId(request.getPartnerOrderId())
                 .user(user)
                 .quantity(request.getQuantity())
                 .status(PaymentStatus.결제대기)

@@ -65,7 +65,10 @@ public enum ErrorStatus implements BaseErrorCode {
     EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다."),
 
     PAYMENT_NO_USER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4001", "존재하지 않는 사용자의 결제 요청입니다."),
-    PAYMENT_NO_ORDER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4002", "존재하지 않는 주문 건입니다.");
+    PAYMENT_NO_ORDER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4002", "유효하지 않은 결제 내역입니다."),
+    PAYMENT_READY_CLIENT_FAILURE(HttpStatus.BAD_REQUEST, "PATYMENT4003", "결제 요청에 실패하였습니다."),
+    PAYMENT_READY_SERVER_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "PAYMENT5001", "서버 에러, 결제 요청에 실패하였습니다."),
+    PAYMENT_APPROVE_FAILURE(HttpStatus.BAD_REQUEST, "PAYMENT4003", "결제 승인에 실패하였습니다.");
 
 
     private final HttpStatus httpStatus;

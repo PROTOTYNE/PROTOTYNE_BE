@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
@@ -37,7 +36,6 @@ public class KakaopayServiceImpl implements KakaopayService {
     @Value("${spring.server.liveServerIp}")
     private String serverAddress;
 
-
     @Autowired
     public KakaopayServiceImpl(WebClient.Builder webClientBuilder, JwtManager jwtManager, PaymentConverter paymentConverter, UserRepository userRepository, PaymentRepository paymentRepository) {
         this.webClient = webClientBuilder.build();
@@ -47,6 +45,7 @@ public class KakaopayServiceImpl implements KakaopayService {
         this.paymentRepository = paymentRepository;
     }
 
+    // 1.결제 시작-> kakaoPay 서버에게 결제 준비 요청 -> 결제 성공 여부 확인
     @Override
     public KakaoPayDto.KakaoPayReadyResponse readyToPay(String accessToken, TicketOption ticketOption) {
         Long userId = jwtManager.validateJwt(accessToken);
@@ -56,7 +55,6 @@ public class KakaopayServiceImpl implements KakaopayService {
         String cancelUrl = "http://" + serverAddress + "/payment/cancel";
         String failUrl = "http://" + serverAddress + "/payment/fail";
 
-        MultiValueMap<String, String> requestBody = request.toMultiValueMap(cid, approvalUrl, cancelUrl, failUrl);
         Payment newPayment = savePaymentLogs(userId, request);
 
         return webClient.post()
@@ -66,14 +64,14 @@ public class KakaopayServiceImpl implements KakaopayService {
                 .bodyValue(request.toMultiValueMap(cid, approvalUrl, cancelUrl, failUrl))
                 .exchangeToMono(response -> {
                     if (response.statusCode().is4xxClientError()) {
-                        updatePaymentStatus(newPayment.getOrderId(), PaymentStatus.결제실패);
+                        updatePaymentStatus(newPayment.getId(), PaymentStatus.결제실패);
                         return response.bodyToMono(String.class).map(body -> {
-                            throw new RuntimeException("4xx error: " + body);
+                            throw new TempHandler(ErrorStatus.PAYMENT_READY_CLIENT_FAILURE);
                         });
                     } else if (response.statusCode().is5xxServerError()) {
-                        updatePaymentStatus(newPayment.getOrderId(), PaymentStatus.결제실패);
+                        updatePaymentStatus(newPayment.getId(), PaymentStatus.결제실패);
                         return response.bodyToMono(String.class).map(body -> {
-                            throw new RuntimeException("5xx error: " + body);
+                            throw new TempHandler(ErrorStatus.PAYMENT_READY_SERVER_FAILURE);
                         });
                     } else {
                         return response.bodyToMono(KakaoPayDto.KakaoPayReadyResponse.class).map(readyResponse -> {
@@ -84,6 +82,41 @@ public class KakaopayServiceImpl implements KakaopayService {
                 })
                 .block();
     }
+
+    // 2. 결제 완료 -> kakaoPay 서버에게 결제 승인 요청
+    public KakaoPayDto.KakaoPayApproveResponse approvePayment(String accessToken, String tid, String pgToken) {
+        Long userId = jwtManager.validateJwt(accessToken);
+        Payment payment = paymentRepository.findByUserIdAndOrderId(userId, tid);
+
+        if(payment == null){
+            throw new TempHandler(ErrorStatus.PAYMENT_NO_ORDER_FOUND);
+        }
+
+        KakaoPayDto.ApprovePaymentRequest approveReq = new KakaoPayDto.ApprovePaymentRequest(cid,
+                payment.getOrderId(),
+                payment.getUser().getId(),
+                pgToken);
+
+        System.out.println("Approve Payment Request Params: " + approveReq.toMultiValueMap());
+
+        return webClient.post()
+                .uri("https://kapi.kakao.com/v1/payment/approve")
+                .header("Authorization", "KakaoAK " + adminKey)
+                .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
+                .bodyValue(approveReq.toMultiValueMap())
+                .retrieve()
+                .bodyToMono(KakaoPayDto.KakaoPayApproveResponse.class)
+                .map(approveResponse -> {
+                    updatePaymentStatus(payment.getId(), PaymentStatus.결제성공);
+                    return approveResponse;
+                })
+                .doOnError(error -> {
+                    updatePaymentStatus(payment.getId(), PaymentStatus.결제실패);
+                    throw new TempHandler(ErrorStatus.PAYMENT_APPROVE_FAILURE);
+                })
+                .block();
+    }
+
 
     // step1. '결제 대기' 상태의 결제 기록 최초 생성
     private Payment savePaymentLogs(Long userId, KakaoPayDto.KakaoPayRequest req){
@@ -105,10 +138,11 @@ public class KakaopayServiceImpl implements KakaopayService {
     }
 
 
-
-    private void updatePaymentStatus(String orderId, PaymentStatus status){
-        Payment originPayment = paymentRepository.findByOrderId(orderId);
+    private void updatePaymentStatus(Long paymentId, PaymentStatus status){
+        Payment originPayment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new TempHandler(ErrorStatus.PAYMENT_NO_ORDER_FOUND));
         originPayment.setStatus(status);
         paymentRepository.save(originPayment);
     }
+
 }
