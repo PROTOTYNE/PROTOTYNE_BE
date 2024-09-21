@@ -8,6 +8,7 @@ import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.Users.web.dto.MyProductDto;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -18,15 +19,15 @@ public class MyProductConverter {
     public MyProductDto.CommonDto toCommonDto(Investment investment) {
         Event event = investment.getEvent();
         Product product = event.getProduct();
-        LocalDateTime releaseStart = event.getReleaseStart();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate releaseStart = event.getReleaseStart();
+        LocalDate now = LocalDate.now();
         String calculatedStatus;
 
         if(investment.getStatus()== InvestmentStatus.신청){
             if(releaseStart.isBefore(now)) {
                 calculatedStatus = "미당첨";
             } else {
-                long dDayToOngoing = (int) ChronoUnit.DAYS.between(now.toLocalDate(), releaseStart.toLocalDate());
+                long dDayToOngoing = (int) ChronoUnit.DAYS.between(now, releaseStart);
                 calculatedStatus = String.valueOf(dDayToOngoing);
             }
         } else {
@@ -46,11 +47,11 @@ public class MyProductConverter {
 
     public MyProductDto.AppliedDto toAppliedDto(Investment investment) {
         MyProductDto.CommonDto commonInfo = toCommonDto(investment);
-        LocalDateTime releaseStart = investment.getEvent().getReleaseStart();
+        LocalDate releaseStart = investment.getEvent().getReleaseStart();
         LocalDateTime now = LocalDateTime.now();
 
         // releaseStart - 현재 날짜
-        long dDayToOngoing = ChronoUnit.DAYS.between(now.toLocalDate(), releaseStart.toLocalDate());
+        long dDayToOngoing = ChronoUnit.DAYS.between(now.toLocalDate(), releaseStart);
 
         return MyProductDto.AppliedDto.builder()
                 .commonInfo(commonInfo)
@@ -72,16 +73,16 @@ public class MyProductConverter {
 
     public MyProductDto.ReviewedDto toReviewedDto(Investment investment) {
         MyProductDto.CommonDto commonInfo = toCommonDto(investment);
-        LocalDateTime judgeEnd = investment.getEvent().getJudgeEnd();
+//        LocalDateTime judgeEnd = investment.getEvent().getJudgeEnd();
         LocalDateTime now = LocalDateTime.now();
 
         // judgeEnd - 현재 날짜
-        long dDayToComplete = ChronoUnit.DAYS.between(now.toLocalDate(), judgeEnd.toLocalDate());
+//        long dDayToComplete = ChronoUnit.DAYS.between(now.toLocalDate(), judgeEnd.toLocalDate());
 
         return MyProductDto.ReviewedDto.builder()
                 .commonInfo(commonInfo)
-                .judgeEnd(judgeEnd)
-                .dDayToComplete((int) dDayToComplete)
+//                .judgeEnd(judgeEnd)
+//                .dDayToComplete((int) dDayToComplete)
                 .build();
     }
 

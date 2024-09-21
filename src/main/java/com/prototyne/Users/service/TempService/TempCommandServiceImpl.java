@@ -8,6 +8,7 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +25,9 @@ public class TempCommandServiceImpl implements TempCommandService {
 
     // 이미지 업로드 및 URL 리스트 반환
     public TempResponse.TempUploadDTO uploadImages(String directory, List<MultipartFile> images) {
+        // null일 경우 빈 리스트로 대체
+        if (images == null) images = new ArrayList<>();
+
         // S3에 이미지 업로드
         List<String> imageUrls = s3Manager.uploadFile(directory, images);
 

@@ -4,7 +4,7 @@ import com.prototyne.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Entity
@@ -24,7 +24,7 @@ public class Alarm extends BaseEntity {
     private String contents;
 
     @Column(nullable = false)
-    private LocalDateTime StartReview; //후기 작성해야 하는 기간에 알람
+    private LocalDate StartReview; //후기 작성해야 하는 기간에 알람
 
     @Column
     private String thumbnailUrl;

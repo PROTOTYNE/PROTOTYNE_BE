@@ -24,8 +24,8 @@ public class TempRestController {
     private final JwtManager JwtManager;
 
     @PostMapping(value="/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<TempResponse.TempUploadDTO> imageUpload(@RequestPart("imageFiles")
-                                                             List<MultipartFile> images) {
+    public ApiResponse<TempResponse.TempUploadDTO> imageUpload(
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> images) {
         TempResponse.TempUploadDTO tempUploadDTO =
                 tempQueryService.uploadImages("test", images);
         return ApiResponse.onSuccess(tempUploadDTO);
