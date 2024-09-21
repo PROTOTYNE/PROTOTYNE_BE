@@ -1,53 +1,99 @@
 package com.prototyne.Users.web.dto;
 
 import com.prototyne.domain.enums.TicketOption;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import lombok.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class KakaoPayDto {
 
     @Getter
     @Setter
-    public static class KakaoPayReadyResponse{
+    @Data
+    public static class KakaoPayReadyResponse {
         private String tid;
+        private String next_redirect_app_url;
+        private String next_redirect_mobile_url;
         private String next_redirect_pc_url;
+        private String android_app_scheme;
+        private String ios_app_scheme;
         private String created_at;
     }
 
     @Data
     public static class KakaoPayRequest {
-        private String orderId; // 결제 건 고유 번호
+        private String partnerOrderId; // 결제 건 고유 번호
         private Long userId;
         private String itemName;
         private int quantity;
         private int totalAmount;
+        private String ticketOption;
 
-        public KakaoPayRequest(Long userId, TicketOption ticketOption){
-            this.orderId = UUID.randomUUID().toString();
+
+        public KakaoPayRequest(Long userId, TicketOption ticketOption) {
+            this.partnerOrderId = UUID.randomUUID().toString();
             this.userId = userId;
-            this.itemName = ticketOption.getTicketNumber() + " 티켓 구매";
+            this.itemName = "[프로토타인] " + ticketOption.getTicketNumber() + " 티켓 구매";
             this.quantity = 1;
             this.totalAmount = ticketOption.getPrice();
+            this.ticketOption = String.valueOf(ticketOption);
         }
 
-        public MultiValueMap<String, String> toMutliValueMap() {
-            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-            map.add("cid", "TC0ONETIME");  // 테스트용 CID
-            map.add("partner_order_id", orderId);
-            map.add("partner_user_id", userId.toString());
-            map.add("item_name", itemName);
-            map.add("quantity", String.valueOf(quantity));
-            map.add("total_amount", String.valueOf(totalAmount));
-            map.add("tax_free_amount", "0");
-            map.add("approval_url", "http://localhost:8080/payment/success");
-            map.add("cancel_url", "http://localhost:8080/payment/cancel");
-            map.add("fail_url", "http://localhost:8080/payment/fail");
+        public Map<String, Object> toFormData(String cid, String approvalUrl, String cancelUrl, String failUrl) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("cid", cid);  // 테스트용 CID
+            map.put("partner_order_id", partnerOrderId);
+            map.put("partner_user_id", userId.toString());
+            map.put("item_name", itemName);
+            map.put("quantity", String.valueOf(quantity));
+            map.put("total_amount", String.valueOf(totalAmount));
+            map.put("tax_free_amount", "0");
+            map.put("approval_url", approvalUrl);
+            map.put("cancel_url", cancelUrl);
+            map.put("fail_url", failUrl);
             return map;
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class ApprovePaymentRequest {
+        private String tid; // kakaopay 발급
+        private String pgToken;
+    }
+
+        @Getter
+        @Setter
+        @ToString
+        public static class KakaoPayApproveResponse {
+            private String aid;
+            private String tid;
+            private String cid;
+            private String partner_order_id;
+            private String partner_user_id;
+            private String payment_method_type;
+            private Amount amount;
+            private String item_name;
+            private String item_code;
+            private int quantity;
+            private String created_at; // 결제 요청
+            private String approved_at;
+            private String payload;
+
+            @Getter
+            @Setter
+            public static class Amount {
+                private int total;
+                private int tax_free;
+                private int tax;
+                private int point;
+                private int discount;
+                private int green_deposit;
+            }
+        }
+
+
 }
