@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface EntReviewService {
     List<EntReviewDTO.ReviewResponse> getAllReviews(String token, Long eventId);
+    EntReviewDTO.ReviewResponse getReviewByUserId(String token, Long investmentId, Long userId);
 
 }

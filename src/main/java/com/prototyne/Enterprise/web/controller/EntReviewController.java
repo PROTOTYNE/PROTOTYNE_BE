@@ -37,5 +37,13 @@ public class EntReviewController {
 
     }
 
+    @GetMapping("/review/{investmentId}/{userId}")
+    @Operation(summary="개별 설문조사 조회 API - 인증 필수")
+    @SecurityRequirement(name = "session-token")
+    public ApiResponse<EntReviewDTO.ReviewResponse> getReviewByUserId(HttpServletRequest token, @PathVariable Long investmentId, @PathVariable Long userId){
+        String accessToken = jwtManager.getToken(token);
+        EntReviewDTO.ReviewResponse review= entReviewService.getReviewByUserId(accessToken,investmentId,userId);
+        return ApiResponse.onSuccess(review);
+    }
 
 }

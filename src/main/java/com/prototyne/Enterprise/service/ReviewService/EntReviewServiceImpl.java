@@ -40,4 +40,18 @@ public class EntReviewServiceImpl implements EntReviewService {
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public EntReviewDTO.ReviewResponse getReviewByUserId(String token, Long investmentId, Long userId){
+        Long enterpriseId = jwtManager.validateJwt(token);
+        Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
+                .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+
+        Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investmentId, userId);
+
+        return EntReviewConverter.toReviewResponse(feedback, feedback.getUser());
+
+
+
+    }
 }
