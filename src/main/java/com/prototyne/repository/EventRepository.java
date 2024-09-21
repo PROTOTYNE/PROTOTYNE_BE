@@ -9,9 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
@@ -24,19 +23,19 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "WHERE e.eventStart <= :now AND e.eventEnd >= :now " +
             "GROUP BY e " +
             "ORDER BY (COUNT(h) + COUNT(i)) / 2 DESC")
-    List<Event> findAllActiveEventsByPopular(@Param("now") LocalDateTime now);
+    List<Event> findAllActiveEventsByPopular(@Param("now") LocalDate now);
 
     // 마감 임박순의 체험 진행 중인 이벤트
     @Query("SELECT e FROM Event e " +
             "WHERE e.eventStart <= :now AND e.eventEnd >= :now " +
             "ORDER BY e.eventEnd ASC")
-    List<Event> findAllEventsByImminent(@Param("now") LocalDateTime now);
+    List<Event> findAllEventsByImminent(@Param("now") LocalDate now);
 
     // 신규 등록순의 체험 진행 중인 이벤트
     @Query("SELECT e FROM Event e " +
             "WHERE e.eventStart <= :now AND e.eventEnd >= :now " +
             "ORDER BY e.eventStart DESC")
-    List<Event> findAllEventsByNew(@Param("now") LocalDateTime now);
+    List<Event> findAllEventsByNew(@Param("now") LocalDate now);
 
     // 검색(제품)명을 포함하는 이벤트
     List<Event> findAllByProductNameContaining(String name);

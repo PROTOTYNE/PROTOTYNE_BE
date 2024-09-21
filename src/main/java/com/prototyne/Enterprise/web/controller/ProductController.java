@@ -58,11 +58,9 @@ public class ProductController {
     public ApiResponse<Long> createProduct(HttpServletRequest token,
                                     @Valid @RequestPart("productRequest") ProductDTO.CreateProductRequest productRequest,
                                            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> images){
-
-
         String oauthToken = jwtManager.getToken(token);
-        Product newProduct = productService.createProduct(oauthToken, productRequest, images);
-        return ApiResponse.onSuccess(newProduct.getId());
+        Long productId = productService.createProduct(oauthToken, productRequest, images);
+        return ApiResponse.onSuccess(productId);
     }
 
     // 시제품 삭제

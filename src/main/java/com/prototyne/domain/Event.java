@@ -5,6 +5,7 @@ import com.prototyne.domain.mapping.Heart;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,32 +22,31 @@ public class Event extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime eventStart;
+    private LocalDate eventStart;
 
     @Column(nullable = false)
-    private LocalDateTime eventEnd;
+    private LocalDate eventEnd;
 
     @Column(nullable = false)
-    private LocalDateTime releaseStart;
+    private LocalDate releaseStart;
 
     @Column(nullable = false)
-    private LocalDateTime releaseEnd;
+    private LocalDate releaseEnd;
 
     @Column(nullable = false)
-    private LocalDateTime feedbackStart;
+    private LocalDate feedbackStart;
 
     @Column(nullable = false)
-    private LocalDateTime feedbackEnd;
+    private LocalDate feedbackEnd;
 
     // 심사 중 필드
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime judgeStart;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime judgeEnd;
+    @Column(nullable = true)
+    private LocalDate endDate;
     //
-
-    @Column(nullable = false)
-    private LocalDateTime endDate;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id")

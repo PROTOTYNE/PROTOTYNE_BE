@@ -1,18 +1,17 @@
 package com.prototyne.Enterprise.web.controller;
 
 import com.prototyne.Enterprise.service.EventService.EventService;
-import com.prototyne.Enterprise.service.ProductService.ProductService;
-import com.prototyne.Enterprise.web.dto.ProductDTO;
+import com.prototyne.Enterprise.web.dto.EventDTO;
 import com.prototyne.Users.service.LoginService.JwtManager;
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.domain.Event;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,10 +36,26 @@ public class EventController {
         4: 후기 작성 기간       | 후기 작성 종료      | feedback_end
         5: 종료                 | 종료일             | end_date
     """, security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<List<ProductDTO.EventResponse>> getEventsList(HttpServletRequest token) {
+    public ApiResponse<List<EventDTO.EventResponse>> getEventsList(HttpServletRequest token) {
         String oauthToken = jwtManager.getToken(token);
-        List<ProductDTO.EventResponse> eventList = eventService.getEvents(oauthToken);
+        List<EventDTO.EventResponse> eventList = eventService.getEvents(oauthToken);
         return ApiResponse.onSuccess(eventList);
     }
 
+    // 체험 정보 조회
+
+    // 시제품에 체험 등록
+    @PostMapping("/products/{productId}/event")
+    @Operation(summary = "체험 등록 API - 인증 필수",
+            security = {@SecurityRequirement(name = "session-token")} )
+    public ApiResponse<Long> createEvent(HttpServletRequest token,
+                                         @PathVariable Long productId,
+                                         @RequestBody @Valid EventDTO.createEventRequest eventRequest) {
+        String oauthToken = jwtManager.getToken(token);
+        Long eventId = eventService.createEvent(oauthToken, productId, eventRequest);
+        return ApiResponse.onSuccess(eventId);
+    }
+
+
+    // 체험 삭제
 }

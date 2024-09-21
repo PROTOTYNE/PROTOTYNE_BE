@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
     // 세제품 등록
     @Override
-    public Product createProduct(String accessToken,
+    public Long createProduct(String accessToken,
                                  ProductDTO.CreateProductRequest productRequest,
                                  List<MultipartFile> images) {
         Long enterpriseId = jwtManager.validateJwt(accessToken);
@@ -60,7 +60,9 @@ public class ProductServiceImpl implements ProductService {
         List<String> imageUrls = s3Manager.uploadFile("product", images);
         Product newProduct = ProductConverter.toProduct(productRequest, enterprise, imageUrls);
 
-        return productRepository.save(newProduct);
+        // 시제품 저장 및 id 반환
+        Product product = productRepository.save(newProduct);
+        return product.getId();
     }
 
     // 시제품 삭제

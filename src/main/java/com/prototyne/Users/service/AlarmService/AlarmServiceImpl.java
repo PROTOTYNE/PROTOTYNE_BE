@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public List<AlarmDto> getAlarmList(String accessToken) {
         Long id = jwtManager.validateJwt(accessToken);
-        return alarmRespository.findByUserId(id).stream().sorted((o1, o2) -> o2.getStartReview().compareTo(o1.getStartReview())).filter(alarm -> !alarm.getStartReview().isAfter(LocalDateTime.now())).map(alarm -> AlarmDto.builder()
+        return alarmRespository.findByUserId(id).stream().sorted((o1, o2) -> o2.getStartReview().compareTo(o1.getStartReview())).filter(alarm -> !alarm.getStartReview().isAfter(LocalDate.now())).map(alarm -> AlarmDto.builder()
                         .title(alarm.getTitle())
                         .contents(alarm.getContents())
                         .thumbnailUrl(alarm.getThumbnailUrl())

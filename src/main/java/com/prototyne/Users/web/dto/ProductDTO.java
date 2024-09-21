@@ -5,6 +5,7 @@ import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.domain.enums.ProductCategory;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -63,15 +64,15 @@ public class ProductDTO {
     @Getter
     @Builder
     public static class DateInfo {
-        private LocalDateTime eventStart;
-        private LocalDateTime eventEnd;
-        private LocalDateTime releaseStart;
-        private LocalDateTime releaseEnd;
-        private LocalDateTime feedbackStart;
-        private LocalDateTime feedbackEnd;
+        private LocalDate eventStart;
+        private LocalDate eventEnd;
+        private LocalDate releaseStart;
+        private LocalDate releaseEnd;
+        private LocalDate feedbackStart;
+        private LocalDate feedbackEnd;
         private LocalDateTime judgeStart;
         private LocalDateTime judgeEnd;
-        private LocalDateTime endDate;
+        private LocalDate endDate;
     }
 
     @Getter

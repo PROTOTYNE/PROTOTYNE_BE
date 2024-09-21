@@ -51,26 +51,4 @@ public class ProductDTO {
         private final Integer eventCount;     // 진행 중인 체험
 //        private LocalDate date;       // 출시 예정일
     }
-
-    // 체험 목록 조회 응답 형식
-    @Builder
-    @Getter
-    public static class EventResponse {
-        private final Long eventId;           // 체험(이벤트) 아이디
-        private final String thumbnailUrl;    // 시제품 썸네일
-        private final String productName;     // 시제품 명
-        private final StageAndDate stageAndDate;  // 체험(이벤트) 단계와 그에 따른 날짜
-        private final LocalDate createdDate;  // 체험(이벤트) 등록일
-        private final ProductCategory category;   // 시제품 카테고리
-    }
-
-    // 체험(이벤트) 단계 및 날짜
-    @Getter
-    @Builder
-    public static class StageAndDate {
-        private final Integer stage;       // 이벤트 단계
-        private final LocalDate stageDate;   // 단계에 따른 날짜
-    }
-
-    //
 }
