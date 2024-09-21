@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByUserId(Long userId);
     Optional<Feedback> findByInvestmentId(Long investmentId);
+    Boolean existsByInvestmentIdAndUserId(Long investmentId, Long userId);
 
 }

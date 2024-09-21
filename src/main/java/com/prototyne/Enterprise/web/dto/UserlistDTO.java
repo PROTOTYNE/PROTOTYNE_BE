@@ -3,7 +3,6 @@ package com.prototyne.Enterprise.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 
 public class UserlistDTO {
 
@@ -13,7 +12,7 @@ public class UserlistDTO {
 
         private String userName;
 
-        private LocalDateTime event_start;
+        private String event_start;
 
         private String prizeStatus;
 
