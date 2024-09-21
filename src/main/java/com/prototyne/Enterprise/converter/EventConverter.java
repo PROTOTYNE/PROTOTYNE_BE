@@ -1,10 +1,13 @@
 package com.prototyne.Enterprise.converter;
 
 import com.prototyne.Enterprise.web.dto.EventDTO;
+import com.prototyne.Enterprise.web.dto.ProductDTO;
 import com.prototyne.domain.Event;
 import com.prototyne.domain.Product;
+import com.prototyne.domain.ProductImage;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 public class EventConverter {
     // 체험 목록 조회 응답 형식으로
@@ -42,7 +45,7 @@ public class EventConverter {
             stageDate = event.getFeedbackEnd();// 작성 종료일
         } else {
             stage = 5; // 종료 -> 종료일
-            stageDate = event.getFeedbackEnd().plusDays(1);;
+            stageDate = event.getFeedbackEnd().plusDays(1);
         }
 
         return EventDTO.StageAndDate.builder()
@@ -52,9 +55,9 @@ public class EventConverter {
     }
 
     // 체험 엔티티 형식으로
-    public static Event toEvent(Product product, EventDTO.createEventRequest request) {
-        // 체험 생성
-        Event newEvent = Event.builder()
+    public static Event toEvent(Product product, EventDTO.EventDate request) {
+        // 체험 생성 및 반환
+        return Event.builder()
                 .product(product)
                 .eventStart(request.getEventStart())
                 .eventEnd(request.getEventEnd())
@@ -63,6 +66,40 @@ public class EventConverter {
                 .feedbackStart(request.getFeedbackStart())
                 .feedbackEnd(request.getFeedbackEnd())
                 .build();
-        return newEvent;
+    }
+
+    // 체험 정보 형식으로
+    public static EventDTO.EventInfo toEventInfo(Product product, Event event) {
+        // 시제품 정보
+        ProductDTO.ProductInfo productInfo = ProductDTO.ProductInfo.builder()
+                .productName(product.getName())
+                .contents(product.getContents())
+                .reqTickets(product.getReqTickets())
+                .notes(product.getNotes())
+                .category(product.getCategory())
+                .build();
+
+        // 체험 정보
+        EventDTO.EventDate eventDate = EventDTO.EventDate.builder()
+                .eventStart(event.getEventStart())
+                .eventEnd(event.getEventEnd())
+                .releaseStart(event.getReleaseStart())
+                .releaseEnd(event.getReleaseEnd())
+                .feedbackStart(event.getFeedbackStart())
+                .feedbackEnd(event.getFeedbackEnd())
+                .build();
+
+        // DTO 반환
+        return EventDTO.EventInfo.builder()
+                .productId(product.getId())
+                .eventId(event.getId())
+                .productImages( // 이미지 url 추출. 없으면 null 반환
+                        product.getProductImageList() != null && !product.getProductImageList().isEmpty()
+                        ? product.getProductImageList().stream()
+                        .map(ProductImage::getImageUrl).collect(Collectors.toList())
+                        : null)
+                .productInfo(productInfo)
+                .dates(eventDate)
+                .build();
     }
 }

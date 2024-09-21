@@ -12,7 +12,15 @@ public class ProductDTO {
     // 시제품 등록 요청 형식
     @Builder
     @Getter
-    public static class CreateProductRequest{
+    public static class CreateProductRequest {
+        private ProductInfo productInfo;
+        private Questions questions;        // 질문 목록
+    }
+
+    // 시제품 정보
+    @Builder
+    @Getter
+    public static class ProductInfo {
         @NotBlank(message = "시제품 명이 공백입니다.")
         private final String productName;   // 시제품 명
 
@@ -24,13 +32,12 @@ public class ProductDTO {
         @NotBlank(message = "시제품 추가 안내사항이 공백입니다.")
         private String notes;               // 시제품 추가 안내사항
         private final ProductCategory category; // 시제품 카테고리
-        private Questions questions;        // 질문 목록
     }
 
     // 질문 목록
     @Builder
     @Getter
-    public static class Questions{
+    public static class Questions {
         private final String question1;
         private final String question2;
         private final String question3;

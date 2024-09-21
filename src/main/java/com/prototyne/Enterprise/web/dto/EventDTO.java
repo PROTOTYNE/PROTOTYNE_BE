@@ -6,13 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class EventDTO {
 
     // 체험 등록 요청 형식
     @Builder
     @Getter
-    public static class createEventRequest {
+    public static class EventDate {
         @NotNull(message = "eventStart가 공백입니다.")
         private final LocalDate eventStart;     // 체험 시작
         @NotNull(message = "eventEnd가 공백입니다.")
@@ -45,5 +46,16 @@ public class EventDTO {
     public static class StageAndDate {
         private final Integer stage;       // 이벤트 단계
         private final LocalDate stageDate;   // 단계에 따른 날짜
+    }
+
+    // 체험 정보 조회
+    @Builder
+    @Getter
+    public static class EventInfo {
+        private final Long productId;
+        private final Long eventId;
+        private final List<String> productImages;
+        private final ProductDTO.ProductInfo productInfo;
+        private final EventDate dates;
     }
 }

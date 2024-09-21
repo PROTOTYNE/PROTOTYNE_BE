@@ -42,7 +42,7 @@ public class EventServiceImpl implements EventService {
 
     // 체험 등록
     @Override
-    public Long createEvent(String accessToken, Long productId, EventDTO.createEventRequest request) {
+    public Long createEvent(String accessToken, Long productId, EventDTO.EventDate request) {
         Long enterpriseId = jwtManager.validateJwt(accessToken);
 
         // 시제품 객체 조회
@@ -58,5 +58,24 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.save(newEvent);
 
         return event.getId();
+    }
+
+    // 체험 상세 조회
+    @Override
+    public EventDTO.EventInfo getEventInfo(String accessToken, Long eventId) {
+        Long enterpriseId = jwtManager.validateJwt(accessToken);
+
+        // 체험 객체 조회
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new TempHandler(ErrorStatus.EVENT_ERROR_ID));
+
+        // 이벤트로부터 제품 객체 가져오기
+        Product product = event.getProduct();
+
+        // 해당 시제품을 기업이 가졌는지 확인
+        if (!product.getEnterprise().getId().equals(enterpriseId))
+            throw new TempHandler(ErrorStatus.ENTERPRISE_ERROR_PRODUCT);
+
+        return EventConverter.toEventInfo(product, event);
     }
 }

@@ -28,17 +28,20 @@ public class ProductConverter {
                                     Enterprise enterprise,
                                     List<String> imageUrls) {
         // Product 생성
+        ProductDTO.ProductInfo productInfo = request.getProductInfo();
+        ProductDTO.Questions questions = request.getQuestions();
+
         Product newProduct = Product.builder()
-                .name(request.getProductName())
-                .contents(request.getContents())
-                .reqTickets(request.getReqTickets())
-                .notes(request.getNotes())
-                .category(request.getCategory())
-                .question1(request.getQuestions().getQuestion1())
-                .question2(request.getQuestions().getQuestion2())
-                .question3(request.getQuestions().getQuestion3())
-                .question4(request.getQuestions().getQuestion4())
-                .question5(request.getQuestions().getQuestion5())
+                .name(productInfo.getProductName())
+                .contents(productInfo.getContents())
+                .reqTickets(productInfo.getReqTickets())
+                .notes(productInfo.getNotes())
+                .category(productInfo.getCategory())
+                .question1(questions.getQuestion1())
+                .question2(questions.getQuestion2())
+                .question3(questions.getQuestion3())
+                .question4(questions.getQuestion4())
+                .question5(questions.getQuestion5())
                 .enterprise(enterprise)
                 .build();
 
