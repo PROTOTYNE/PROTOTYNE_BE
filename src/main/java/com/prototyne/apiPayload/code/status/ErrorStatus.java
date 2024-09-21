@@ -33,12 +33,11 @@ public enum ErrorStatus implements BaseErrorCode {
     OCCUPATION_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 occupation 형식입니다."),
     PHONES_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "ADDINFO4001", "잘못된 phones 형식입니다."),
 
-
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
     // 로그인하지 않은 사용자가 북마크 여부 변경시
     HEART_ERROR_ID(HttpStatus.BAD_REQUEST, "HEART4001", "로그인이 필요합니다"),
-    // 존재하지 않는 이gi벤트의 북마크 여부 변경시
+    // 존재하지 않는 이벤트의 북마크 여부 변경시
     HEART_ERROR_EVENT(HttpStatus.BAD_REQUEST, "HEART4002", "잘못된 이벤트 접근입니다"),
 
     DATE_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "FORMAT4001", "잘못된 날짜 형식입니다. 올바른 형식: yyyy-MM-dd"),
@@ -52,6 +51,9 @@ public enum ErrorStatus implements BaseErrorCode {
 
     PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4004", "존재하지 않는 시제품입니다."),
 
+    // 시제품 삭제 시, 시제품에 연결된 eventList가 비어있지 않은 경우
+    PRODUCT_ERROR_EVENTLIST(HttpStatus.BAD_REQUEST, "PRODUCT4005", "시제품에 대한 체험이 존재합니다."),
+
     INVESTMENT_ERROR_ID(HttpStatus.BAD_REQUEST, "INVESTMENT4001", "존재하지 않는 나의 시제품입니다."),
 
     FEEDBACK_ERROR_ID(HttpStatus.BAD_REQUEST, "FEEDBACK4001", "존재하지 않는 체험 후기입니다."),
@@ -63,6 +65,21 @@ public enum ErrorStatus implements BaseErrorCode {
     TiCKET_LACK_ERROR(HttpStatus.BAD_REQUEST, "TiCKET4001", "티켓이 부족합니다."),
 
     EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다."),
+
+    // 이벤트의 날짜가 null로 설정된 경우
+    EVENT_ERROR_DATE(HttpStatus.BAD_REQUEST,"EVENT4002","이벤트의 날짜가 null 입니다."),
+
+    // 이벤트가 존재하지 않은 경우
+    EVENT_ERROR_ID(HttpStatus.BAD_REQUEST,"EVENT4003","존재하지 않은 이벤트 입니다."),
+
+    // 존재하지 않은 기업일 경우
+    ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다."),
+
+    // 기업이 가지지 않은 시제품을 조회했을 경우
+    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "기업이 등록하지 않은 시제품입니다."),
+
+    // 업로드할 이미지 개수가 초과될 경우
+    IMAGE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "IMAGE4001", "업로드할 이미지 개수 초과");
 
     PAYMENT_NO_USER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4001", "존재하지 않는 사용자의 결제 요청입니다."),
     PAYMENT_NO_ORDER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4002", "유효하지 않은 결제 내역입니다."),

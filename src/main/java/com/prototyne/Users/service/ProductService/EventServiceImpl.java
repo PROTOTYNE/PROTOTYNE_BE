@@ -17,11 +17,11 @@ import com.prototyne.Users.web.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Service("usersEventServiceImpl")
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
@@ -36,7 +36,7 @@ public class EventServiceImpl implements EventService {
         // 유저 아이디 객체 가져옴
         Long userId = jwtManager.validateJwt(accessToken);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         List<ProductDTO.EventResponse> poluarList = getEvents(now, "popular")
                 .stream().limit(2)
                 .map(event -> {
@@ -72,7 +72,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<ProductDTO.EventResponse> getEventsByType(Long userId, String type) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         // 타입별 신청 진행 중인 시제품 이벤트만 가져옴
         List<Event> events = getEvents(now, type);
@@ -99,7 +99,7 @@ public class EventServiceImpl implements EventService {
 
 
         // 신청 진행 중인 시제품 이벤트만 가져옴
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         List<Event> events = eventRepository.findAllByProductNameContaining(name).stream()
                 .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
                 .collect(Collectors.toList());
@@ -165,7 +165,7 @@ public class EventServiceImpl implements EventService {
         // 카테고리 타입 변환 (String -> Enum)
         ProductCategory productCategory = changeToProductCategory(category);
         // 신청 진행 중인 시제품 이벤트만 가져옴
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         List<Event> events = eventRepository.findByProductCategory(productCategory).stream()
                 .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
                 .collect(Collectors.toList());
@@ -201,7 +201,7 @@ public class EventServiceImpl implements EventService {
     }
 
     // 타입별 이벤트 가져옴
-    private List<Event> getEvents(LocalDateTime now, String type) {
+    private List<Event> getEvents(LocalDate now, String type) {
         return switch (type) {
             case "popular" -> eventRepository.findAllActiveEventsByPopular(now);
             case "imminent" -> eventRepository.findAllEventsByImminent(now).stream()
@@ -224,7 +224,7 @@ public class EventServiceImpl implements EventService {
     }
 
     // 디데이 계산
-    private Integer calculateDDay(LocalDateTime now, LocalDateTime endDate) {
+    private Integer calculateDDay(LocalDate now, LocalDate endDate) {
         long daysBetween = java.time.Duration.between(now, endDate).toDays();
         return (int) daysBetween;
     }

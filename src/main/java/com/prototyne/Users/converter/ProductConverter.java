@@ -84,9 +84,9 @@ public class ProductConverter {
                 .releaseEnd(event.getReleaseEnd())
                 .feedbackStart(event.getFeedbackStart())
                 .feedbackEnd(event.getFeedbackEnd())
-                .judgeStart(event.getJudgeStart())
-                .judgeEnd(event.getJudgeEnd())
-                .endDate(event.getEndDate())
+//                .judgeStart(event.getJudgeStart())
+//                .judgeEnd(event.getJudgeEnd())
+//                .endDate(event.getEndDate())
                 .build();
     }
 
