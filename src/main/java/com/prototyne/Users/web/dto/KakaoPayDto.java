@@ -61,40 +61,37 @@ public class KakaoPayDto {
     @Setter
     @AllArgsConstructor
     public static class ApprovePaymentRequest {
-        private String cid;
         private String tid; // kakaopay 발급
-        private Long userId;
         private String pgToken;
-
-        public Map<String, Object> toFormData() {
-            Map<String, Object> map = new HashMap<>();
-            {
-                map.put("cid", cid);
-                map.put("tid", tid);
-                map.put("partner_order_id", tid);
-                map.put("partner_user_id", userId.toString());
-                map.put("pg_token", pgToken);
-                return map;
-            }
-        }
     }
 
         @Getter
         @Setter
         @ToString
         public static class KakaoPayApproveResponse {
+            private String aid;
             private String tid;
+            private String cid;
             private String partner_order_id;
             private String partner_user_id;
             private String payment_method_type;
             private Amount amount;
+            private String item_name;
+            private String item_code;
+            private int quantity;
+            private String created_at; // 결제 요청
             private String approved_at;
+            private String payload;
 
             @Getter
             @Setter
             public static class Amount {
                 private int total;
-                private int vat;
+                private int tax_free;
+                private int tax;
+                private int point;
+                private int discount;
+                private int green_deposit;
             }
         }
 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -76,6 +77,8 @@ public class KakaopayServiceImpl implements KakaopayService {
                 KakaoPayDto.KakaoPayReadyResponse.class);
         if(kakaoReady != null) {
             updatePaymentStatus(newPayment.getId(), PaymentStatus.결제진행);
+            newPayment.setTid(kakaoReady.getTid());
+            paymentRepository.save(newPayment);
         }
         else {
             updatePaymentStatus(newPayment.getId(), PaymentStatus.결제실패);
@@ -86,38 +89,45 @@ public class KakaopayServiceImpl implements KakaopayService {
     }
 
     // 2. 결제 완료 -> kakaoPay 서버에게 결제 승인 요청
-    public KakaoPayDto.KakaoPayApproveResponse approvePayment(String accessToken, String tid, String pgToken) {
+    public KakaoPayDto.KakaoPayApproveResponse approvePayment(String accessToken, String pgToken) {
         Long userId = jwtManager.validateJwt(accessToken);
-        Payment payment = paymentRepository.findByUserIdAndOrderId(userId, tid);
+        Payment payment = paymentRepository.findByUserIdAndTid(userId, kakaoReady.getTid());
 
         if(payment == null){
             throw new TempHandler(ErrorStatus.PAYMENT_NO_ORDER_FOUND);
         }
 
-        KakaoPayDto.ApprovePaymentRequest approveReq = new KakaoPayDto.ApprovePaymentRequest(
-                kakaopayProperties.getCid(),
-                payment.getOrderId(),
-                payment.getUser().getId(),
-                pgToken);
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("cid", kakaopayProperties.getCid());
+        parameters.put("tid", kakaoReady.getTid());
+        parameters.put("partner_order_id", payment.getPartnerOrderId());
+        parameters.put("partner_user_id", payment.getUser().getId().toString());
+        parameters.put("pg_token", pgToken);
 
-        System.out.println("Approve Payment Request Params: " + approveReq.toFormData());
+        HttpEntity<Map<String, String>> reqEntity = new HttpEntity<>(parameters, this.getHeaders());
+        System.out.println();
+        System.out.println();
+        System.out.println(reqEntity);
+        System.out.println();
+        System.out.println();
 
-        return webClient.post()
-                .uri("https://open-api.kakaopay.com/v1/payment/approve")
-                .header("Authorization", "KakaoAK " + kakaopayProperties.getSecretKey())
-                .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-                .bodyValue(approveReq.toFormData())
-                .retrieve()
-                .bodyToMono(KakaoPayDto.KakaoPayApproveResponse.class)
-                .map(approveResponse -> {
-                    updatePaymentStatus(payment.getId(), PaymentStatus.결제성공);
-                    return approveResponse;
-                })
-                .doOnError(error -> {
-                    updatePaymentStatus(payment.getId(), PaymentStatus.결제실패);
-                    throw new TempHandler(ErrorStatus.PAYMENT_APPROVE_FAILURE);
-                })
-                .block();
+        if (pgToken == null || pgToken.isEmpty()) {
+            throw new TempHandler(ErrorStatus.PAYMENT_INVALID_PGTOKEN);
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        KakaoPayDto.KakaoPayApproveResponse approveResponse = restTemplate.postForObject(
+                "https://open-api.kakaopay.com/online/v1/payment/approve",
+                reqEntity,
+                KakaoPayDto.KakaoPayApproveResponse.class);
+        if(approveResponse != null){
+            updatePaymentStatus(payment.getId(), PaymentStatus.결제성공);
+        }
+        else {
+            updatePaymentStatus(payment.getId(), PaymentStatus.결제실패);
+        }
+        return approveResponse;
     }
 
 
@@ -130,14 +140,6 @@ public class KakaopayServiceImpl implements KakaopayService {
 
         return paymentRepository.save(payment);
 
-    }
-
-    // step 2. readyToPay()함수 호출 성공하여 response 제대로 반환 시,
-    // 반환되는 제휴사(카카오) 결제 id 결제 db에 저장 후 '결제 진행' 상태로 업데이트
-    private void updateToOngoingPaymentLogs(Payment payment, KakaoPayDto.KakaoPayReadyResponse res){
-        payment.setOrderId(res.getTid());
-        payment.setStatus(PaymentStatus.결제진행);
-        paymentRepository.save(payment);
     }
 
 

@@ -22,7 +22,10 @@ public class Payment extends BaseEntity {
     private User user;
 
     @Column
-    private String orderId; //kakaoPay 연동 주문(결제) 고유 id
+    private String partnerOrderId;
+
+    @Column
+    private String tid; //kakaoPay 연동 주문(결제) 고유 id
 
     @Column(nullable = false, columnDefinition = "결제대기")
     @Enumerated(EnumType.STRING)
