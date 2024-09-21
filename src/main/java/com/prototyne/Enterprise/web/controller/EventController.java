@@ -50,7 +50,7 @@ public class EventController {
             security = {@SecurityRequirement(name = "session-token")} )
     public ApiResponse<Long> createEvent(HttpServletRequest token,
                                          @PathVariable Long productId,
-                                         @RequestBody @Valid EventDTO.createEventRequest eventRequest) {
+                                         @Valid @RequestBody EventDTO.createEventRequest eventRequest) {
         String oauthToken = jwtManager.getToken(token);
         Long eventId = eventService.createEvent(oauthToken, productId, eventRequest);
         return ApiResponse.onSuccess(eventId);

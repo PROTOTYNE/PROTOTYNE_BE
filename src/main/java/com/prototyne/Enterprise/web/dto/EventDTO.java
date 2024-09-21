@@ -1,7 +1,7 @@
 package com.prototyne.Enterprise.web.dto;
 
 import com.prototyne.domain.enums.ProductCategory;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,17 +13,17 @@ public class EventDTO {
     @Builder
     @Getter
     public static class createEventRequest {
-        @NotBlank(message = "eventStart가 공백입니다.")
+        @NotNull(message = "eventStart가 공백입니다.")
         private final LocalDate eventStart;     // 체험 시작
-        @NotBlank(message = "eventEnd가 공백입니다.")
+        @NotNull(message = "eventEnd가 공백입니다.")
         private final LocalDate eventEnd;       // 체험 마감
-        @NotBlank(message = "releaseStart가 공백입니다.")
+        @NotNull(message = "releaseStart가 공백입니다.")
         private final LocalDate releaseStart;   // 당첨자 시작
-        @NotBlank(message = "releaseEnd가 공백입니다.")
+        @NotNull(message = "releaseEnd가 공백입니다.")
         private final LocalDate releaseEnd;     // 당첨자 종료
-        @NotBlank(message = "feedbackStart가 공백입니다.")
+        @NotNull(message = "feedbackStart가 공백입니다.")
         private final LocalDate feedbackStart;  // 피드백 시작
-        @NotBlank(message = "feedbackEnd가 공백입니다.")
+        @NotNull(message = "feedbackEnd가 공백입니다.")
         private final LocalDate feedbackEnd;    // 피드백 종료
     }
 

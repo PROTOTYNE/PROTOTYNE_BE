@@ -39,14 +39,12 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private LocalDate feedbackEnd;
 
-    // 심사 중 필드
-    @Column(nullable = true)
-    private LocalDateTime judgeStart;
-    @Column(nullable = true)
-    private LocalDateTime judgeEnd;
-    @Column(nullable = true)
-    private LocalDate endDate;
-    //
+//    @Column(nullable = true)
+//    private LocalDateTime judgeStart;
+//    @Column(nullable = true)
+//    private LocalDateTime judgeEnd;
+//    @Column(nullable = true)
+//    private LocalDate endDate;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id")

@@ -37,12 +37,12 @@ public class EventConverter {
         } else if (now.isBefore(event.getFeedbackStart())) {
             stage = 3; // 당첨자 발표 기간 -> 발표 종료일
             stageDate = event.getReleaseEnd();
-        } else if (now.isBefore(event.getEndDate())) {
+        } else if (now.isBefore(event.getFeedbackEnd()) || now.isEqual(event.getFeedbackEnd())) {
             stage = 4; // 후기 작성 기간 -> 작성 종료일
             stageDate = event.getFeedbackEnd();// 작성 종료일
         } else {
             stage = 5; // 종료 -> 종료일
-            stageDate = event.getEndDate();
+            stageDate = event.getFeedbackEnd().plusDays(1);;
         }
 
         return EventDTO.StageAndDate.builder()

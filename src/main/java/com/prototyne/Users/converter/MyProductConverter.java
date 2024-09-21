@@ -73,16 +73,16 @@ public class MyProductConverter {
 
     public MyProductDto.ReviewedDto toReviewedDto(Investment investment) {
         MyProductDto.CommonDto commonInfo = toCommonDto(investment);
-        LocalDateTime judgeEnd = investment.getEvent().getJudgeEnd();
+//        LocalDateTime judgeEnd = investment.getEvent().getJudgeEnd();
         LocalDateTime now = LocalDateTime.now();
 
         // judgeEnd - 현재 날짜
-        long dDayToComplete = ChronoUnit.DAYS.between(now.toLocalDate(), judgeEnd.toLocalDate());
+//        long dDayToComplete = ChronoUnit.DAYS.between(now.toLocalDate(), judgeEnd.toLocalDate());
 
         return MyProductDto.ReviewedDto.builder()
                 .commonInfo(commonInfo)
-                .judgeEnd(judgeEnd)
-                .dDayToComplete((int) dDayToComplete)
+//                .judgeEnd(judgeEnd)
+//                .dDayToComplete((int) dDayToComplete)
                 .build();
     }
 
