@@ -13,9 +13,13 @@ import com.prototyne.repository.PaymentRepository;
 import com.prototyne.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,23 +30,26 @@ public class KakaopayServiceImpl implements KakaopayService {
     private final PaymentConverter paymentConverter;
     private final UserRepository userRepository;
     private final PaymentRepository paymentRepository;
+    private final KakaopayProperties kakaopayProperties;
 
-    @Value("${spring.kakao.pay.admin-key}")
-    private String adminKey;
+    private RestTemplate restTemplate = new RestTemplate();
+    private KakaoPayDto.KakaoPayReadyResponse kakaoReady;
 
-    @Value("${spring.kakao.pay.cid}")
-    private String cid;
-
-    @Value("${spring.server.liveServerIp}")
-    private String serverAddress;
-
+    private HttpHeaders getHeaders(){
+        HttpHeaders headers = new HttpHeaders();
+        String auth = "SECRET_KEY " + kakaopayProperties.getSecretKey();
+        headers.set("Authorization", auth);
+        headers.set("Content-Type", "application/json");
+        return headers;
+    }
     @Autowired
-    public KakaopayServiceImpl(WebClient.Builder webClientBuilder, JwtManager jwtManager, PaymentConverter paymentConverter, UserRepository userRepository, PaymentRepository paymentRepository) {
+    public KakaopayServiceImpl(WebClient.Builder webClientBuilder, JwtManager jwtManager, PaymentConverter paymentConverter, UserRepository userRepository, PaymentRepository paymentRepository, KakaopayProperties kakaopayProperties) {
         this.webClient = webClientBuilder.build();
         this.jwtManager = jwtManager;
         this.paymentConverter = paymentConverter;
         this.userRepository = userRepository;
         this.paymentRepository = paymentRepository;
+        this.kakaopayProperties = kakaopayProperties;
     }
 
     // 1.결제 시작-> kakaoPay 서버에게 결제 준비 요청 -> 결제 성공 여부 확인
@@ -50,37 +57,32 @@ public class KakaopayServiceImpl implements KakaopayService {
     public KakaoPayDto.KakaoPayReadyResponse readyToPay(String accessToken, TicketOption ticketOption) {
         Long userId = jwtManager.validateJwt(accessToken);
 
-        KakaoPayDto.KakaoPayRequest request = new KakaoPayDto.KakaoPayRequest(userId, ticketOption);
-        String approvalUrl = "http://" + serverAddress + "/payment/success";
-        String cancelUrl = "http://" + serverAddress + "/payment/cancel";
-        String failUrl = "http://" + serverAddress + "/payment/fail";
+        KakaoPayDto.KakaoPayRequest readyReq = new KakaoPayDto.KakaoPayRequest(userId, ticketOption);
+        String approvalUrl = "http://" + kakaopayProperties.getServerAddress() + "/payment/success";
+        String cancelUrl = "http://" + kakaopayProperties.getServerAddress() + "/payment/cancel";
+        String failUrl = "http://" + kakaopayProperties.getServerAddress() + "/payment/fail";
 
-        Payment newPayment = savePaymentLogs(userId, request);
+        Payment newPayment = savePaymentLogs(userId, readyReq);
 
-        return webClient.post()
-                .uri("https://kapi.kakao.com/v1/payment/ready")
-                .header("Authorization", "KakaoAK " + adminKey)
-                .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-                .bodyValue(request.toMultiValueMap(cid, approvalUrl, cancelUrl, failUrl))
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is4xxClientError()) {
-                        updatePaymentStatus(newPayment.getId(), PaymentStatus.결제실패);
-                        return response.bodyToMono(String.class).map(body -> {
-                            throw new TempHandler(ErrorStatus.PAYMENT_READY_CLIENT_FAILURE);
-                        });
-                    } else if (response.statusCode().is5xxServerError()) {
-                        updatePaymentStatus(newPayment.getId(), PaymentStatus.결제실패);
-                        return response.bodyToMono(String.class).map(body -> {
-                            throw new TempHandler(ErrorStatus.PAYMENT_READY_SERVER_FAILURE);
-                        });
-                    } else {
-                        return response.bodyToMono(KakaoPayDto.KakaoPayReadyResponse.class).map(readyResponse -> {
-                            updateToOngoingPaymentLogs(newPayment, readyResponse);
-                            return readyResponse;
-                        });
-                    }
-                })
-                .block();
+        Map<String, Object> parameters = readyReq.toFormData(kakaopayProperties.getCid(), approvalUrl, cancelUrl, failUrl);
+
+        HttpEntity<Map<String, Object>> reqEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        kakaoReady = restTemplate.postForObject(
+                "https://open-api.kakaopay.com/online/v1/payment/ready",
+                reqEntity,
+                KakaoPayDto.KakaoPayReadyResponse.class);
+        if(kakaoReady != null) {
+            updatePaymentStatus(newPayment.getId(), PaymentStatus.결제진행);
+        }
+        else {
+            updatePaymentStatus(newPayment.getId(), PaymentStatus.결제실패);
+            throw new TempHandler(ErrorStatus.PAYMENT_READY_SERVER_FAILURE);
+        }
+        return kakaoReady;
+
     }
 
     // 2. 결제 완료 -> kakaoPay 서버에게 결제 승인 요청
@@ -92,18 +94,19 @@ public class KakaopayServiceImpl implements KakaopayService {
             throw new TempHandler(ErrorStatus.PAYMENT_NO_ORDER_FOUND);
         }
 
-        KakaoPayDto.ApprovePaymentRequest approveReq = new KakaoPayDto.ApprovePaymentRequest(cid,
+        KakaoPayDto.ApprovePaymentRequest approveReq = new KakaoPayDto.ApprovePaymentRequest(
+                kakaopayProperties.getCid(),
                 payment.getOrderId(),
                 payment.getUser().getId(),
                 pgToken);
 
-        System.out.println("Approve Payment Request Params: " + approveReq.toMultiValueMap());
+        System.out.println("Approve Payment Request Params: " + approveReq.toFormData());
 
         return webClient.post()
-                .uri("https://kapi.kakao.com/v1/payment/approve")
-                .header("Authorization", "KakaoAK " + adminKey)
+                .uri("https://open-api.kakaopay.com/v1/payment/approve")
+                .header("Authorization", "KakaoAK " + kakaopayProperties.getSecretKey())
                 .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-                .bodyValue(approveReq.toMultiValueMap())
+                .bodyValue(approveReq.toFormData())
                 .retrieve()
                 .bodyToMono(KakaoPayDto.KakaoPayApproveResponse.class)
                 .map(approveResponse -> {
