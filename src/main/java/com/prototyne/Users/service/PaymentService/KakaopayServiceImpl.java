@@ -2,6 +2,7 @@ package com.prototyne.Users.service.PaymentService;
 
 import com.prototyne.Users.converter.PaymentConverter;
 import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.Users.web.dto.KakaoPayDto;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
@@ -32,6 +33,7 @@ public class KakaopayServiceImpl implements KakaopayService {
     private final UserRepository userRepository;
     private final PaymentRepository paymentRepository;
     private final KakaopayProperties kakaopayProperties;
+    private final TicketService ticketService;
 
     private RestTemplate restTemplate = new RestTemplate();
     private KakaoPayDto.KakaoPayReadyResponse kakaoReady;
@@ -44,13 +46,14 @@ public class KakaopayServiceImpl implements KakaopayService {
         return headers;
     }
     @Autowired
-    public KakaopayServiceImpl(WebClient.Builder webClientBuilder, JwtManager jwtManager, PaymentConverter paymentConverter, UserRepository userRepository, PaymentRepository paymentRepository, KakaopayProperties kakaopayProperties) {
+    public KakaopayServiceImpl(WebClient.Builder webClientBuilder, JwtManager jwtManager, PaymentConverter paymentConverter, UserRepository userRepository, PaymentRepository paymentRepository, KakaopayProperties kakaopayProperties, TicketService ticketService) {
         this.webClient = webClientBuilder.build();
         this.jwtManager = jwtManager;
         this.paymentConverter = paymentConverter;
         this.userRepository = userRepository;
         this.paymentRepository = paymentRepository;
         this.kakaopayProperties = kakaopayProperties;
+        this.ticketService = ticketService;
     }
 
     // 1.결제 시작-> kakaoPay 서버에게 결제 준비 요청 -> 결제 성공 여부 확인
@@ -123,6 +126,7 @@ public class KakaopayServiceImpl implements KakaopayService {
                 KakaoPayDto.KakaoPayApproveResponse.class);
         if(approveResponse != null){
             updatePaymentStatus(payment.getId(), PaymentStatus.결제성공);
+            ticketService.buyTicket(accessToken, payment.getTicketOption().getTicketNumber());
         }
         else {
             updatePaymentStatus(payment.getId(), PaymentStatus.결제실패);
