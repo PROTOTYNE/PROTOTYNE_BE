@@ -76,7 +76,7 @@ public enum ErrorStatus implements BaseErrorCode {
     ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다."),
 
     // 기업이 가지지 않은 시제품을 조회했을 경우
-    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "기업이 등록하지 않은 시제품입니다."),
+    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "다른 기업의 시제품입니다."),
 
     // 업로드할 이미지 개수가 초과될 경우
     IMAGE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "IMAGE4001", "업로드할 이미지 개수 초과");
