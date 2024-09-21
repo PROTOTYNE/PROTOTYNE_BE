@@ -85,7 +85,7 @@ public class TicketServiceImpl implements TicketService {
         // appliedNum
         Integer appliedNum = (int) myProductRepository.findByUserId(userId).stream()
                 .filter(investment -> investment.getStatus() == InvestmentStatus.신청)
-                .filter(investment -> investment.getEvent().getReleaseStart().isAfter(now))
+                .filter(investment -> investment.getEvent().getReleaseStart().atStartOfDay().isAfter(now))
                 .count();
 
         // selectedNum
@@ -136,7 +136,7 @@ public class TicketServiceImpl implements TicketService {
                 .user(user)
                 .title("티켓 구매")
                 .contents("티켓 " + ticketNumber + "개 구매 완료")
-                .StartReview(LocalDateTime.now())
+                .StartReview(LocalDate.now())
                 .build());
     }
 

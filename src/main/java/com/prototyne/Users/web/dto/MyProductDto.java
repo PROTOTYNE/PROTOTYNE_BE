@@ -3,6 +3,7 @@ package com.prototyne.Users.web.dto;
 import com.prototyne.domain.enums.InvestmentShipping;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -39,8 +40,8 @@ public class MyProductDto {
         private CommonDto commonInfo;
         private InvestmentShipping shipping;    // 배송 상태 (Investment)
         private String transportNum;            // 운송장 번호 (Investment)
-        private LocalDateTime feedbackStart;    // 후기작성 시작시간 (Event)
-        private LocalDateTime feedbackEnd;      // 후기작성 마감시간 (Event)
+        private LocalDate feedbackStart;    // 후기작성 시작시간 (Event)
+        private LocalDate feedbackEnd;      // 후기작성 마감시간 (Event)
     }
 
     @Builder

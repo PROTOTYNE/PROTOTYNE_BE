@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class MyProductServiceImpl implements MyProductService {
     @Override
     public List<MyProductDto.AppliedDto> getAppliedMyProduct(String accessToken) {
         Long userId = jwtManager.validateJwt(accessToken);
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         return myProductRepository.findByUserId(userId).stream()
                 .filter(investment -> investment.getStatus() == InvestmentStatus.신청)

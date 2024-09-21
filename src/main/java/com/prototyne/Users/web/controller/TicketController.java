@@ -61,13 +61,13 @@ public class TicketController {
         return ApiResponse.onSuccess(ticketList);
     }
 
-    @PostMapping("/buy")
-    @Operation(summary = "티켓 구매 API - 인증 필요",
-            description = "티켓 구매",
-            security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<String> buyTicket(HttpServletRequest token, @RequestParam int ticketCount) {
-        String aouthtoken = jwtManager.getToken(token);
-        ticketService.buyTicket(aouthtoken, ticketCount);
-        return ApiResponse.onSuccess("success");
-    }
+//    @PostMapping("/buy")
+//    @Operation(summary = "티켓 구매 API - 인증 필요",
+//            description = "티켓 구매",
+//            security = {@SecurityRequirement(name = "session-token")})
+//    public ApiResponse<String> buyTicket(HttpServletRequest token, @RequestParam int ticketCount) {
+//        String aouthtoken = jwtManager.getToken(token);
+//        ticketService.buyTicket(aouthtoken, ticketCount);
+//        return ApiResponse.onSuccess("success");
+//    }
 }

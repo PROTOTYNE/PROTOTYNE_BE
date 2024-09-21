@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("usersProductController")
 @RequiredArgsConstructor
 @RequestMapping("/product")
 @Tag(name = "${swagger.tag.product}")

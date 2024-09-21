@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -89,7 +90,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                     .title("티켓 사용")
                     .contents("티켓 " + reqTickets + "개 사용 완료 - " + product.getName())
                     .thumbnailUrl(product.getThumbnailUrl())
-                    .StartReview(LocalDateTime.now())
+                    .StartReview(LocalDate.now())
                     .build());
 
             eventService.saveInvestment(investment);
