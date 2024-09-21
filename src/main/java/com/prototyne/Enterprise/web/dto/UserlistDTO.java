@@ -2,6 +2,7 @@ package com.prototyne.Enterprise.web.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 
 public class UserlistDTO {
@@ -21,5 +22,13 @@ public class UserlistDTO {
         private String reviewStatus;
 
         private String addInfo;
+    }
+
+    @Getter
+    @Setter
+    public static class DeliveryRequest {
+        private Boolean isDelivery;
+
+        private String transportNum;
     }
 }

@@ -11,5 +11,5 @@ import java.util.List;
 public interface UserlistService {
     List<UserlistDTO.UserListResponse> getUserList(String token, Long eventId);
     UserlistDTO.UserListResponse updateUserPrize(String token, Long eventId, Long userId, Boolean isPrize);
-    UserlistDTO.UserListResponse updateUserDelivery(String token, Long eventId, Long userId, Boolean isDelivery);
+    UserlistDTO.UserListResponse updateUserDelivery(String token, Long eventId, Long userId, UserlistDTO.DeliveryRequest request);
 }
