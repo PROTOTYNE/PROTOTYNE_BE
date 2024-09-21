@@ -4,16 +4,15 @@ import com.prototyne.Enterprise.service.ReviewService.EntReviewService;
 import com.prototyne.Enterprise.web.dto.EntReviewDTO;
 import com.prototyne.Users.service.LoginService.JwtManager;
 import com.prototyne.apiPayload.ApiResponse;
+import com.prototyne.apiPayload.code.status.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,6 +43,16 @@ public class EntReviewController {
         String accessToken = jwtManager.getToken(token);
         EntReviewDTO.ReviewResponse review= entReviewService.getReviewByUserId(accessToken,investmentId,userId);
         return ApiResponse.onSuccess(review);
+    }
+
+    @DeleteMapping("/review/{investmentId}/{userId}")
+    @Operation(summary="개별 설문조사 삭제 API - 인증 필수")
+    @SecurityRequirement(name = "session-token")
+    public ApiResponse<Void> deleteReviewByUserId(HttpServletRequest token, @PathVariable Long investmentId, @PathVariable Long userId){
+        String accessToken = jwtManager.getToken(token);
+        entReviewService.deleteReviewByUserId(accessToken, investmentId, userId);
+
+        return ApiResponse.onSuccess(null);
     }
 
 }
