@@ -32,7 +32,8 @@ public class ProductController {
     // 시제품 목록 조회
     @GetMapping("/products")
     @Operation(summary = "시제품 목록 조회 API - 인증 필수",
-            description = "시제품 체험 목록 > 시제품 목록",
+            description = "시제품 체험 목록 > 시제품 목록 \n" +
+                    "출시예정일 (launchedDate) - 공백(null)이면 프론트에서 미정 처리해야 함",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.ProductResponse>> getProductsList(HttpServletRequest token) {
         String oauthToken = jwtManager.getToken(token);
@@ -50,8 +51,9 @@ public class ProductController {
                     3. 티켓 갯수 (reqTickets)
                     4. 추가 안내사항 (notes) - 공백 시 에러
                     5. 카테고리 (category)
-                    6. 질문 목록 (1~5)
-                    7. imageFiles : 제품 사진 (최대 3장)
+                    6. 출시예정일 (launchedDate) - 공백(null)이면 미정
+                    7. 질문 목록 (1~5)
+                    8. imageFiles : 제품 사진 (최대 3장)
                     
                     요청 성공 시, 시제품 아이디(product_id) 반환""",
             security = {@SecurityRequirement(name = "session-token")})

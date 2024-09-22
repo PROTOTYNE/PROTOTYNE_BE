@@ -32,6 +32,7 @@ public class ProductDTO {
         @NotBlank(message = "시제품 추가 안내사항이 공백입니다.")
         private String notes;               // 시제품 추가 안내사항
         private final ProductCategory category; // 시제품 카테고리
+        private LocalDate launchedDate;     // 출시 예정일
     }
 
     // 질문 목록
@@ -56,6 +57,6 @@ public class ProductDTO {
         private final LocalDate createdDate;  // 시제품 등록일
         private final ProductCategory category;   // 시제품 카테고리
         private final Integer eventCount;     // 진행 중인 체험
-//        private LocalDate date;       // 출시 예정일
+        private LocalDate launchedDate;       // 출시 예정일
     }
 }
