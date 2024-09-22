@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/review")
+@RequestMapping("/users/review")
 public class ReviewController {
     private final ReviewService reviewService;
     private final FeedbackService feedbackService;

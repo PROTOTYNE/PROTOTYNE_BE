@@ -18,7 +18,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/my")
+@RequestMapping("/users/my")
 @Tag(name = "${swagger.tag.my}")
 public class MyController {
 

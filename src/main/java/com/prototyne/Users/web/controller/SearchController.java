@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/search")
+@RequestMapping("/users/search")
 @Tag(name = "${swagger.tag.product-search}")
 public class SearchController {
     private final EventService eventService;

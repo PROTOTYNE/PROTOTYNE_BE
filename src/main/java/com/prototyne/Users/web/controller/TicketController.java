@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ticket")
+@RequestMapping("/users/ticket")
 @Tag(name = "${swagger.tag.my-ticket}")
 public class TicketController {
 
