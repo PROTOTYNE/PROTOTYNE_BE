@@ -7,6 +7,6 @@ import java.util.List;
 public interface EntReviewService {
     List<EntReviewDTO.ReviewResponse> getAllReviews(String token, Long eventId);
     EntReviewDTO.ReviewResponse getReviewByUserId(String token, Long investmentId, Long userId);
-    Void deleteReviewByUserId(String token, Long investmentId, Long userId);
+    EntReviewDTO.ReviewResponse updatePenaltyByUserId(String token, Long investmentId, Long userId);
 
 }

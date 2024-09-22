@@ -45,14 +45,14 @@ public class EntReviewController {
         return ApiResponse.onSuccess(review);
     }
 
-    @DeleteMapping("/review/{investmentId}/{userId}")
-    @Operation(summary="개별 설문조사 삭제 API - 인증 필수")
+    @PatchMapping("/review/{investmentId}/{userId}")
+    @Operation(summary="패널티 부여 API - 인증 필수")
     @SecurityRequirement(name = "session-token")
-    public ApiResponse<Void> deleteReviewByUserId(HttpServletRequest token, @PathVariable Long investmentId, @PathVariable Long userId){
+    public ApiResponse<EntReviewDTO.ReviewResponse> updatePenaltyByUserId(HttpServletRequest token, @PathVariable Long investmentId, @PathVariable Long userId){
         String accessToken = jwtManager.getToken(token);
-        entReviewService.deleteReviewByUserId(accessToken, investmentId, userId);
+        EntReviewDTO.ReviewResponse review= entReviewService.updatePenaltyByUserId(accessToken, investmentId, userId);
 
-        return ApiResponse.onSuccess(null);
+        return ApiResponse.onSuccess(review);
     }
 
 }

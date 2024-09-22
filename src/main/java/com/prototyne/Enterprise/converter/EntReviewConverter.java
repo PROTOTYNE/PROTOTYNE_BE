@@ -9,6 +9,7 @@ public class EntReviewConverter {
 
         return EntReviewDTO.ReviewResponse.builder()
                 .investmentId(feedback.getInvestment().getId())
+                .penalty(feedback.getPenalty())
                 .userId(user.getId())
                 .answer1(feedback.getAnswer1())
                 .answer2(feedback.getAnswer2())

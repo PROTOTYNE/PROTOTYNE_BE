@@ -53,15 +53,16 @@ public class EntReviewServiceImpl implements EntReviewService {
     }
 
     @Override
-    public Void deleteReviewByUserId(String token, Long investmentId, Long userId){
+    public EntReviewDTO.ReviewResponse updatePenaltyByUserId(String token, Long investmentId, Long userId){
         Long enterpriseId = jwtManager.validateJwt(token);
         Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investmentId, userId);
+        feedback.setPenalty(true);
 
-        feedbackRepository.delete(feedback);
+        feedbackRepository.save(feedback);
 
-        return null;
+        return EntReviewConverter.toReviewResponse(feedback, feedback.getUser());
     }
 }

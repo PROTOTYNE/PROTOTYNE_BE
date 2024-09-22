@@ -14,6 +14,8 @@ public class EntReviewDTO {
 
         private Long userId;
 
+        private Boolean penalty;
+
         private Integer answer1;
 
         private Integer answer2;
