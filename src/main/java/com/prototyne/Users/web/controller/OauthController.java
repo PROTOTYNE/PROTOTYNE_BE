@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/oauth2")
+@RequestMapping("/users/oauth2")
 @Tag(name = "${swagger.tag.auth}")
 public class OauthController {
 

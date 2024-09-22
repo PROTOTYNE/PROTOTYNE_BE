@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/kakaopay")
+@RequestMapping("/users/kakaopay")
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "${swagger.tag.pay}")

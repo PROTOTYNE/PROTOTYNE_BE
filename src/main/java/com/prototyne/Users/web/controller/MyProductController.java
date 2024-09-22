@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/myproduct")
+@RequestMapping("/users/myproduct")
 public class MyProductController {
     private final MyProductServiceImpl myProductService;
     private final JwtManager jwtManager;
