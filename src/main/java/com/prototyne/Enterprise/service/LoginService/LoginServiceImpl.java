@@ -53,14 +53,15 @@ public class LoginServiceImpl implements LoginService {
         // 사용자 조회
         Enterprise enterprise = enterpriseRepository.findByUsername(enterpriseLoginRequest.getUsername())
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
-        // 승인 대기상태 확인
-        if(enterprise.getStatus()== EnterpriseStatus.대기){
-            throw new TempHandler(ErrorStatus.ENTERPRISE_ERROR_STATUS);
-        }
 
         // 비밀번호 확인
         if(!passwordEncoder.matches(enterpriseLoginRequest.getPassword(), enterprise.getPassword())){
             throw new TempHandler(ErrorStatus.LOGIN_ERROR_PW);
+        }
+
+        // 승인 대기상태 확인
+        if(enterprise.getStatus()== EnterpriseStatus.대기) {
+            throw new TempHandler(ErrorStatus.ENTERPRISE_ERROR_STATUS);
         }
 
         // JWT 토큰 생성
