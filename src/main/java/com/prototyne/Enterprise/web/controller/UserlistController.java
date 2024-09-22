@@ -48,9 +48,9 @@ public class UserlistController {
     @PatchMapping("/user/delivery/{eventId}")
     @Operation(summary = "신청자 배송 정보 수정 API - 인증 필수")
     @SecurityRequirement(name = "session-token")
-    public ApiResponse<UserlistDTO.UserListResponse> updateUserDelivery(HttpServletRequest token, @PathVariable Long eventId, @RequestParam("userId") Long userId, @RequestBody UserlistDTO.DeliveryRequest request) {
+    public ApiResponse<UserlistDTO.UserListResponse> updateUserDelivery(HttpServletRequest token, @PathVariable Long eventId, @RequestParam("userId") Long userId, @RequestParam("택배사 이름") String deliveryCompany, @RequestParam("운송장 번호") String transportNum) {
         String accessToken = jwtManager.getToken(token);
-        UserlistDTO.UserListResponse userlist = userlistService.updateUserDelivery(accessToken, eventId, userId, request);
+        UserlistDTO.UserListResponse userlist = userlistService.updateUserDelivery(accessToken, eventId, userId, deliveryCompany, transportNum);
         return ApiResponse.onSuccess(userlist);
 
     }

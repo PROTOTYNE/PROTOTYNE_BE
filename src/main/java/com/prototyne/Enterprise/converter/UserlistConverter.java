@@ -21,19 +21,11 @@ public class UserlistConverter {
         }
         else {prizeStatus="당첨";}
 
-        if(Objects.equals(String.valueOf(investment.getShipping()), "배달완료"))
-        {
-            deliveryStatus="배송 후";
-        }
-        else {deliveryStatus="배송 전";}
-
-
-
         return UserlistDTO.UserListResponse.builder()
                 .userName(user.getUsername())
                 .event_start(investment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .prizeStatus(prizeStatus)
-                .deliveryStatus(deliveryStatus)
+                .deliveryStatus(String.valueOf(investment.getShipping()))
                 .reviewStatus(reviewStatus)
                 .addInfo("가족 구성원: "+user.getFamilyMember())
                 .build();
