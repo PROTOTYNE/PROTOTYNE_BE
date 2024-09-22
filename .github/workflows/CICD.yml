@@ -115,13 +115,20 @@ jobs:
           script_stop: true
           script: |
             sudo docker exec -i nginxserver bash -c 'echo "set \$service_url ${{ env.TARGET_UPSTREAM }};" > /etc/nginx/conf.d/service-env.inc && nginx -s reload' 
-     
-      - name: Stop current server
-        uses: appleboy/ssh-action@master
-        with:
-          username: ubuntu
-          host: ${{ secrets.LIVE_SERVER_IP }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script_stop: true
-          script: |
-            if [ "${{env.CURRENT_UPSTREAM}}" != "default_env" ]; then sudo docker stop ${{env.CURRENT_UPSTREAM}} && sudo docker rm ${{env.CURRENT_UPSTREAM}}; else echo "Skipping stop and remove for default_env"; fi
+
+ #     - name: Stop current server
+ #       uses: appleboy/ssh-action@master
+ #       with:
+ #         username: ubuntu
+ #         host: ${{ secrets.LIVE_SERVER_IP }}
+ #         key: ${{ secrets.EC2_SSH_KEY }}
+ #         script_stop: true
+ #         script: |
+ #           if sudo docker ps -a --format '{{.Names}}' | grep -Eq "^${{env.CURRENT_UPSTREAM}}$"; then
+ #            echo "Stopping and removing container: ${{env.CURRENT_UPSTREAM}}";
+ #            sudo docker stop ${{env.CURRENT_UPSTREAM}} && sudo docker rm ${{env.CURRENT_UPSTREAM}};
+ #           else
+ #             echo "Container ${{env.CURRENT_UPSTREAM}} does not exist. Skipping stop and remove.";
+ #           fi
+
+

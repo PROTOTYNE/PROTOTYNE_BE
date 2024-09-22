@@ -81,6 +81,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 업로드할 이미지 개수가 초과될 경우
     IMAGE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "IMAGE4001", "업로드할 이미지 개수 초과"),
 
+    // 기업이 대기중인 상태에서 로그인할 경우
+    ENTERPRISE_ERROR_STATUS(HttpStatus.BAD_REQUEST, "ENTERPRISE4003", "승인 대기중인 기업입니다."),
+
     PAYMENT_NO_USER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4001", "존재하지 않는 사용자의 결제 요청입니다."),
     PAYMENT_NO_ORDER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4002", "유효하지 않은 결제 내역입니다."),
     PAYMENT_READY_CLIENT_FAILURE(HttpStatus.BAD_REQUEST, "PATYMENT4003", "결제 요청에 실패하였습니다."),
