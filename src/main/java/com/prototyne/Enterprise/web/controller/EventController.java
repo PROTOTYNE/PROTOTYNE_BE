@@ -62,7 +62,7 @@ public class EventController {
     @GetMapping("/events/{eventId}")
     @Operation(summary = "체험 정보 조회 API - 인증 필수",
             description = """
-                    체험 상세 조회 \n 
+                    체험 상세 조회 \n
                     eventId 입력""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<EventDTO.EventInfo> getEvent(HttpServletRequest token, @PathVariable Long eventId) {
@@ -74,10 +74,11 @@ public class EventController {
     // 체험 삭제
     @DeleteMapping("/events/{eventId}")
     @Operation(summary = "체험 삭제 API - 인증 필수",
-            description = "구현 중",
+            description = "체험 삭제 \n eventId 입력",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<String> deleteEvent(HttpServletRequest token, @PathVariable Long eventId) {
         String oauthToken = jwtManager.getToken(token);
+        eventService.deleteEvent(oauthToken, eventId);
         return ApiResponse.onSuccess("삭제 성공");
     }
 }

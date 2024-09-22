@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/alarm")
+@RequestMapping("/users/alarm")
 @Tag(name = "${swagger.tag.alarm}")
 public class AlarmController {
 

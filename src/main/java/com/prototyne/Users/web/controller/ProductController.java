@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController("usersProductController")
 @RequiredArgsConstructor
-@RequestMapping("/product")
+@RequestMapping("/users/product")
 @Tag(name = "${swagger.tag.product}")
 public class ProductController {
 

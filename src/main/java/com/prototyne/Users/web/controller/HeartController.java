@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class HeartController {
     private final HeartServiceImpl heartService;
     private final JwtManager jwtManager;
