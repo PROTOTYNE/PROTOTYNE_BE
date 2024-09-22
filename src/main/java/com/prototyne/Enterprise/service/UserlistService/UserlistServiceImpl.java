@@ -86,7 +86,7 @@ public class UserlistServiceImpl implements UserlistService{
 
         if(request.getIsDelivery()){
 
-            investment.setShipping(InvestmentShipping.배달완료);
+            investment.setShipping(InvestmentShipping.배송후);
             if (request.getTransportNum() != null && !request.getTransportNum().isEmpty()) {
                 investment.setTransportNum(request.getTransportNum());
             }
