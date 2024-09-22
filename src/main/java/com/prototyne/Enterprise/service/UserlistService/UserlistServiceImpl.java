@@ -77,24 +77,16 @@ public class UserlistServiceImpl implements UserlistService{
     }
 
     @Override
-    public UserlistDTO.UserListResponse updateUserDelivery(String token, Long eventId, Long userId, UserlistDTO.DeliveryRequest request){
+    public UserlistDTO.UserListResponse updateUserDelivery(String token, Long eventId, Long userId, String deliveryName, String transportNum){
         Long enterpriseId = jwtManager.validateJwt(token);
         Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
         Investment investment=investmentRepository.findFirstByUserIdAndEventId(userId, eventId)
                 .orElseThrow(()->new TempHandler((ErrorStatus.PRODUCT_ERROR_EVENT)));
 
-        if(request.getIsDelivery()){
-
-            investment.setShipping(InvestmentShipping.배달완료);
-            if (request.getTransportNum() != null && !request.getTransportNum().isEmpty()) {
-                investment.setTransportNum(request.getTransportNum());
-            }
-        }
-        else{
-            investment.setShipping(InvestmentShipping.배송전);
-            investment.setTransportNum(null);
-        }
+        investment.setDeliveryCompany(deliveryName);
+        investment.setTransportNum(transportNum);
+        investment.setShipping(InvestmentShipping.배송후);
 
         investmentRepository.save(investment);
         String reviewStatus = determineReviewStatus(investment.getId(), userId);

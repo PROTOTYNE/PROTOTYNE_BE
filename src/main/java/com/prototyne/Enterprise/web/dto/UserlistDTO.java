@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 
 public class UserlistDTO {
 
@@ -21,7 +23,14 @@ public class UserlistDTO {
 
         private String reviewStatus;
 
-        private String addInfo;
+        //private String addInfo;
+
+        private String birth;
+
+        private String familyMember;
+
+        private String gender;
+
     }
 
     @Getter
