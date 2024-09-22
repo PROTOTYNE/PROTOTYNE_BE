@@ -27,7 +27,9 @@ public class UserlistConverter {
                 .prizeStatus(prizeStatus)
                 .deliveryStatus(String.valueOf(investment.getShipping()))
                 .reviewStatus(reviewStatus)
-                .addInfo("가족 구성원: "+user.getFamilyMember())
+                .birth("생년월일: "+user.getBirth())
+                .gender("성별: "+user.getGender())
+                .familyMember("가족 구성원: "+user.getFamilyMember())
                 .build();
     }
 }
