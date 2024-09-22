@@ -29,7 +29,7 @@ public class TempCommandServiceImpl implements TempCommandService {
         if (images == null) images = new ArrayList<>();
 
         // S3에 이미지 업로드
-        List<String> imageUrls = s3Manager.uploadFile(directory, images);
+        List<String> imageUrls = s3Manager.uploadFiles(directory, images);
 
         // DTO 생성 (URL 리스트를 포함한 DTO)
         return TempResponse.TempUploadDTO.builder()

@@ -81,7 +81,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         });
 
         // Amazon S3에 이미지 업로드
-        List<String> imageUrls = s3Manager.uploadFile(directory, feedbackImages);
+        List<String> imageUrls = s3Manager.uploadFiles(directory, feedbackImages);
 
         for (String imageUrl : imageUrls) {
             FeedbackImage feedbackImage = FeedbackImage.builder()
