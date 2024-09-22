@@ -1,6 +1,6 @@
-package com.prototyne.Enterprise.service.EnterpriseService;
+package com.prototyne.Enterprise.service.LoginService;
 
-import com.prototyne.Enterprise.web.dto.EnterpriseDto;
+import com.prototyne.Enterprise.web.dto.LoginDto;
 import com.prototyne.Users.service.LoginService.JwtManager;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EnterpriseServiceImpl implements EnterpriseService {
+public class LoginServiceImpl implements LoginService {
     private final EnterpriseRepository enterpriseRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtManager jwtManager;
 
 
     @Override
-    public EnterpriseDto.EnterpriseSignupResponse registerEnterprise(EnterpriseDto.EnterpriseSignupRequest enterpriseSignupRequest) {
+    public LoginDto.EnterpriseSignupResponse registerEnterprise(LoginDto.EnterpriseSignupRequest enterpriseSignupRequest) {
         // 중복 사용자 체크
         enterpriseRepository.findByUsername(enterpriseSignupRequest.getUsername())
                 .ifPresent(enterprise -> {throw new TempHandler(ErrorStatus.SIGNUP_DUPLICATE);
@@ -38,18 +38,18 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 .address(enterpriseSignupRequest.getAddress())
                 .category(enterpriseSignupRequest.getCategory())
                 .size(enterpriseSignupRequest.getSize())
-                .status(enterpriseSignupRequest.getStatus())
+                .status(EnterpriseStatus.대기)
                 .build();
         Enterprise savedEnterprise = enterpriseRepository.save(enterprise);
 
-        return EnterpriseDto.EnterpriseSignupResponse.builder()
+        return LoginDto.EnterpriseSignupResponse.builder()
                 .enterpriseId(savedEnterprise.getId())
                 .msg("회원가입이 완료되었습니다.")
                 .build();
     }
 
     @Override
-    public EnterpriseDto.EnterpriseLoginResponse loginEnterprise(EnterpriseDto.EnterpriseLoginRequest enterpriseLoginRequest) {
+    public LoginDto.EnterpriseLoginResponse loginEnterprise(LoginDto.EnterpriseLoginRequest enterpriseLoginRequest) {
         // 사용자 조회
         Enterprise enterprise = enterpriseRepository.findByUsername(enterpriseLoginRequest.getUsername())
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
@@ -66,7 +66,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         // JWT 토큰 생성
         String accessToken = jwtManager.createJwt(enterprise.getId());
 
-        return EnterpriseDto.EnterpriseLoginResponse.builder()
+        return LoginDto.EnterpriseLoginResponse.builder()
                 .id(enterprise.getId())
                 .name(enterprise.getName())
                 .access_token(accessToken)
