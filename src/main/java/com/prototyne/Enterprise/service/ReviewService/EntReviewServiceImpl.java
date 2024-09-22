@@ -7,13 +7,16 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.Enterprise;
 import com.prototyne.domain.Feedback;
+import com.prototyne.domain.FeedbackImage;
 import com.prototyne.domain.Investment;
 import com.prototyne.repository.EnterpriseRepository;
+//import com.prototyne.repository.FeedbackImageRepository;
 import com.prototyne.repository.FeedbackRepository;
 import com.prototyne.repository.InvestmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ public class EntReviewServiceImpl implements EntReviewService {
     private final FeedbackRepository feedbackRepository;
     private final EnterpriseRepository enterpriseRepository;
     private final InvestmentRepository investmentRepository;
+    //private final FeedbackImageRepository feedbackImageRepository;
 
     @Override
     public List<EntReviewDTO.ReviewResponse> getAllReviews(String token, Long eventId){
@@ -35,12 +39,21 @@ public class EntReviewServiceImpl implements EntReviewService {
         return investments.stream()
                 .flatMap(investment -> {
                     List<Feedback> feedbacks = feedbackRepository.findAllByInvestmentId(investment.getId());
-                    return feedbacks.stream().map(feedback ->EntReviewConverter.toReviewResponse(feedback, feedback.getUser()));
+                    return feedbacks.stream().map(feedback ->{
+                        List<String> imagefiles = new ArrayList<>();
+                        if (feedback.getFeedbackImageList() != null &&!feedback.getFeedbackImageList().isEmpty()) {
+                            imagefiles = feedback.getFeedbackImageList().stream()
+                                   .map(FeedbackImage::getImageUrl)
+                                   .collect(Collectors.toList());
+                        }
+                        return EntReviewConverter.toReviewResponse(feedback, feedback.getUser(), imagefiles);
+
+                    });
                 })
                 .collect(Collectors.toList());
 
     }
-
+//EntReviewConverter.toReviewResponse(feedback, feedback.getUser(),imagefiles)
     @Override
     public EntReviewDTO.ReviewResponse getReviewByUserId(String token, Long investmentId, Long userId){
         Long enterpriseId = jwtManager.validateJwt(token);
@@ -48,8 +61,18 @@ public class EntReviewServiceImpl implements EntReviewService {
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investmentId, userId);
+        //FeedbackImage feedbackImage =feedbackImageRepository.findByFeedbackId(feedback.getId());
+        List<String> imagefiles = new ArrayList<>();
 
-        return EntReviewConverter.toReviewResponse(feedback, feedback.getUser());
+        if (feedback.getFeedbackImageList() != null && !feedback.getFeedbackImageList().isEmpty()) {
+            imagefiles = feedback.getFeedbackImageList().stream()
+                    .map(FeedbackImage::getImageUrl)
+                    .collect(Collectors.toList());
+
+
+
+        }
+        return EntReviewConverter.toReviewResponse(feedback, feedback.getUser(), imagefiles);
     }
 
     @Override
@@ -63,6 +86,16 @@ public class EntReviewServiceImpl implements EntReviewService {
 
         feedbackRepository.save(feedback);
 
-        return EntReviewConverter.toReviewResponse(feedback, feedback.getUser());
+        List<String> imagefiles = new ArrayList<>();
+
+        if (feedback.getFeedbackImageList() != null && !feedback.getFeedbackImageList().isEmpty()) {
+            imagefiles = feedback.getFeedbackImageList().stream()
+                    .map(FeedbackImage::getImageUrl)
+                    .collect(Collectors.toList());
+
+
+
+        }
+        return EntReviewConverter.toReviewResponse(feedback, feedback.getUser(), imagefiles);
     }
 }

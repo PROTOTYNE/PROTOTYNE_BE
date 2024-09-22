@@ -87,17 +87,6 @@ public class UserlistServiceImpl implements UserlistService{
         investment.setDeliveryCompany(deliveryName);
         investment.setTransportNum(transportNum);
         investment.setShipping(InvestmentShipping.배송후);
-        /*if(request.getIsDelivery()){
-
-            investment.setShipping(InvestmentShipping.배송후);
-            if (request.getTransportNum() != null && !request.getTransportNum().isEmpty()) {
-                investment.setTransportNum(request.getTransportNum());
-            }
-        }
-        else{
-            investment.setShipping(InvestmentShipping.배송전);
-            investment.setTransportNum(null);
-        }*/
 
         investmentRepository.save(investment);
         String reviewStatus = determineReviewStatus(investment.getId(), userId);

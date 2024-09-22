@@ -1,8 +1,11 @@
 package com.prototyne.Enterprise.web.dto;
 
+import com.prototyne.domain.FeedbackImage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class EntReviewDTO {
@@ -27,6 +30,8 @@ public class EntReviewDTO {
         private String answer5;
 
         private Boolean answer6;
+
+        private List<String> imagefiles;
 
     }
 
