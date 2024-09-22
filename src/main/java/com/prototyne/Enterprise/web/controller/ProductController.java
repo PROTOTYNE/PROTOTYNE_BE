@@ -65,7 +65,7 @@ public class ProductController {
 
     // 시제품 삭제
     @DeleteMapping("/products/{productId}")
-    @Operation(summary = "시제품 등록 API - 인증 필수",
+    @Operation(summary = "시제품 삭제 API - 인증 필수",
             description = """
                     시제품 삭제 \n
                     productId 입력 \n

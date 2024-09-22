@@ -1,9 +1,11 @@
 package com.prototyne.aws.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.prototyne.apiPayload.config.AmazonConfig;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,7 +25,7 @@ public class AmazonS3Manager {
     private final AmazonConfig amazonConfig;
 
     // S3에 여러 이미지 업로드
-    public List<String> uploadFile(String dirName, List<MultipartFile> files) {
+    public List<String> uploadFiles(String dirName, List<MultipartFile> files) {
 
         // 반환 받을 이미지 url 리스트
         List<String> imageUrlList = new ArrayList<>();
@@ -51,6 +53,18 @@ public class AmazonS3Manager {
         return imageUrlList;
     }
 
+    // S3의 여러 이미지 삭제
+    public void deleteFiles(String dirName, List<String> files) {
+        for (String file : files) {
+            try {
+                String keyName = findKeyName(file);
+                amazonS3.deleteObject(new DeleteObjectRequest(amazonConfig.getBucket(), keyName));
+            } catch (Exception e) {
+                log.error("error at AmazonS3Manager deletedFile : {}", (Object) e.getStackTrace());
+            }
+        }
+    }
+
     /* 동일 이름의 이미지 방지를 위한, 이미지 이름 대신 랜덤 uuid 사용
        버킷/디렉터리/uuid.확장자 */
 
@@ -65,5 +79,11 @@ public class AmazonS3Manager {
     private static String extractExt(String originalName) {
         int pos = originalName.lastIndexOf(".");
         return originalName.substring(pos + 1);
+    }
+
+    private static String findKeyName(String fileName) {
+        int slashIndex = fileName.lastIndexOf('/');
+        int secondSlashIndex = fileName.lastIndexOf('/', slashIndex - 1);
+        return fileName.substring(secondSlashIndex + 1);
     }
 }

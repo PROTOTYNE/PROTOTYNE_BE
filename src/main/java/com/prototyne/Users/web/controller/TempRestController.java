@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/users/test")
 @RequiredArgsConstructor
 public class TempRestController {
 

@@ -8,6 +8,7 @@ import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.aws.s3.AmazonS3Manager;
 import com.prototyne.domain.Enterprise;
 import com.prototyne.domain.Product;
+import com.prototyne.domain.ProductImage;
 import com.prototyne.repository.EnterpriseRepository;
 import com.prototyne.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -57,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
             throw new TempHandler(ErrorStatus.IMAGE_LIMIT_EXCEEDED);  // 새로운 에러 코드 정의 필요
 
         // S3에 이미지 업로드
-        List<String> imageUrls = s3Manager.uploadFile("product", images);
+        List<String> imageUrls = s3Manager.uploadFiles("product", images);
         Product newProduct = ProductConverter.toProduct(productRequest, enterprise, imageUrls);
 
         // 시제품 저장 및 id 반환
@@ -81,6 +82,16 @@ public class ProductServiceImpl implements ProductService {
         // 해당 시제품에 연결된 이벤트가 있는지 확인
         if (!product.getEventList().isEmpty())
             throw new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENTLIST);
+
+        // 시제품의 이미지가 있을 경우, S3에서 이미지 제거
+        if (product.getProductImageList() != null && !product.getProductImageList().isEmpty()) {
+            List<String> imagefiles = product.getProductImageList().stream()
+                    .map(ProductImage::getImageUrl)
+                    .collect(Collectors.toList());
+
+            // S3에서 여러 이미지 삭제
+            s3Manager.deleteFiles("product", imagefiles);
+        }
 
         // 제품 삭제
         productRepository.delete(product);

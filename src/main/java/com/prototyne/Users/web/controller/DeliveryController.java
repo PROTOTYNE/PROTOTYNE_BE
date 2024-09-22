@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/delivery")
+@RequestMapping("/users/delivery")
 @Tag(name = "${swagger.tag.my-delivery}")
 public class DeliveryController {
 

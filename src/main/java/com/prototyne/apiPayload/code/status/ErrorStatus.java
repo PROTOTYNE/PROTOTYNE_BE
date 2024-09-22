@@ -72,14 +72,20 @@ public enum ErrorStatus implements BaseErrorCode {
     // 이벤트가 존재하지 않은 경우
     EVENT_ERROR_ID(HttpStatus.BAD_REQUEST,"EVENT4003","존재하지 않은 이벤트 입니다."),
 
+    // 이벤트에 유저가 투자했을 경우
+    EVENT_ERROR_INVESTMENT(HttpStatus.BAD_REQUEST,"EVENT4004","유저가 투자하고 있는 체험입니다."),
+
     // 존재하지 않은 기업일 경우
     ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다."),
 
     // 기업이 가지지 않은 시제품을 조회했을 경우
-    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "기업이 등록하지 않은 시제품입니다."),
+    ENTERPRISE_ERROR_PRODUCT(HttpStatus.BAD_REQUEST, "ENTERPRISE4002", "다른 기업의 시제품입니다."),
 
     // 업로드할 이미지 개수가 초과될 경우
     IMAGE_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "IMAGE4001", "업로드할 이미지 개수 초과"),
+
+    // 기업이 대기중인 상태에서 로그인할 경우
+    ENTERPRISE_ERROR_STATUS(HttpStatus.BAD_REQUEST, "ENTERPRISE4003", "승인 대기중인 기업입니다."),
 
     PAYMENT_NO_USER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4001", "존재하지 않는 사용자의 결제 요청입니다."),
     PAYMENT_NO_ORDER_FOUND(HttpStatus.BAD_REQUEST, "PAYMENT4002", "유효하지 않은 결제 내역입니다."),
