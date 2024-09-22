@@ -72,6 +72,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 이벤트가 존재하지 않은 경우
     EVENT_ERROR_ID(HttpStatus.BAD_REQUEST,"EVENT4003","존재하지 않은 이벤트 입니다."),
 
+    // 이벤트에 유저가 투자했을 경우
+    EVENT_ERROR_INVESTMENT(HttpStatus.BAD_REQUEST,"EVENT4004","유저가 투자하고 있는 체험입니다."),
+
     // 존재하지 않은 기업일 경우
     ENTERPRISE_ERROR_ID(HttpStatus.BAD_REQUEST, "ENTERPRISE4001", "존재하지 않는 기업입니다."),
 

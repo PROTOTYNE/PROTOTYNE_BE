@@ -95,6 +95,10 @@ public class EventServiceImpl implements EventService {
         if (!product.getEnterprise().getId().equals(enterpriseId))
             throw new TempHandler(ErrorStatus.ENTERPRISE_ERROR_PRODUCT);
 
+        // 해당 체험에 연결된 투자가 있는지 확인
+        if (!event.getInvestmentList().isEmpty())
+            throw new TempHandler(ErrorStatus.EVENT_ERROR_INVESTMENT);
+
         // 체험 삭제
         eventRepository.delete(event);
     }
