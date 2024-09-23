@@ -102,4 +102,23 @@ public class EventServiceImpl implements EventService {
         // 체험 삭제
         eventRepository.delete(event);
     }
+
+    @Override
+    public EventDTO.EventProgress getEventProgress(String accessToken, Long eventId) {
+        Long enterpriseId = jwtManager.validateJwt(accessToken);
+        LocalDate now = LocalDate.now(); // 현재 날짜
+
+        // 체험 객체 조회
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new TempHandler(ErrorStatus.EVENT_ERROR_ID));
+
+        // 이벤트로부터 제품 객체 가져오기
+        Product product = event.getProduct();
+
+        // 해당 시제품을 기업이 가졌는지 확인
+        if (!product.getEnterprise().getId().equals(enterpriseId))
+            throw new TempHandler(ErrorStatus.ENTERPRISE_ERROR_PRODUCT);
+
+        return EventConverter.toEventProgress(now, event);
+    }
 }

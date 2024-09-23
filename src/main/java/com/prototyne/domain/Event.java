@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +37,6 @@ public class Event extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDate feedbackEnd;
-
-//    @Column(nullable = true)
-//    private LocalDateTime judgeStart;
-//    @Column(nullable = true)
-//    private LocalDateTime judgeEnd;
-//    @Column(nullable = true)
-//    private LocalDate endDate;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id")
