@@ -55,13 +55,13 @@ public class EntReviewServiceImpl implements EntReviewService {
     }
 //EntReviewConverter.toReviewResponse(feedback, feedback.getUser(),imagefiles)
     @Override
-    public EntReviewDTO.ReviewResponse getReviewByUserId(String token, Long investmentId, Long userId){
+    public EntReviewDTO.ReviewResponse getReviewByUserId(String token, Long eventId, Long userId){
         Long enterpriseId = jwtManager.validateJwt(token);
         Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
-        Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investmentId, userId);
-        //FeedbackImage feedbackImage =feedbackImageRepository.findByFeedbackId(feedback.getId());
+        Investment investment=investmentRepository.findByEventIdAndUserId(eventId, userId);
+        Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investment.getId(), userId);
         List<String> imagefiles = new ArrayList<>();
 
         if (feedback.getFeedbackImageList() != null && !feedback.getFeedbackImageList().isEmpty()) {
@@ -76,12 +76,13 @@ public class EntReviewServiceImpl implements EntReviewService {
     }
 
     @Override
-    public EntReviewDTO.ReviewResponse updatePenaltyByUserId(String token, Long investmentId, Long userId){
+    public EntReviewDTO.ReviewResponse updatePenaltyByUserId(String token, Long eventId, Long userId){
         Long enterpriseId = jwtManager.validateJwt(token);
         Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
                 .orElseThrow(()->new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
-        Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investmentId, userId);
+        Investment investment=investmentRepository.findByEventIdAndUserId(eventId, userId);
+        Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investment.getId(), userId);
         feedback.setPenalty(true);
 
         feedbackRepository.save(feedback);
