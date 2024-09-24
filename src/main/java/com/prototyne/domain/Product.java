@@ -5,6 +5,7 @@ import com.prototyne.domain.enums.ProductCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class Product extends BaseEntity {
     private String thumbnailUrl;
 
     private Integer reqTickets;
+
+    private LocalDate launchedDate; // 출시 예정일
 
     @Column(nullable = true, length = 100)
     private String question1;

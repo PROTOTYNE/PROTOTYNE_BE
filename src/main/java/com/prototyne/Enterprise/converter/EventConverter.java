@@ -5,6 +5,7 @@ import com.prototyne.Enterprise.web.dto.ProductDTO;
 import com.prototyne.domain.Event;
 import com.prototyne.domain.Product;
 import com.prototyne.domain.ProductImage;
+import com.prototyne.domain.enums.InvestmentStatus;
 
 import java.time.LocalDate;
 import java.util.stream.Collectors;
@@ -12,45 +13,19 @@ import java.util.stream.Collectors;
 public class EventConverter {
     // 체험 목록 조회 응답 형식으로
     public static EventDTO.EventResponse toEventResponse(Event event, Product product, LocalDate now) {
-        // 1. 체험(이벤트) 단계와 그에 따른 날짜 계산
-        EventDTO.StageAndDate stageAndDate = calculateStageAndDate(event, now);
+
+        int stage = calculateStage(now, event); // 단계 계산
+        LocalDate stageDate = calculateStageDate(stage, event); // 단계에 따른 날짜 계산
 
         // 2. DTO 반환
         return EventDTO.EventResponse.builder()
                 .eventId(event.getId())
                 .thumbnailUrl(product.getThumbnailUrl())
                 .productName(product.getName())
-                .stageAndDate(stageAndDate)
-                .createdDate(event.getCreatedAt().toLocalDate())
-                .category(product.getCategory())
-                .build();
-    }
-
-    // 현재 날짜에 따라 체험(이벤트) 단계와 날짜 반환
-    public static EventDTO.StageAndDate calculateStageAndDate(Event event, LocalDate now) {
-        Integer stage;
-        LocalDate stageDate;
-
-        if (now.isBefore(event.getEventStart())) {
-            stage = 1; // 시작 전 -> 이벤트 시작일
-            stageDate = event.getEventStart();
-        } else if (now.isBefore(event.getReleaseStart())) {
-            stage = 2; // 신청자 모집 기간 -> 이벤트 종료일
-            stageDate = event.getEventEnd();
-        } else if (now.isBefore(event.getFeedbackStart())) {
-            stage = 3; // 당첨자 발표 기간 -> 발표 종료일
-            stageDate = event.getReleaseEnd();
-        } else if (now.isBefore(event.getFeedbackEnd()) || now.isEqual(event.getFeedbackEnd())) {
-            stage = 4; // 후기 작성 기간 -> 작성 종료일
-            stageDate = event.getFeedbackEnd();// 작성 종료일
-        } else {
-            stage = 5; // 종료 -> 종료일
-            stageDate = event.getFeedbackEnd().plusDays(1);
-        }
-
-        return EventDTO.StageAndDate.builder()
                 .stage(stage)
                 .stageDate(stageDate)
+                .createdDate(event.getCreatedAt().toLocalDate())
+                .category(product.getCategory())
                 .build();
     }
 
@@ -76,6 +51,7 @@ public class EventConverter {
                 .contents(product.getContents())
                 .reqTickets(product.getReqTickets())
                 .notes(product.getNotes())
+                .launchedDate(product.getLaunchedDate())
                 .category(product.getCategory())
                 .build();
 
@@ -101,5 +77,50 @@ public class EventConverter {
                 .productInfo(productInfo)
                 .dates(eventDate)
                 .build();
+    }
+
+    // 체험 현황 형식으로
+    public static EventDTO.EventProgress toEventProgress(LocalDate now, Event event) {
+        // 당첨자 수
+        int iCount = (int) event.getInvestmentList().stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.당첨)
+                .count();
+
+        // 후기 작성 수
+        int fCount = (int) event.getInvestmentList().stream()
+                .filter(investment -> investment.getStatus() == InvestmentStatus.후기작성)
+                .count();
+
+        return EventDTO.EventProgress.builder()
+                .stage(calculateStage(now, event)).investCount(iCount).feedbackCount(fCount)
+                .build();
+    }
+
+    // 현재 날짜에 따라 체험(이벤트) 단계 계산
+    private static Integer calculateStage(LocalDate now, Event event){
+        if (now.isBefore(event.getEventStart())) return 1; // 시작 전
+        else if (now.isBefore(event.getReleaseStart())) return 2; // 신청자 모집 기간
+        else if (now.isBefore(event.getFeedbackStart())) return 3; // 당첨자 발표 기간
+        else if (now.isBefore(event.getFeedbackEnd()) || now.isEqual(event.getFeedbackEnd()))
+            return  4; // 후기 작성 기간
+        else return 5; // 종료
+    }
+
+    // 체험(이벤트) 단계에 따라 단계 종료 날짜 반환
+    private static LocalDate calculateStageDate(int stage, Event event) {
+        switch (stage) {
+            case 1:
+                return event.getEventStart(); // 시작 전 -> 이벤트 시작일
+            case 2:
+                return event.getEventEnd(); // 신청자 모집 기간 -> 이벤트 종료일
+            case 3:
+                return event.getReleaseEnd(); // 당첨자 발표 기간 -> 발표 종료일
+            case 4:
+                return event.getFeedbackEnd(); // 후기 작성 기간 -> 작성 종료일
+            case 5:
+                return event.getFeedbackEnd().plusDays(1); // 종료 -> 종료일 다음날
+            default:
+                throw new IllegalArgumentException("Invalid stage: " + stage);
+        }
     }
 }
