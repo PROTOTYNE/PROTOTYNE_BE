@@ -88,6 +88,7 @@ public class UserlistServiceImpl implements UserlistService{
         investment.setTransportNum(transportNum);
         investment.setShipping(InvestmentShipping.배송후);
 
+
         investmentRepository.save(investment);
         String reviewStatus = determineReviewStatus(investment.getId(), userId);
         return UserlistConverter.toUserlistResponse(investment, investment.getUser(),reviewStatus);
