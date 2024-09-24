@@ -44,4 +44,7 @@ public class Investment extends BaseEntity {
 
     @OneToOne(mappedBy ="investment", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Feedback feedback;
+
+    @Column(nullable=true, length=100)
+    private String deliveryCompany;
 }

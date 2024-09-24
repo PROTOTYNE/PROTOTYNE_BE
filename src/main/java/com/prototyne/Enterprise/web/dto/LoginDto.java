@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class EnterpriseDto {
+public class LoginDto {
 
     @Builder
     @Getter
