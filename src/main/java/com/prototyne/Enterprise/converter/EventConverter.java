@@ -51,6 +51,7 @@ public class EventConverter {
                 .contents(product.getContents())
                 .reqTickets(product.getReqTickets())
                 .notes(product.getNotes())
+                .launchedDate(product.getLaunchedDate())
                 .category(product.getCategory())
                 .build();
 

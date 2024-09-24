@@ -68,7 +68,7 @@ public class EventController {
     @GetMapping("/events/{eventId}")
     @Operation(summary = "체험 정보 조회 API - 인증 필수",
             description = """
-                    체험 상세 조회 \n
+                    체험 상세 조회 (출시예정일 반영)\n
                     eventId 입력""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<EventDTO.EventInfo> getEvent(HttpServletRequest token, @PathVariable Long eventId) {
