@@ -72,8 +72,8 @@ public class UserDto {
         public String accessToken;
         @JsonProperty("expires_in")
         public Integer expiresIn;
-        //        @JsonProperty("refresh_token")
-        //        public String refreshToken;
+        @JsonProperty("refresh_token")
+        public String refreshToken;
         //        @JsonProperty("refresh_token_expires_in")
         //        public Integer refreshTokenExpiresIn;
         @JsonProperty("scope")

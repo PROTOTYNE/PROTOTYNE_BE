@@ -1,7 +1,7 @@
 package com.prototyne.Users.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.service.LoginService.KakaoServiceImpl;
 import com.prototyne.Users.service.SignupService.UserSignupServiceImpl;
 import com.prototyne.Users.web.dto.UserDto;

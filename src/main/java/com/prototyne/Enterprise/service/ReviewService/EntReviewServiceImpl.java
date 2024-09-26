@@ -2,7 +2,7 @@ package com.prototyne.Enterprise.service.ReviewService;
 
 import com.prototyne.Enterprise.converter.EntReviewConverter;
 import com.prototyne.Enterprise.web.dto.EntReviewDTO;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.Enterprise;

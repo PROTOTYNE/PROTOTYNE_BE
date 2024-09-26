@@ -43,5 +43,6 @@ public class LoginDto {
         private Long id;
         private String name;
         private String access_token;
+        private String refresh_token;
     }
 }

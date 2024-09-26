@@ -1,6 +1,6 @@
 package com.prototyne.Users.web.controller;
 
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.service.PaymentService.KakaopayService;
 import com.prototyne.Users.web.dto.KakaoPayDto;
 import com.prototyne.apiPayload.ApiResponse;
