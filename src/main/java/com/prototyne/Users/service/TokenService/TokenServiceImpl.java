@@ -16,14 +16,14 @@ public class TokenServiceImpl implements TokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
-    public JwtTokenDto refreshAccessToken(String accessToken){
-        Long userId = jwtUtil.validateRefreshToken(accessToken);
+    public JwtTokenDto refreshAccessToken(String refreshToken){
+        Long userId = jwtUtil.validateRefreshToken(refreshToken);
 
         String storedRefreshToken = refreshTokenRepository.findById(userId)
                 .map(RefreshToken::getRefreshToken)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.TOKEN_UNVALID));
 
-        if (!storedRefreshToken.equals(accessToken)) {
+        if (!storedRefreshToken.equals(refreshToken)) {
             throw new TempHandler(ErrorStatus.TOKEN_UNVALID);
         }
 

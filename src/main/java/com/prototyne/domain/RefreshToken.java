@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash(value = "token", timeToLive = 10)
+@RedisHash(value = "token", timeToLive = 604800)
 @AllArgsConstructor
 @Getter
 public class RefreshToken {
