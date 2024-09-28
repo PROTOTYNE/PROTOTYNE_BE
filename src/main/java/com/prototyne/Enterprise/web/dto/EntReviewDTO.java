@@ -4,7 +4,6 @@ import com.prototyne.domain.FeedbackImage;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -35,6 +34,5 @@ public class EntReviewDTO {
         private List<String> imagefiles;
 
     }
-
 
 }

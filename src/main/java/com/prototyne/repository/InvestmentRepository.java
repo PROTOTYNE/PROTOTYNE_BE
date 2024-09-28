@@ -15,5 +15,5 @@ public interface InvestmentRepository extends JpaRepository<Investment, Long> {
 
     List<Investment> findByEventId(Long eventId);
 
-    Investment findByEventIdAndUserId(Long eventId, Long userId);
+    Optional<Investment>findByUserIdAndEventId(Long userId, Long eventId);
 }
