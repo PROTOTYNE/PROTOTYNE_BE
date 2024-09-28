@@ -1,6 +1,10 @@
 package com.prototyne.Users.service.SignupService;
 
+import com.prototyne.Users.service.TokenService.TokenService;
+import com.prototyne.Users.web.dto.JwtTokenDto;
+import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.ADD_set;
 import com.prototyne.domain.User;
@@ -9,8 +13,6 @@ import com.prototyne.domain.mapping.Additional;
 import com.prototyne.repository.ADD_setRepository;
 import com.prototyne.repository.AdditionalRepository;
 import com.prototyne.repository.UserRepository;
-import com.prototyne.Users.service.LoginService.JwtManager;
-import com.prototyne.Users.web.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -28,12 +30,19 @@ public class UserSignupServiceImpl implements UserSignupService {
     private final ADD_setRepository addSetRepository;
     @Lazy
     private final JwtManager jwtManager;
+    private final TokenService tokenService;
+
     @Override
     public UserDto.UserSignUpResponse signup(String aouthToken,
                        UserDto.UserDetailRequest userDetailRequest,
                        UserDto.UserAddInfoRequest addInfoRequest){
-        Long userId = jwtManager.validateJwt(aouthToken);
-        // id로 기존 회원이 존재하는지 여부 조회
+        Long userId;
+        try {
+            userId = jwtManager.validateAccessToken(aouthToken);
+        } catch (TempHandler e) {
+            JwtTokenDto newTokens = tokenService.refreshAccessToken(aouthToken);
+            userId = jwtManager.validateAccessToken(newTokens.getAccessToken());
+        }
         User existingUser = userRepository.findById(userId).orElse(null);
 
         if(existingUser != null && existingUser.getSignupComplete()) {

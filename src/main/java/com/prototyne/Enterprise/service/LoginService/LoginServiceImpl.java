@@ -1,7 +1,7 @@
 package com.prototyne.Enterprise.service.LoginService;
 
 import com.prototyne.Enterprise.web.dto.LoginDto;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.Enterprise;
@@ -65,12 +65,15 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // JWT 토큰 생성
-        String accessToken = jwtManager.createJwt(enterprise.getId());
+        String accessToken = jwtManager.createAccessToken(enterprise.getId());
+        String refreshToken = jwtManager.createRefreshToken(enterprise.getId(), true);
+
 
         return LoginDto.EnterpriseLoginResponse.builder()
                 .id(enterprise.getId())
                 .name(enterprise.getName())
                 .access_token(accessToken)
+                .refresh_token(refreshToken)
                 .build();
     }
 }

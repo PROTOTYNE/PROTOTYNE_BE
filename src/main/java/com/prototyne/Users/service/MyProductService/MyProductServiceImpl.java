@@ -4,14 +4,13 @@ import com.prototyne.Users.converter.MyProductConverter;
 import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.repository.FeedbackRepository;
 import com.prototyne.repository.MyProductRepository;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.web.dto.MyProductDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

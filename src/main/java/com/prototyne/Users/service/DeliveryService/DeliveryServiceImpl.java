@@ -4,7 +4,7 @@ import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.User;
 import com.prototyne.repository.UserRepository;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.web.dto.DeliveryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

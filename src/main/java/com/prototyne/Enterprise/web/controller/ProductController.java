@@ -2,13 +2,9 @@ package com.prototyne.Enterprise.web.controller;
 
 import com.prototyne.Enterprise.service.ProductService.ProductService;
 import com.prototyne.Enterprise.web.dto.ProductDTO;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.domain.Product;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

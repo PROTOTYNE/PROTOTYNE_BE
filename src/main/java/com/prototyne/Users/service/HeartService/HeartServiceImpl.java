@@ -9,7 +9,7 @@ import com.prototyne.domain.mapping.Heart;
 import com.prototyne.repository.EventRepository;
 import com.prototyne.repository.HeartRepository;
 import com.prototyne.repository.UserRepository;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.web.dto.HeartDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

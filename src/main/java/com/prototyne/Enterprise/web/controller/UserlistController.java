@@ -4,7 +4,7 @@ package com.prototyne.Enterprise.web.controller;
 
 import com.prototyne.Enterprise.service.UserlistService.UserlistService;
 import com.prototyne.Enterprise.web.dto.UserlistDTO;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,7 +48,7 @@ public class UserlistController {
     @PatchMapping("/user/delivery/{eventId}")
     @Operation(summary = "신청자 배송 정보 수정 API - 인증 필수")
     @SecurityRequirement(name = "session-token")
-    public ApiResponse<UserlistDTO.UserListResponse> updateUserDelivery(HttpServletRequest token, @PathVariable Long eventId, @RequestParam("userId") Long userId, @RequestParam("택배사 이름") String deliveryCompany, @RequestParam("운송장 번호") String transportNum) {
+    public ApiResponse<UserlistDTO.UserListResponse> updateUserDelivery(HttpServletRequest token, @PathVariable Long eventId, @RequestParam("userId") Long userId, @RequestParam("deliveryCompany") String deliveryCompany, @RequestParam("transportNum") String transportNum) {
         String accessToken = jwtManager.getToken(token);
         UserlistDTO.UserListResponse userlist = userlistService.updateUserDelivery(accessToken, eventId, userId, deliveryCompany, transportNum);
         return ApiResponse.onSuccess(userlist);

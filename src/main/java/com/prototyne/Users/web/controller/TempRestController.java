@@ -2,7 +2,7 @@ package com.prototyne.Users.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
 import com.prototyne.Users.converter.TempConverter;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.service.TempService.TempCommandService;
 import com.prototyne.Users.web.dto.TempResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +62,7 @@ public class TempRestController {
         } else if (flag < 1) {
             return ResponseEntity.badRequest().body("flag must be greater than 1");
         }
-        String jwt = JwtManager.createJwt(flag);
+        String jwt = JwtManager.createAccessToken(flag);
         return ResponseEntity.ok(jwt);
     }
 }
