@@ -41,7 +41,7 @@ public class LoginController {
         return ApiResponse.onSuccess(response);
     }
 
-    @DeleteMapping("/logout")
+    @PostMapping("/logout")
     @Operation(summary = "기업 로그아웃 API",
             description = "Delete되는 Refresh Token 과 해당하는 enterpriseId 응답",
             security = {@SecurityRequirement(name = "session-token")})
