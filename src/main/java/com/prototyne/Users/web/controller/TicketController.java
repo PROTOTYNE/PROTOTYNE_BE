@@ -1,7 +1,7 @@
 package com.prototyne.Users.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.Users.web.dto.TicketDto;
 import io.swagger.v3.oas.annotations.Operation;

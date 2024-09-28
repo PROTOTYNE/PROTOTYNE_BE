@@ -1,6 +1,8 @@
 package com.prototyne.Users.service.LoginService;
 
+import com.prototyne.Users.service.TokenService.TokenService;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.Users.converter.UserConverter;
 import com.prototyne.domain.User;
@@ -23,12 +25,14 @@ import java.util.Objects;
 public class KakaoServiceImpl implements KakaoService {
     private final JwtManager jwtManager;
     private final UserRepository userRepository;
+    private final TokenService tokenService;
     private String clientId;
 
     @Autowired
-    public KakaoServiceImpl(JwtManager jwtManager, UserRepository userRepository, @Value("${spring.datasource.client-id}") String clientId) {
+    public KakaoServiceImpl(JwtManager jwtManager, UserRepository userRepository, TokenService tokenService, @Value("${spring.datasource.client-id}") String clientId) {
         this.jwtManager = jwtManager;
         this.userRepository = userRepository;
+        this.tokenService = tokenService;
         this.clientId = clientId;
     }
 
@@ -55,8 +59,12 @@ public class KakaoServiceImpl implements KakaoService {
             kakaotokenresponse.setSignupComplete(user.getSignupComplete());
         }
         Long id = user.getId();
-        String token = jwtManager.createJwt(id);
-        kakaotokenresponse.setAccessToken(token);
+        String accessToken = jwtManager.createAccessToken(id);
+        String refreshToken = jwtManager.createRefreshToken(id, false);
+        tokenService.saveRefreshToken(id, refreshToken);
+        kakaotokenresponse.setAccessToken(accessToken);
+        kakaotokenresponse.setRefreshToken(refreshToken);
+
         return kakaotokenresponse;
     }
 
@@ -78,7 +86,7 @@ public class KakaoServiceImpl implements KakaoService {
 
     @Override
     public UserDto.UserRequest getUserInfo(String accessToken) {
-        Long id = jwtManager.validateJwt(accessToken);
+        Long id = jwtManager.validateAccessToken(accessToken);
 //        log.info("id : {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
         return UserConverter.toUserInfoDto(user);

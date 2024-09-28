@@ -2,7 +2,7 @@ package com.prototyne.Users.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
 import com.prototyne.Users.service.AlarmService.AlarmService;
-import com.prototyne.Users.service.LoginService.JwtManager;
+import com.prototyne.apiPayload.config.JwtManager;
 import com.prototyne.Users.web.dto.AlarmDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -30,8 +30,8 @@ public class AlarmController {
     @Operation(summary = "알림 조회 API - 인증 필요",
             description = "유저 알림 조회",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<List<AlarmDto>> GetA(HttpServletRequest token) {
-        String aouthtoken = jwtManager.getToken(token);
+    public ApiResponse<List<AlarmDto>> GetA(HttpServletRequest req) {
+        String aouthtoken = jwtManager.getToken(req);
         return ApiResponse.onSuccess(alarmService.getAlarmList(aouthtoken));
     }
 }
