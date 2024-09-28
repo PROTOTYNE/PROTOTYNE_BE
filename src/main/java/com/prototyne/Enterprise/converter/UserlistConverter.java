@@ -14,22 +14,28 @@ public class UserlistConverter {
     public static UserlistDTO.UserListResponse toUserlistResponse(Investment investment, User user,String reviewStatus){
 
         String prizeStatus;
-        String deliveryStatus;
+        Boolean deliveryStatus;
         if(Objects.equals(String.valueOf(investment.getStatus()), "신청"))
         {
             prizeStatus="미당첨";
         }
         else {prizeStatus="당첨";}
 
+        if(Objects.equals(String.valueOf(investment.getShipping()), "배송후")){
+            deliveryStatus=true;
+        }
+        else {deliveryStatus=false;}
+
         return UserlistDTO.UserListResponse.builder()
+                .userId(user.getId())
                 .userName(user.getUsername())
                 .event_start(investment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .prizeStatus(prizeStatus)
-                .deliveryStatus(String.valueOf(investment.getShipping()))
+                .deliveryStatus(deliveryStatus)
                 .reviewStatus(reviewStatus)
-                .birth("생년월일: "+user.getBirth())
-                .gender("성별: "+user.getGender())
-                .familyMember("가족 구성원: "+user.getFamilyMember())
+                .birth(user.getBirth())
+                .gender(user.getGender())
+                .familyMember(user.getFamilyMember())
                 .build();
     }
 }

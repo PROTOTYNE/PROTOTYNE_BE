@@ -13,6 +13,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     Optional<Feedback> findByInvestmentId(Long investmentId);
     Boolean existsByInvestmentIdAndUserId(Long investmentId, Long userId);
 
-    List<Feedback> findAllByInvestmentId(Long investmentId);
     Feedback findByInvestmentIdAndUserId(Long investmentId,Long userId);
+    List<Feedback> findAllByInvestmentIdIn(List<Long> investmentIds);
 }
