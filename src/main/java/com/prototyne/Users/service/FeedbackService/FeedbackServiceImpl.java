@@ -34,15 +34,16 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackImageRepository feedbackImageRepository;
 
     @Override
-    public FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO) {
+    public FeedbackDTO UpdateFeedbacks(String accessToken, Long eventId, FeedbackDTO feedbackDTO) {
 
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
-        Investment investment = investmentRepository.findFirstByUserIdAndId(userId, investmentId)
+
+        Investment investment = investmentRepository.findFirstByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
-        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseGet(() -> Feedback.builder()
+        Feedback feedback = feedbackRepository.findByInvestmentId(investment.getId()).orElseGet(() -> Feedback.builder()
                 .investment(investment)
                 .user(user)
                 .reYn((byte) 1)
@@ -61,16 +62,16 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     }
 
-    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long investmentId, String directory, List<MultipartFile> feedbackImages) {
+    public FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long eventId, String directory, List<MultipartFile> feedbackImages) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         if (feedbackImages.isEmpty() || feedbackImages.size() > 3) {
             throw new TempHandler(ErrorStatus.INVALID_IMAGE_COUNT);
         }
-        Investment investment = investmentRepository.findFirstByUserIdAndId(userId, investmentId).orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
+        Investment investment = investmentRepository.findFirstByUserIdAndEventId(userId, eventId).orElseThrow(() -> new TempHandler(ErrorStatus.INVESTMENT_ERROR_ID));
 
-        Feedback feedback = feedbackRepository.findByInvestmentId(investmentId).orElseGet(() -> {
+        Feedback feedback = feedbackRepository.findByInvestmentId(investment.getId()).orElseGet(() -> {
             Feedback newFeedback = Feedback.builder()
                     .investment(investment)
                     .user(user)
