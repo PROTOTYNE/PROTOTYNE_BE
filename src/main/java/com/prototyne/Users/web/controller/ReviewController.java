@@ -37,23 +37,23 @@ public class ReviewController {
     }
 
     @Tag(name="${swagger.tag.product-etc}")
-    @PutMapping("/text/{eventId}")
+    @PutMapping("/text/{investmentId}")
     @Operation(summary="후기 작성 텍스트 API", description="사용자가 체험했던 시제품에 대한 후기 작성",security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<FeedbackDTO> UpdateFeedbacks(HttpServletRequest token, @PathVariable Long eventId,
+    public ApiResponse<FeedbackDTO> UpdateFeedbacks(HttpServletRequest token, @PathVariable Long investmentId,
                                                     @RequestBody FeedbackDTO feedbackDTO){
         String aouthtoken = jwtManager.getToken(token);
-        FeedbackDTO UpdateFeedbacks = feedbackService.UpdateFeedbacks(aouthtoken,eventId, feedbackDTO);
+        FeedbackDTO UpdateFeedbacks = feedbackService.UpdateFeedbacks(aouthtoken,investmentId, feedbackDTO);
         return ApiResponse.onSuccess(UpdateFeedbacks);
     }
 
     @Tag(name="${swagger.tag.product-etc}")
-    @PostMapping(value="/image/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value="/image/{investmentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary="후기 작성 이미지 API", description="사용자가 체험했던 시제품에 대한 후기 이미지 업로드",security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<FeedbackImageDTO> CreateFeedbacksImages(HttpServletRequest token, @PathVariable Long eventId,
+    public ApiResponse<FeedbackImageDTO> CreateFeedbacksImages(HttpServletRequest token, @PathVariable Long investmentId,
                                                               @RequestPart("imageFiles")
                                                               List<MultipartFile> images) {
         String aouthtoken = jwtManager.getToken(token);
-        FeedbackImageDTO CreateFeedbacksImages = feedbackService.CreateFeedbacksImage(aouthtoken, eventId,"feedback-images", images);
+        FeedbackImageDTO CreateFeedbacksImages = feedbackService.CreateFeedbacksImage(aouthtoken, investmentId,"feedback-images", images);
 
         return ApiResponse.onSuccess(CreateFeedbacksImages);
     }

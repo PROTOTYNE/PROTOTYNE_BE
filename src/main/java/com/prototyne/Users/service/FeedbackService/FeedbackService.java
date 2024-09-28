@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface FeedbackService {
-    FeedbackDTO UpdateFeedbacks(String accessToken, Long eventId, FeedbackDTO feedbackDTO);
+    FeedbackDTO UpdateFeedbacks(String accessToken, Long investmentId, FeedbackDTO feedbackDTO);
 
-    FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long eventId, String directory, List<MultipartFile> feedbackImages);
+    FeedbackImageDTO CreateFeedbacksImage(String accessToken, Long investmentId, String directory, List<MultipartFile> feedbackImages);
 }
