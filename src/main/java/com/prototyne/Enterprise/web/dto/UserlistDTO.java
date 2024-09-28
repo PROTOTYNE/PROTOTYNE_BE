@@ -1,5 +1,6 @@
 package com.prototyne.Enterprise.web.dto;
 
+import com.prototyne.domain.enums.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,23 +14,25 @@ public class UserlistDTO {
     @Builder
     public static class UserListResponse {
 
+        private Long userId;
+
         private String userName;
 
         private String event_start;
 
         private String prizeStatus;
 
-        private String deliveryStatus;
+        private Boolean deliveryStatus;
 
         private String reviewStatus;
 
         //private String addInfo;
 
-        private String birth;
+        private LocalDate birth;
 
-        private String familyMember;
+        private Integer familyMember;
 
-        private String gender;
+        private Gender gender;
 
     }
 
