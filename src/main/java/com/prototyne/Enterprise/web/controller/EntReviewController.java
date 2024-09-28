@@ -1,8 +1,10 @@
 package com.prototyne.Enterprise.web.controller;
 
 import com.prototyne.Enterprise.service.ReviewService.EntReviewService;
+import com.prototyne.Enterprise.web.dto.EntAllReviewResponseDTO;
 import com.prototyne.Enterprise.web.dto.EntReviewDTO;
 import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.Users.web.dto.ReviewDTO;
 import com.prototyne.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,9 +29,9 @@ public class EntReviewController {
     @GetMapping("/review/{eventId}")
     @Operation(summary="전체 설문조사 조회 API - 인증 필수")
     @SecurityRequirement(name = "session-token")
-    public ApiResponse<List<EntReviewDTO.ReviewResponse>> getAllReviews(HttpServletRequest token, @PathVariable Long eventId){
+    public ApiResponse<EntAllReviewResponseDTO.ReviewResponse> getAllReviews(HttpServletRequest token, @PathVariable Long eventId){
         String accessToken = jwtManager.getToken(token);
-        List<EntReviewDTO.ReviewResponse> reviewList= entReviewService.getAllReviews(accessToken,eventId);
+        EntAllReviewResponseDTO.ReviewResponse reviewList= entReviewService.getAllReviews(accessToken,eventId);
         return ApiResponse.onSuccess(reviewList);
 
     }
@@ -53,4 +55,13 @@ public class EntReviewController {
         return ApiResponse.onSuccess(review);
     }
 
+    @PutMapping("/review/{productId}")
+    @Operation(summary="설문조사 질문 목록 생성 API - 인증 필수")
+    @SecurityRequirement(name="session-token")
+    public ApiResponse<ReviewDTO.ReviewResponseDTO> updateReviewQuestion(HttpServletRequest token, @PathVariable Long productId,@RequestBody ReviewDTO.ReviewResponseDTO request){
+        String accessToken=jwtManager.getToken(token);
+        ReviewDTO.ReviewResponseDTO reviewQuestion=entReviewService.updateReviewQuestion(accessToken,productId, request);
+
+        return ApiResponse.onSuccess(reviewQuestion);
+    }
 }
