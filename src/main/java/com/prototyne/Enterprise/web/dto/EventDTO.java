@@ -35,17 +35,10 @@ public class EventDTO {
         private final Long eventId;           // 체험(이벤트) 아이디
         private final String thumbnailUrl;    // 시제품 썸네일
         private final String productName;     // 시제품 명
-        private final StageAndDate stageAndDate;  // 체험(이벤트) 단계와 그에 따른 날짜
-        private final LocalDate createdDate;  // 체험(이벤트) 등록일
-        private final ProductCategory category;   // 시제품 카테고리
-    }
-
-    // 체험(이벤트) 단계 및 날짜
-    @Getter
-    @Builder
-    public static class StageAndDate {
         private final Integer stage;       // 이벤트 단계
         private final LocalDate stageDate;   // 단계에 따른 날짜
+        private final LocalDate createdDate;  // 체험(이벤트) 등록일
+        private final ProductCategory category;   // 시제품 카테고리
     }
 
     // 체험 정보 조회
@@ -57,5 +50,14 @@ public class EventDTO {
         private final List<String> productImages;
         private final ProductDTO.ProductInfo productInfo;
         private final EventDate dates;
+    }
+
+    // 체험 현황
+    @Builder
+    @Getter
+    public static class EventProgress {
+        private final Integer stage;         // 이벤트 단계
+        private final Integer investCount;   // 당첨자 발표 수
+        private final Integer feedbackCount; // 후기 작성 수
     }
 }

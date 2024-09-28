@@ -36,21 +36,21 @@ public class EntReviewController {
 
     }
 
-    @GetMapping("/review/{investmentId}/{userId}")
+    @GetMapping("/review/{eventId}/{userId}")
     @Operation(summary="개별 설문조사 조회 API - 인증 필수")
     @SecurityRequirement(name = "session-token")
-    public ApiResponse<EntReviewDTO.ReviewResponse> getReviewByUserId(HttpServletRequest token, @PathVariable Long investmentId, @PathVariable Long userId){
+    public ApiResponse<EntReviewDTO.ReviewResponse> getReviewByUserId(HttpServletRequest token, @PathVariable Long eventId, @PathVariable Long userId){
         String accessToken = jwtManager.getToken(token);
-        EntReviewDTO.ReviewResponse review= entReviewService.getReviewByUserId(accessToken,investmentId,userId);
+        EntReviewDTO.ReviewResponse review= entReviewService.getReviewByUserId(accessToken,eventId,userId);
         return ApiResponse.onSuccess(review);
     }
 
-    @PatchMapping("/review/{investmentId}/{userId}")
+    @PatchMapping("/review/{eventId}/{userId}")
     @Operation(summary="패널티 부여 API - 인증 필수")
     @SecurityRequirement(name = "session-token")
-    public ApiResponse<EntReviewDTO.ReviewResponse> updatePenaltyByUserId(HttpServletRequest token, @PathVariable Long investmentId, @PathVariable Long userId){
+    public ApiResponse<EntReviewDTO.ReviewResponse> updatePenaltyByUserId(HttpServletRequest token, @PathVariable Long eventId, @PathVariable Long userId){
         String accessToken = jwtManager.getToken(token);
-        EntReviewDTO.ReviewResponse review= entReviewService.updatePenaltyByUserId(accessToken, investmentId, userId);
+        EntReviewDTO.ReviewResponse review= entReviewService.updatePenaltyByUserId(accessToken, eventId, userId);
 
         return ApiResponse.onSuccess(review);
     }

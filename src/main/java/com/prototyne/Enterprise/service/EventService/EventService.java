@@ -16,4 +16,7 @@ public interface EventService {
 
     // 체험 삭제
     void deleteEvent(String accessToken, Long eventId);
+
+    // 체험 현황 조회
+    EventDTO.EventProgress getEventProgress(String accessToken, Long eventId);
 }

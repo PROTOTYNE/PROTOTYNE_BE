@@ -20,6 +20,7 @@ public class ProductConverter {
                 .category(product.getCategory())
                 // 진행 중인 체험이 없다면 0
                 .eventCount(product.getEventList() != null ? product.getEventList().size() : 0)
+                .launchedDate(product.getLaunchedDate())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public class ProductConverter {
                 .reqTickets(productInfo.getReqTickets())
                 .notes(productInfo.getNotes())
                 .category(productInfo.getCategory())
+                .launchedDate(productInfo.getLaunchedDate())
                 .question1(questions.getQuestion1())
                 .question2(questions.getQuestion2())
                 .question3(questions.getQuestion3())
