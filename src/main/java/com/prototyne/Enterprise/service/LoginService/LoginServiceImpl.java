@@ -66,7 +66,7 @@ public class LoginServiceImpl implements LoginService {
 
         // JWT 토큰 생성
         String accessToken = jwtManager.createAccessToken(enterprise.getId());
-        String refreshToken = jwtManager.createRefreshToken(enterprise.getId());
+        String refreshToken = jwtManager.createRefreshToken(enterprise.getId(), true);
 
 
         return LoginDto.EnterpriseLoginResponse.builder()

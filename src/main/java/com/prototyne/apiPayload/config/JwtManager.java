@@ -28,8 +28,8 @@ public class JwtManager {
         return jwtUtil.createAccessToken(id);
     }
 
-    public String createRefreshToken(Long id) {
-        return jwtUtil.createRefreshToken(id);
+    public String createRefreshToken(Long id, boolean isEnterprise) {
+        return jwtUtil.createRefreshToken(id, isEnterprise);
     }
 
     // JWT 검증 로직도 JwtUtil을 사용
@@ -41,21 +41,21 @@ public class JwtManager {
         return jwtUtil.validateRefreshToken(token);
     }
     public Long validateJwt(String token) {
-        Long userId;
+        Long ownerId;
         try {
             // 1. 액세스 토큰 검증
-            userId = validateAccessToken(token);
+            ownerId = validateAccessToken(token);
         } catch (TempHandler e) {
             // 2. 예외가 발생했을 때, 예외 코드로 구분하여 처리
             if ("TOKEN4002".equals(e.getCode())) {  // TOKEN_EXPIRED 코드 체크
                 // 3. 리프레시 토큰으로 새로운 액세스 토큰 발급
                 JwtTokenDto newTokens = tokenService.refreshAccessToken(token);
-                userId = validateAccessToken(newTokens.getAccessToken());
+                ownerId = validateAccessToken(newTokens.getAccessToken());
             } else {
                 throw e; // 4. 다른 예외는 그대로 던짐
             }
         }
-        return userId;
+        return ownerId;
     }
 
     public String getToken(HttpServletRequest token) {

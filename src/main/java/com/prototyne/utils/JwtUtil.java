@@ -35,14 +35,14 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createRefreshToken(Long id){
+    public String createRefreshToken(Long id, boolean isEnterprise){
         String refreshToken =  Jwts.builder()
                 .subject(String.valueOf(id))
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + REFRESH_TOKEN_EXPIRATION))
                 .signWith(key)
                 .compact();
-        RefreshToken token = new RefreshToken(id, refreshToken);
+        RefreshToken token = new RefreshToken(id, refreshToken, isEnterprise);
         refreshTokenRepository.save(token);
         return refreshToken;
     }

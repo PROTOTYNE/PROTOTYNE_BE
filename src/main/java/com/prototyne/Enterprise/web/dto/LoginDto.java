@@ -1,6 +1,7 @@
 package com.prototyne.Enterprise.web.dto;
 
 import com.prototyne.domain.enums.EnterpriseStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,14 @@ public class LoginDto {
         private Long id;
         private String name;
         private String access_token;
+        private String refresh_token;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class EnterpriseLogoutResponse {
+        private Long id;
         private String refresh_token;
     }
 }

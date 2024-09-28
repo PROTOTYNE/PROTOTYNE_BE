@@ -82,6 +82,20 @@ public class UserDto {
     }
 
     @Getter
+    @Setter
+    @RequiredArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class KakaoLogoutTokenResponse{
+        @JsonProperty("refresh_token")
+        public String refreshToken;
+        @JsonProperty("user_id")
+        public Long userId;
+
+        public KakaoLogoutTokenResponse(String refreshToken, Long userId) {
+        }
+    }
+
+    @Getter
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UserInfoResponse {

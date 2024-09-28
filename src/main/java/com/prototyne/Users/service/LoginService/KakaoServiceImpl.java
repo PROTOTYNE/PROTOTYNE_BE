@@ -60,7 +60,7 @@ public class KakaoServiceImpl implements KakaoService {
         }
         Long id = user.getId();
         String accessToken = jwtManager.createAccessToken(id);
-        String refreshToken = jwtManager.createRefreshToken(id);
+        String refreshToken = jwtManager.createRefreshToken(id, false);
         tokenService.saveRefreshToken(id, refreshToken);
         kakaotokenresponse.setAccessToken(accessToken);
         kakaotokenresponse.setRefreshToken(refreshToken);
