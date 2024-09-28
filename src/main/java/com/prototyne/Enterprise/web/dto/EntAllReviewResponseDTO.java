@@ -50,7 +50,9 @@ public class EntAllReviewResponseDTO {
 
         private List<EntAllReviewResponseDTO.ObjectDTO> objectives;
 
-        private SubjectiveDTO subjective;
+        //private SubjectiveDTO subjective;
+
+        private List<EntAllReviewResponseDTO.SubjectiveDTO> subjectiveList;
 
         private List<Integer> repurchase;
 
