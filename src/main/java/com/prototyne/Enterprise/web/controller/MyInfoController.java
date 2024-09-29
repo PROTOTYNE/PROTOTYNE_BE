@@ -2,7 +2,7 @@ package com.prototyne.Enterprise.web.controller;
 
 import com.prototyne.Enterprise.service.MyInfoService.MyInfoService;
 import com.prototyne.Enterprise.web.dto.MyInfoDTO;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

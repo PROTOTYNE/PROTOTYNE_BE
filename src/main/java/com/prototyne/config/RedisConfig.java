@@ -1,4 +1,4 @@
-package com.prototyne.apiPayload.config;
+package com.prototyne.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

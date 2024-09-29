@@ -1,7 +1,7 @@
 package com.prototyne.Enterprise.service.LoginService;
 
 import com.prototyne.Enterprise.web.dto.LoginDto;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.Enterprise;

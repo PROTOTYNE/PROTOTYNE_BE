@@ -4,7 +4,7 @@ import com.prototyne.Users.service.TokenService.TokenService;
 import com.prototyne.Users.web.dto.JwtTokenDto;
 import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.ADD_set;
 import com.prototyne.domain.User;

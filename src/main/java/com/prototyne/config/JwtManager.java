@@ -1,4 +1,4 @@
-package com.prototyne.apiPayload.config;
+package com.prototyne.config;
 
 import com.prototyne.Users.service.TokenService.TokenService;
 import com.prototyne.Users.web.dto.JwtTokenDto;

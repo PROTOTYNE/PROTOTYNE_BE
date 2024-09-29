@@ -2,7 +2,7 @@ package com.prototyne.Enterprise.service.ProductService;
 
 import com.prototyne.Enterprise.converter.ProductConverter;
 import com.prototyne.Enterprise.web.dto.ProductDTO;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.aws.s3.AmazonS3Manager;

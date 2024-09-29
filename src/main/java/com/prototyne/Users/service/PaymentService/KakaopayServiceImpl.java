@@ -1,7 +1,7 @@
 package com.prototyne.Users.service.PaymentService;
 
 import com.prototyne.Users.converter.PaymentConverter;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.Users.web.dto.KakaoPayDto;
 import com.prototyne.apiPayload.code.status.ErrorStatus;

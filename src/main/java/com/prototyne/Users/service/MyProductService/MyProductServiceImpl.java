@@ -4,7 +4,7 @@ import com.prototyne.Users.converter.MyProductConverter;
 import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.repository.FeedbackRepository;
 import com.prototyne.repository.MyProductRepository;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.web.dto.MyProductDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

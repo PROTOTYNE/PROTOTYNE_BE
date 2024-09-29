@@ -2,7 +2,7 @@ package com.prototyne.Enterprise.service.MyInfoService;
 
 import com.prototyne.Enterprise.converter.MyInfoConverter;
 import com.prototyne.Enterprise.web.dto.MyInfoDTO;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.domain.Enterprise;
 import com.prototyne.repository.EnterpriseRepository;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ import com.prototyne.Users.service.SignupService.UserSignupServiceImpl;
 import com.prototyne.Users.service.TokenService.TokenService;
 import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +36,7 @@ public class OauthController {
     }
 
     @PostMapping("/logout")
-    @Operation(summary = "로그아웃 API",
+    @Operation(summary = "로그아웃 API - 인증 필요",
             description = "Delete되는 Refresh Token 과 해당하는 userId 응답",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<UserDto.KakaoLogoutTokenResponse> logout(HttpServletRequest req){

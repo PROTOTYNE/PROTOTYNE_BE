@@ -9,7 +9,7 @@ import com.prototyne.domain.mapping.Additional;
 import com.prototyne.repository.ADD_setRepository;
 import com.prototyne.repository.AdditionalRepository;
 import com.prototyne.repository.UserRepository;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.web.dto.UserDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

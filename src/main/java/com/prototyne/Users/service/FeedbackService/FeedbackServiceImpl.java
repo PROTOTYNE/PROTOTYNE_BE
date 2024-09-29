@@ -12,7 +12,7 @@ import com.prototyne.repository.FeedbackImageRepository;
 import com.prototyne.repository.FeedbackRepository;
 import com.prototyne.repository.InvestmentRepository;
 import com.prototyne.repository.UserRepository;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.web.dto.FeedbackDTO;
 import com.prototyne.Users.web.dto.FeedbackImageDTO;
 import lombok.RequiredArgsConstructor;

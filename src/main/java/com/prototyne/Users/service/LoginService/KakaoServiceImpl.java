@@ -2,7 +2,7 @@ package com.prototyne.Users.service.LoginService;
 
 import com.prototyne.Users.service.TokenService.TokenService;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.Users.converter.UserConverter;
 import com.prototyne.domain.User;

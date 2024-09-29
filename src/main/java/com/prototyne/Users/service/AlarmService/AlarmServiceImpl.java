@@ -1,7 +1,7 @@
 package com.prototyne.Users.service.AlarmService;
 
 import com.prototyne.repository.AlarmRespository;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.web.dto.AlarmDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

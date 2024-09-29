@@ -2,7 +2,7 @@ package com.prototyne.Users.web.controller;
 
 import com.prototyne.apiPayload.ApiResponse;
 import com.prototyne.Users.converter.TempConverter;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.service.TempService.TempCommandService;
 import com.prototyne.Users.web.dto.TempResponse;
 import io.swagger.v3.oas.annotations.Operation;
