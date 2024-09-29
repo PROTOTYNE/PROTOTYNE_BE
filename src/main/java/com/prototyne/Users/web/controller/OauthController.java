@@ -36,7 +36,7 @@ public class OauthController {
     }
 
     @PostMapping("/logout")
-    @Operation(summary = "로그아웃 API",
+    @Operation(summary = "로그아웃 API - 인증 필요",
             description = "Delete되는 Refresh Token 과 해당하는 userId 응답",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<UserDto.KakaoLogoutTokenResponse> logout(HttpServletRequest req){

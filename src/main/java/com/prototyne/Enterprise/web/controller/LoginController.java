@@ -42,7 +42,7 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    @Operation(summary = "기업 로그아웃 API",
+    @Operation(summary = "기업 로그아웃 API - 인증 필요",
             description = "Delete되는 Refresh Token 과 해당하는 enterpriseId 응답",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<LoginDto.EnterpriseLogoutResponse> enterpriseLogout(HttpServletRequest req){
