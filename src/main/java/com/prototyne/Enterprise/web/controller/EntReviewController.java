@@ -5,7 +5,7 @@ import com.prototyne.Enterprise.web.dto.EntAllReviewResponseDTO;
 import com.prototyne.Enterprise.web.dto.EntReviewDTO;
 import com.prototyne.Users.web.dto.ReviewDTO;
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -2,7 +2,7 @@ package com.prototyne.Enterprise.service.UserlistService;
 
 import com.prototyne.Enterprise.converter.UserlistConverter;
 import com.prototyne.Enterprise.web.dto.UserlistDTO;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.domain.Enterprise;

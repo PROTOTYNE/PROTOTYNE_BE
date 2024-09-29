@@ -3,7 +3,7 @@ package com.prototyne.Enterprise.service.ReviewService;
 import com.prototyne.Enterprise.converter.EntReviewConverter;
 import com.prototyne.Enterprise.web.dto.EntAllReviewResponseDTO;
 import com.prototyne.Enterprise.web.dto.EntReviewDTO;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.converter.ReviewConverter;
 import com.prototyne.Users.web.dto.ReviewDTO;
 import com.prototyne.apiPayload.code.status.ErrorStatus;

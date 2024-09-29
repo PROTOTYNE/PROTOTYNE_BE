@@ -5,7 +5,7 @@ import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.Users.converter.InvestmentConverter;
 import com.prototyne.domain.*;
 import com.prototyne.repository.*;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.service.ProductService.EventService;
 import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.Users.web.dto.InvestmentDTO;

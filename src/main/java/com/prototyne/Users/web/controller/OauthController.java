@@ -5,7 +5,7 @@ import com.prototyne.Users.service.SignupService.UserSignupServiceImpl;
 import com.prototyne.Users.service.TokenService.TokenService;
 import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.apiPayload.ApiResponse;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

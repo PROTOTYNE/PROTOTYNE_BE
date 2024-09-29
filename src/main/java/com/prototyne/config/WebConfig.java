@@ -1,4 +1,4 @@
-package com.prototyne.apiPayload.config;
+package com.prototyne.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

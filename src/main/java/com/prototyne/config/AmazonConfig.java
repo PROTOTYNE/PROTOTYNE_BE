@@ -1,4 +1,4 @@
-package com.prototyne.apiPayload.config;
+package com.prototyne.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;

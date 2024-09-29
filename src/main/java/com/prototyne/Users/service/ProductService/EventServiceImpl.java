@@ -12,7 +12,7 @@ import com.prototyne.repository.EventRepository;
 import com.prototyne.repository.HeartRepository;
 import com.prototyne.repository.InvestmentRepository;
 import com.prototyne.repository.UserRepository;
-import com.prototyne.apiPayload.config.JwtManager;
+import com.prototyne.config.JwtManager;
 import com.prototyne.Users.web.dto.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
