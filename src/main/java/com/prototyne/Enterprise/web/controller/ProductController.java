@@ -59,7 +59,7 @@ public class ProductController {
             security = {@SecurityRequirement(name = "session-token")})
     @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Long> createProduct(HttpServletRequest token,
-                                           @RequestPart("productRequest") ProductDTO.CreateProductRequest productRequest,
+                                           @Valid @RequestPart("productRequest") ProductDTO.CreateProductRequest productRequest,
                                            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> images)
     {
         String oauthToken = jwtManager.getToken(token);
