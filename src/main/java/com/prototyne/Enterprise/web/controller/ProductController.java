@@ -54,7 +54,7 @@ public class ProductController {
                     요청 성공 시, 시제품 아이디(product_id) 반환""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<Long> createProduct(HttpServletRequest token,
-                                    @Valid @RequestPart("productRequest") ProductDTO.CreateProductRequest productRequest,
+                                    @Valid @RequestBody ProductDTO.CreateProductRequest productRequest,
                                            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> images){
         String oauthToken = jwtManager.getToken(token);
         Long productId = productService.createProduct(oauthToken, productRequest, images);
