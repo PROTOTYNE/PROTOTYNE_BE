@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class SwaggerBeanConfig {
 
     public SwaggerBeanConfig(MappingJackson2HttpMessageConverter converter) {
-        // Content-Type에 ctetstream 허용
+        // 스웨거에서 Content-Type에 ctetstream 허용
         var supportedMediaTypes = new ArrayList<>(converter.getSupportedMediaTypes());
         supportedMediaTypes.add(new MediaType("application", "octet-stream"));
         converter.setSupportedMediaTypes(supportedMediaTypes);

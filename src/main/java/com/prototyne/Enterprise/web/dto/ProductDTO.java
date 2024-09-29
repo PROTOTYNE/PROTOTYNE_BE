@@ -1,9 +1,12 @@
 package com.prototyne.Enterprise.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prototyne.domain.enums.ProductCategory;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -12,8 +15,13 @@ public class ProductDTO {
     // 시제품 등록 요청 형식
     @Builder
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CreateProductRequest {
+        @JsonProperty("productInfo")
         private ProductInfo productInfo;
+
+        @JsonProperty("questions")
         private Questions questions;        // 질문 목록
     }
 
