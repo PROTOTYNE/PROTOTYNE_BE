@@ -45,7 +45,7 @@ public class ProductController {
     // 시제품 등록
     @Operation(summary = "시제품 등록 API - 인증 필수",
             description = "시제품 등록(추가)" + """
-                    
+
                     1. 시제품 명 (productName) - 공백 시 에러
                     2. 설명 (contents - 공백 시 에러
                     3. 티켓 갯수 (reqTickets)
@@ -54,7 +54,7 @@ public class ProductController {
                     6. 출시예정일 (launchedDate) - 공백(null)이면 미정
                     7. 질문 목록 (1~5)
                     8. imageFiles : 제품 사진 (최대 3장)
-                    
+
                     요청 성공 시, 시제품 아이디(product_id) 반환""",
             security = {@SecurityRequirement(name = "session-token")})
     @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
