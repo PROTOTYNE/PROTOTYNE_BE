@@ -79,7 +79,9 @@ public class EventController {
     // 체험 삭제
     @DeleteMapping("/events/{eventId}")
     @Operation(summary = "체험 삭제 API - 인증 필수",
-            description = "체험 삭제 \n eventId 입력",
+            description = "체험 삭제" +
+                    "eventId 입력" +
+                    "체험(event)에 연결된 투자(investment)가 없어야 삭제 가능",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<String> deleteEvent(HttpServletRequest token, @PathVariable Long eventId) {
         String oauthToken = jwtManager.getToken(token);
