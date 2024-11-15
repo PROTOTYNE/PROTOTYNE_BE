@@ -8,6 +8,6 @@ import java.util.List;
 public interface AlarmService {
 
     SseEmitter subscribe(String accessToken);
-    //void sendAlarm(String accessToken, String msg);
+    void sendAlarm(String accessToken, String msg);
     List<AlarmDto> getAlarmList(String accessToken);
 }
