@@ -1,10 +1,15 @@
 package com.prototyne.Enterprise.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prototyne.Enterprise.service.ProductService.ProductService;
 import com.prototyne.Enterprise.web.dto.ProductDTO;
 import com.prototyne.config.JwtManager;
 import com.prototyne.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,10 +43,9 @@ public class ProductController {
     }
 
     // 시제품 등록
-    @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "시제품 등록 API - 인증 필수",
             description = "시제품 등록(추가)" + """
-                    
+
                     1. 시제품 명 (productName) - 공백 시 에러
                     2. 설명 (contents - 공백 시 에러
                     3. 티켓 갯수 (reqTickets)
@@ -50,12 +54,14 @@ public class ProductController {
                     6. 출시예정일 (launchedDate) - 공백(null)이면 미정
                     7. 질문 목록 (1~5)
                     8. imageFiles : 제품 사진 (최대 3장)
-                    
+
                     요청 성공 시, 시제품 아이디(product_id) 반환""",
             security = {@SecurityRequirement(name = "session-token")})
+    @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Long> createProduct(HttpServletRequest token,
-                                    @Valid @RequestPart("productRequest") ProductDTO.CreateProductRequest productRequest,
-                                           @RequestPart(value = "imageFiles", required = false) List<MultipartFile> images){
+                                           @Valid @RequestPart("productRequest") ProductDTO.CreateProductRequest productRequest,
+                                           @RequestPart(value = "imageFiles", required = false) List<MultipartFile> images)
+    {
         String oauthToken = jwtManager.getToken(token);
         Long productId = productService.createProduct(oauthToken, productRequest, images);
         return ApiResponse.onSuccess(productId);
