@@ -59,7 +59,8 @@ public class ProductServiceImpl implements ProductService {
 
         // S3에 이미지 업로드
         List<String> imageUrls = s3Manager.uploadFiles("product", images);
-        Product newProduct = ProductConverter.toProduct(productRequest, enterprise, imageUrls);
+        Product newProduct = ProductConverter.toProduct(productRequest.getProductInfo(), productRequest.getQuestions(),
+                enterprise, imageUrls);
 
         // 시제품 저장 및 id 반환
         Product product = productRepository.save(newProduct);

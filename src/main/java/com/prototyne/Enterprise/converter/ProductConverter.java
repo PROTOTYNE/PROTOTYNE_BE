@@ -25,12 +25,13 @@ public class ProductConverter {
     }
 
     // 시제품 엔티티 형식으로
-    public static Product toProduct(ProductDTO.CreateProductRequest request,
+    public static Product toProduct(ProductDTO.CreateProductRequest.ProductInfo req1,
+                                    ProductDTO.CreateProductRequest.Questions req2,
                                     Enterprise enterprise,
                                     List<String> imageUrls) {
         // Product 생성
-        ProductDTO.ProductInfo productInfo = request.getProductInfo();
-        ProductDTO.Questions questions = request.getQuestions();
+        ProductDTO.CreateProductRequest.ProductInfo productInfo = req1;
+        ProductDTO.CreateProductRequest.Questions questions = req2;
 
         Product newProduct = Product.builder()
                 .name(productInfo.getProductName())

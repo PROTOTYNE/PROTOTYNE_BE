@@ -48,7 +48,7 @@ public class EventDTO {
         private final Long productId;
         private final Long eventId;
         private final List<String> productImages;
-        private final ProductDTO.ProductInfo productInfo;
+        private final ProductDTO.CreateProductRequest.ProductInfo productInfo;
         private final EventDate dates;
     }
 
