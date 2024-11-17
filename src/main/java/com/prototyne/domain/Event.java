@@ -3,6 +3,7 @@ package com.prototyne.domain;
 import com.prototyne.domain.common.BaseEntity;
 import com.prototyne.domain.mapping.Heart;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -37,6 +38,9 @@ public class Event extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDate feedbackEnd;
+
+    @PositiveOrZero // 음수 허용 X
+    private Integer speed;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id")
