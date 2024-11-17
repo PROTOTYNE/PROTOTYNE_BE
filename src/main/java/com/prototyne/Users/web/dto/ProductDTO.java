@@ -20,6 +20,31 @@ public class ProductDTO {
         List<SearchResponse> newList;
     }
 
+    // 시제품 DTO
+    @Getter
+    @Builder
+    public static class EventDTO{
+        private Long eventId;           // 이벤트 아이디
+        private String proName;         // 시제품 이름
+        private String thumbnailUrl;    // 시제품 썸네일 (첫번째 사진)
+        private String entName;         // 기업 이름
+        private Boolean bookmark;       // 유저의 북마크 여부
+        private Integer reqTickets;     // 시제품 필요 티켓 수
+        private Integer speed;          // 이벤트 시속 점수
+        private Integer investCount;    // 신청한 사람 수 -> 투자 테이블 수
+        private Integer dDay;           // 디데이(신청마감 기준, 프론트 처리?)
+        private LocalDate eventEnd;
+        private LocalDate releaseEnd;  // 당첨자 결과 발표일
+        private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @Builder
+    public static class PaginatedResponse {
+        private List<ProductDTO.EventDTO> events;
+        private String nextCursor;
+    }
+
     // 시제품 정렬 응답 형식
     @Getter
     @Builder
@@ -70,9 +95,6 @@ public class ProductDTO {
         private LocalDate releaseEnd;
         private LocalDate feedbackStart;
         private LocalDate feedbackEnd;
-        private LocalDateTime judgeStart;
-        private LocalDateTime judgeEnd;
-        private LocalDate endDate;
     }
 
     @Getter

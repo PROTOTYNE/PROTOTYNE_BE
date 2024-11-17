@@ -3,6 +3,7 @@ package com.prototyne.repository;
 import com.prototyne.domain.Event;
 
 import com.prototyne.domain.enums.ProductCategory;
+import com.prototyne.repository.querydsl.EventRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, Long> {
+public interface EventRepository extends JpaRepository<Event, Long>, EventRepositoryCustom {
 
     // 인기순의 체험 진행 중인 이벤트
     // 인기순 : 북마크 수 + 투자 수 평균

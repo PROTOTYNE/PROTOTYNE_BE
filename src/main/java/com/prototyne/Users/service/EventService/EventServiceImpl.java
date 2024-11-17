@@ -1,4 +1,4 @@
-package com.prototyne.Users.service.ProductService;
+package com.prototyne.Users.service.EventService;
 
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
@@ -33,60 +33,86 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public ProductDTO.HomeResponse getHomeById(String accessToken) {
-        // 유저 아이디 객체 가져옴
-        Long userId = jwtManager.validateJwt(accessToken);
+//        // 유저 아이디 객체 가져옴
+//        Long userId = jwtManager.validateJwt(accessToken);
+//
+//        LocalDate now = LocalDate.now();
+//        List<ProductDTO.EventResponse> poluarList = getEvents(now, "popular")
+//                .stream().limit(2)
+//                .map(event -> {
+//                    Product product = event.getProduct();
+//                    int investCount = event.getInvestmentList().size();
+//                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
+//                    return ProductConverter.toEvent(event, , investCount, isBookmarked);
+//                })
+//                .collect(Collectors.toList());
+//
+//        List<ProductDTO.SearchResponse> imminentList = getEvents(now, "imminent")
+//                .stream().limit(3)
+//                .map(event -> {
+//                    Product product = event.getProduct();
+//                    int dDay = calculateDDay(now, event.getEventEnd());
+//                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
+//                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
+//                })
+//                .collect(Collectors.toList());
+//
+//        List<ProductDTO.SearchResponse> newList = getEvents(now, "new")
+//                .stream().limit(3)
+//                .map(event -> {
+//                    Product product = event.getProduct();
+//                    int dDay = calculateDDay(now, event.getEventEnd());
+//                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
+//                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
+//                })
+//                .collect(Collectors.toList());
+//
+//        return ProductConverter.toHome(poluarList, imminentList, newList);
+    return  null;
+    }
 
-        LocalDate now = LocalDate.now();
-        List<ProductDTO.EventResponse> poluarList = getEvents(now, "popular")
-                .stream().limit(2)
+    // 홈 화면 더보기 조회
+    // type에 따라 시제품 이벤트 리스트 반환
+    @Override
+    public List<ProductDTO.EventDTO> getEventsByType(Long userId, String type, String cursor, Integer pageSize) {
+
+        // 유저 아이디 확인
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        List<Event> events = eventRepository.findAllEventsByType(type, cursor, pageSize);
+        return events.stream()
                 .map(event -> {
-                    Product product = event.getProduct();
-                    int investCount = event.getInvestmentList().size();
+                    // 북마크 상태 확인
                     boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
-                    return ProductConverter.toEvent(event, product, investCount, isBookmarked);
+                    return ProductConverter.toEvent(event, isBookmarked);
                 })
                 .collect(Collectors.toList());
-
-        List<ProductDTO.SearchResponse> imminentList = getEvents(now, "imminent")
-                .stream().limit(3)
-                .map(event -> {
-                    Product product = event.getProduct();
-                    int dDay = calculateDDay(now, event.getEventEnd());
-                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
-                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
-                })
-                .collect(Collectors.toList());
-
-        List<ProductDTO.SearchResponse> newList = getEvents(now, "new")
-                .stream().limit(3)
-                .map(event -> {
-                    Product product = event.getProduct();
-                    int dDay = calculateDDay(now, event.getEventEnd());
-                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
-                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
-                })
-                .collect(Collectors.toList());
-
-        return ProductConverter.toHome(poluarList, imminentList, newList);
     }
 
     @Override
-    public List<ProductDTO.EventResponse> getEventsByType(Long userId, String type) {
-        LocalDate now = LocalDate.now();
+    public String getNextCursor(List<ProductDTO.EventDTO> events, String type) {
+        // 리스트가 비어있으면 null 반환
+        if (events.isEmpty()) {
+            return null;
+        }
 
-        // 타입별 신청 진행 중인 시제품 이벤트만 가져옴
-        List<Event> events = getEvents(now, type);
+        // 마지막 이벤트 가져오기
+        ProductDTO.EventDTO lastEvent = events.get(events.size() - 1);
 
-        // DTO 변환
-        return events.stream()
-                .map(event -> {
-                    Product product = event.getProduct();
-                    int investCount = event.getInvestmentList().size();
-                    // 북마크 상태 확인
-                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
-                    return ProductConverter.toEvent(event, product, investCount, isBookmarked);
-                })
-                .collect(Collectors.toList());
+        // 정렬 기준에 따라 커서 생성
+        switch (type) {
+            case "popular":
+                // 투자자 수, 등록일 기준
+                return lastEvent.getInvestCount() + "," + lastEvent.getCreatedAt();
+            case "imminent":
+                // 마감일, 등록일 기준
+                return lastEvent.getEventEnd() + "," + lastEvent.getCreatedAt();
+            case "new":
+                // 등록일 기준
+                return lastEvent.getCreatedAt().toString();
+            default:
+                throw new TempHandler(ErrorStatus.PRODUCT_ERROR_TYPE);
+        }
     }
 
     @Override
