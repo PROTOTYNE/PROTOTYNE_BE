@@ -68,6 +68,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     TiCKET_LACK_ERROR(HttpStatus.BAD_REQUEST, "TiCKET4001", "티켓이 부족합니다."),
 
+    USER_SPEED__LACK_ERROR(HttpStatus.BAD_REQUEST, "SPEED4001", "시속이 부족하여 신청이 불가합니다."),
+
     EVENT_USER_EXIST(HttpStatus.BAD_REQUEST,"EVENT4001","이미 체험 신청한 시제품입니다."),
 
     // 이벤트의 날짜가 null로 설정된 경우
