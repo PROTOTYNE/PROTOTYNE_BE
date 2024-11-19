@@ -23,6 +23,7 @@ public enum ErrorStatus implements BaseErrorCode {
     TOKEN_UNKNOWN_ERROR(HttpStatus.UNAUTHORIZED, "TOKEN500", "토큰이 존재하지 않습니다."),
     TOKEN_WRONG_TYPE_ERROR(HttpStatus.BAD_REQUEST, "TOKEN4006", "변조된 토큰입니다."),
     TOKEN_UNSUPPORTED_ERROR(HttpStatus.BAD_REQUEST, "TOKEN4007", "변조된 토큰입니다."),
+    JSON_PARSING_ERROR(HttpStatus.BAD_REQUEST, "JSON4001", "JSON 파싱이 잘못되었습니다."),
 
     // 이미 회원가입을 완료한 사용자가 다시 회원가입을 시도했을 시
     SIGNUP_DUPLICATE(HttpStatus.BAD_REQUEST, "LOGIN4001", "이미 회원가입을 완료한 유저입니다"),
@@ -99,7 +100,10 @@ public enum ErrorStatus implements BaseErrorCode {
     PAYMENT_READY_SERVER_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "PAYMENT5001", "서버 에러, 결제 요청에 실패하였습니다."),
     PAYMENT_APPROVE_FAILURE(HttpStatus.BAD_REQUEST, "PAYMENT4004", "결제 진행 중 실패하였습니다."),
     PAYMENT_APPROVE_CANCEL(HttpStatus.BAD_REQUEST, "PAYMENT4005", "결제 진행 중 취소되었습니다."),
-    PAYMENT_INVALID_PGTOKEN(HttpStatus.BAD_REQUEST, "PAYMENT4006", "유효하지 않은 pg 토큰입니다.");
+    PAYMENT_INVALID_PGTOKEN(HttpStatus.BAD_REQUEST, "PAYMENT4006", "유효하지 않은 pg 토큰입니다."),
+
+    DELIVERY_LIST_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "DELIVERY4001", "배송지는 10개를 초과하여 등록할 수 없습니다."),
+    DELIVERY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DELIVERY4002", "존재하지 않는 배송지입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

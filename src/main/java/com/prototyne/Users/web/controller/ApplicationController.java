@@ -26,9 +26,11 @@ public class ApplicationController {
     @Tag(name = "${swagger.tag.product-etc}")
     @PostMapping("/{eventId}")
     @Operation(summary="체험 신청 API",security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<InvestmentDTO.ApplicationResponse> Application(HttpServletRequest token, @PathVariable("eventId") Long eventId){
+    public ApiResponse<InvestmentDTO.ApplicationResponse> Application(HttpServletRequest token,
+                                                                      @PathVariable("deliveryId") Long deliveryId,
+                                                                      @PathVariable("eventId") Long eventId){
         String aouthtoken = jwtManager.getToken(token);
-        InvestmentDTO.ApplicationResponse applicationResponse= applicationService.Application(aouthtoken, eventId);
+        InvestmentDTO.ApplicationResponse applicationResponse= applicationService.Application(aouthtoken, deliveryId, eventId);
         return ApiResponse.onSuccess(applicationResponse);
     }
 }
