@@ -32,11 +32,13 @@ public class EventServiceImpl implements EventService {
     private final JwtManager jwtManager;
 
     @Override
-    public ProductDTO.HomeResponse getHomeById(String accessToken) {
-//        // 유저 아이디 객체 가져옴
-//        Long userId = jwtManager.validateJwt(accessToken);
-//
-//        LocalDate now = LocalDate.now();
+    public ProductDTO.HomeResponse getHomeByCnt(String accessToken, Integer popular, Integer imminent, Integer latest) {
+        // 유저 아이디 객체 가져옴
+        Long userId = jwtManager.validateJwt(accessToken);
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+
+        LocalDate now = LocalDate.now();
 //        List<ProductDTO.EventResponse> poluarList = getEvents(now, "popular")
 //                .stream().limit(2)
 //                .map(event -> {
@@ -226,20 +228,6 @@ public class EventServiceImpl implements EventService {
         return ProductConverter.toEventDetails(event, investment, isBookmarked);
     }
 
-    // 타입별 이벤트 가져옴
-    private List<Event> getEvents(LocalDate now, String type) {
-        return switch (type) {
-            case "popular" -> eventRepository.findAllActiveEventsByPopular(now);
-            case "imminent" -> eventRepository.findAllEventsByImminent(now).stream()
-                    .filter(event -> event.getEventEnd().isBefore(now.plusDays(3)))
-                    .collect(Collectors.toList());
-            case "new" -> eventRepository.findAllEventsByNew(now).stream()
-                    .filter(event -> event.getEventStart().isAfter(now.minusWeeks(1)))
-                    .collect(Collectors.toList());
-            default -> throw new TempHandler(ErrorStatus.PRODUCT_ERROR_TYPE);
-        };
-    }
-
     // Enum에 category 없으면 오류 처리
     private ProductCategory changeToProductCategory(String category) {
         try {
@@ -249,7 +237,7 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    // 디데이 계산
+    // 디데이 계산 -> 컨버터로 옮기기
     private Integer calculateDDay(LocalDate now, LocalDate endDate) {
         long daysBetween = java.time.Duration.between(now, endDate).toDays();
         return (int) daysBetween;

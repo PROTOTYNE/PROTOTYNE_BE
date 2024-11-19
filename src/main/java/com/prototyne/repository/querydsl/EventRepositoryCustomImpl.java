@@ -31,6 +31,9 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
                 .fetch();
     }
 
+    // 홈화면 이벤트 반환
+
+    // 더보기 이벤트 반환
     @Override
     public List<Event> findAllEventsByType(String type, String cursor, int pageSize) {
         QEvent event = QEvent.event;

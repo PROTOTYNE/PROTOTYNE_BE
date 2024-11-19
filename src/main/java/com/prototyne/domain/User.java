@@ -68,6 +68,8 @@ public class User extends BaseEntity {
     @Column(length = 50)
     private String detailAddress; // 상세 주소
 
+    private Integer Speed;
+
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> recentSearchList = new ArrayList<>(); // 최근 검색어 10개 저장
 

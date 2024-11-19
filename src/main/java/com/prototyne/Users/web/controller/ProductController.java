@@ -29,11 +29,16 @@ public class ProductController {
     @Operation(summary = "홈 화면 조회 API - 인증 필요",
             description = """
                 홈 화면 조회 \n
-                인기순 2개, 마감 임박순 3개, 신규 등록순 3개 \n""",
+                조회하고 싶은 개수대로 인기순, 마감임박순, 최신등록순 입력 \n
+                디폴트 3, 3, 3 \n""",
             security = {@SecurityRequirement(name = "session-token")})
-    public ApiResponse<ProductDTO.HomeResponse> getHome(HttpServletRequest token) {
+    public ApiResponse<ProductDTO.HomeResponse> getHome(
+            HttpServletRequest token,
+            @RequestParam(defaultValue = "3") Integer popular,
+            @RequestParam(defaultValue = "3") Integer imminent,
+            @RequestParam(value = "new", defaultValue = "3") Integer latest) {
         String oauthToken = jwtManager.getToken(token);
-        ProductDTO.HomeResponse home = eventService.getHomeById(oauthToken);
+        ProductDTO.HomeResponse home = eventService.getHomeByCnt(oauthToken, popular, imminent, latest);
         return ApiResponse.onSuccess(home);
     }
 
