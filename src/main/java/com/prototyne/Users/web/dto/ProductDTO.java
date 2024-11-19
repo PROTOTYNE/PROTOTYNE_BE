@@ -15,9 +15,10 @@ public class ProductDTO {
     @Getter
     @Builder
     public static class HomeResponse {
-        List<EventResponse> popularList;
-        List<SearchResponse> imminentList;
-        List<SearchResponse> newList;
+        UserDto.UserSpeed userSpeed;
+        List<EventDTO> popularList;
+        List<EventDTO> imminentList;
+        List<EventDTO> newList;
     }
 
     // 시제품 DTO

@@ -32,6 +32,20 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
     }
 
     // 홈화면 이벤트 반환
+    @Override
+    public List<Event> findAllEventsByLimit(String type, int limit) {
+        QEvent event = QEvent.event;
+
+        List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(event, type);
+
+        // 쿼리 작성: 커서 조건 제거
+        JPAQuery<Event> query = jpaQueryFactory
+                .selectFrom(event)
+                .orderBy(orderSpecifiers.toArray(new OrderSpecifier<?>[0]))
+                .limit(limit); // 요청된 개수만큼 제한
+
+        return query.fetch();
+    }
 
     // 더보기 이벤트 반환
     @Override

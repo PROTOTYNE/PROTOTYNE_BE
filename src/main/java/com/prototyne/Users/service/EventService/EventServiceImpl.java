@@ -32,45 +32,39 @@ public class EventServiceImpl implements EventService {
     private final JwtManager jwtManager;
 
     @Override
-    public ProductDTO.HomeResponse getHomeByCnt(String accessToken, Integer popular, Integer imminent, Integer latest) {
+    public ProductDTO.HomeResponse getHomeByLimit(String accessToken, Integer popular, Integer imminent, Integer latest) {
         // 유저 아이디 객체 가져옴
         Long userId = jwtManager.validateJwt(accessToken);
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
 
+        // 인기순
+        List<ProductDTO.EventDTO> pList = eventRepository.findAllEventsByLimit("popular", popular)
+                .stream()
+                .map(event -> {
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toEvent(event, isBookmarked);
+                })
+                .collect(Collectors.toList());
 
-        LocalDate now = LocalDate.now();
-//        List<ProductDTO.EventResponse> poluarList = getEvents(now, "popular")
-//                .stream().limit(2)
-//                .map(event -> {
-//                    Product product = event.getProduct();
-//                    int investCount = event.getInvestmentList().size();
-//                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
-//                    return ProductConverter.toEvent(event, , investCount, isBookmarked);
-//                })
-//                .collect(Collectors.toList());
-//
-//        List<ProductDTO.SearchResponse> imminentList = getEvents(now, "imminent")
-//                .stream().limit(3)
-//                .map(event -> {
-//                    Product product = event.getProduct();
-//                    int dDay = calculateDDay(now, event.getEventEnd());
-//                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
-//                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
-//                })
-//                .collect(Collectors.toList());
-//
-//        List<ProductDTO.SearchResponse> newList = getEvents(now, "new")
-//                .stream().limit(3)
-//                .map(event -> {
-//                    Product product = event.getProduct();
-//                    int dDay = calculateDDay(now, event.getEventEnd());
-//                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
-//                    return ProductConverter.toSearch(event, product, dDay, isBookmarked);
-//                })
-//                .collect(Collectors.toList());
-//
-//        return ProductConverter.toHome(poluarList, imminentList, newList);
-    return  null;
+        // 임박순
+        List<ProductDTO.EventDTO> iList = eventRepository.findAllEventsByLimit("imminent", imminent)
+                .stream()
+                .map(event -> {
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toEvent(event, isBookmarked);
+                })
+                .collect(Collectors.toList());
+
+        // 최신순
+        List<ProductDTO.EventDTO> lList = eventRepository.findAllEventsByLimit("new", latest)
+                .stream()
+                .map(event -> {
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
+                    return ProductConverter.toEvent(event, isBookmarked);
+                })
+                .collect(Collectors.toList());
+
+        return ProductConverter.toHomeResponse(user, pList, iList, lList);
     }
 
     // 홈 화면 더보기 조회

@@ -1,5 +1,6 @@
 package com.prototyne.Users.converter;
 
+import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.domain.*;
 import com.prototyne.Users.web.dto.ProductDTO;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,19 @@ import java.util.stream.Collectors;
 public class ProductConverter {
 
     // 홈 화면 형식
-    public static ProductDTO.HomeResponse toHome (List<ProductDTO.EventResponse> pL,
-                                                  List<ProductDTO.SearchResponse> iL,
-                                                  List<ProductDTO.SearchResponse> nL) {
+    public static ProductDTO.HomeResponse toHomeResponse (User user,
+                                                          List<ProductDTO.EventDTO> pL,
+                                                          List<ProductDTO.EventDTO> iL,
+                                                          List<ProductDTO.EventDTO> lL) {
+        UserDto.UserSpeed userSpeed = UserDto.UserSpeed.builder()
+                .username(user.getUsername())
+                .profileUrl(user.getProfileUrl())
+                .speed(user.getSpeed())
+                .build();
+
         return ProductDTO.HomeResponse.builder()
-                .popularList(pL).imminentList(iL).newList(nL).build();
+                .userSpeed(userSpeed)
+                .popularList(pL).imminentList(iL).newList(lL).build();
     }
 
     // 체험 진행 중인 시제품 목록 형식

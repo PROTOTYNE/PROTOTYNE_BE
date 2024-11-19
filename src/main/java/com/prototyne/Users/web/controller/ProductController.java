@@ -38,7 +38,7 @@ public class ProductController {
             @RequestParam(defaultValue = "3") Integer imminent,
             @RequestParam(value = "new", defaultValue = "3") Integer latest) {
         String oauthToken = jwtManager.getToken(token);
-        ProductDTO.HomeResponse home = eventService.getHomeByCnt(oauthToken, popular, imminent, latest);
+        ProductDTO.HomeResponse home = eventService.getHomeByLimit(oauthToken, popular, imminent, latest);
         return ApiResponse.onSuccess(home);
     }
 
