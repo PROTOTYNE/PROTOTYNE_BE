@@ -81,6 +81,40 @@ public class DeliveryServiceImpl implements DeliveryService {
         return toDeliveryInfo(delivery);
     }
 
+    @Override
+    @Transactional
+    public DeliveryDto.deliveryInfoResponse updateDeliveryInfo(String accessToken, Long deliveryId, DeliveryDto req){
+        Long id = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(id).orElseThrow(()-> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+        DeliveryAddress delivery = deliveryAddressRepository.findByUserAndId(user, deliveryId)
+                .orElseThrow(()-> new TempHandler(ErrorStatus.DELIVERY_NOT_FOUND));
+
+        if(req.getDeliveryName()!=null) delivery.setDeliveryName(req.getDeliveryName());
+        if(req.getDeliveryPhone()!=null) delivery.setDeliveryPhone(req.getDeliveryPhone());
+        if(req.getPostCode()!=null) delivery.setPostCode(req.getPostCode());
+        if(req.getBaseAddress()!=null) delivery.setBaseAddress(req.getBaseAddress());
+        if(req.getDetailAddress()!=null) delivery.setDetailAddress(req.getDetailAddress());
+
+        if(req.isDefault()) resetDefaultDelivery(user);
+
+        delivery.setDefault(req.isDefault());
+        deliveryAddressRepository.save(delivery);
+        return toDeliveryInfo(delivery);
+    }
+
+    @Override
+    public List<DeliveryDto.deliveryInfoResponse> deleteDeliveryAddr(String accessToken, Long deliveryId){
+        Long id = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(id).orElseThrow(()-> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+        DeliveryAddress deliveryToDelete = deliveryAddressRepository.findByUserAndId(user, deliveryId)
+                .orElseThrow(()-> new TempHandler(ErrorStatus.DELIVERY_NOT_FOUND));
+        deliveryAddressRepository.delete(deliveryToDelete);
+        List<DeliveryAddress> updatedDeliveries = deliveryAddressRepository.findByUser(user);
+        return updatedDeliveries.stream()
+                .map(DeliveryConverter::toDeliveryInfo)
+                .toList();
+    }
+
     private void resetDefaultDelivery(User user) {
         List<DeliveryAddress> userAddressList = deliveryAddressRepository.findByUser(user);
         userAddressList.stream()

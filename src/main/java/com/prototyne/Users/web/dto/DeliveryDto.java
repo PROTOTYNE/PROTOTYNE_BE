@@ -1,5 +1,6 @@
 package com.prototyne.Users.web.dto;
 
+import com.prototyne.domain.mapping.DeliveryAddress;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -28,6 +29,24 @@ public class DeliveryDto {
     public static class deliveryInfoResponse {
         private Long id;
         private boolean isDefault;      // 기본 배송지 여부
+        private String deliveryName;
+        private String deliveryPhone;
+        private String postCode;
+        private String baseAddress;
+        private String detailAddress;
+
+        public deliveryInfoResponse(DeliveryAddress delivery) {
+        }
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class updateDeliveryDto {
+        private Long id;
+        private boolean isDefault;
         private String deliveryName;
         private String deliveryPhone;
         private String postCode;
