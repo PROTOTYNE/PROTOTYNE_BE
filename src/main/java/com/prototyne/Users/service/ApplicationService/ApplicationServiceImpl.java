@@ -1,18 +1,21 @@
 package com.prototyne.Users.service.ApplicationService;
 
-import com.prototyne.apiPayload.code.status.ErrorStatus;
-import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.Users.converter.InvestmentConverter;
-import com.prototyne.domain.*;
-import com.prototyne.repository.*;
-import com.prototyne.config.JwtManager;
+import com.prototyne.Users.service.DeliveryService.DeliveryService;
 import com.prototyne.Users.service.ProductService.EventService;
 import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.Users.web.dto.InvestmentDTO;
 import com.prototyne.Users.web.dto.TicketDto;
+import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
+import com.prototyne.config.JwtManager;
+import com.prototyne.domain.*;
+import com.prototyne.domain.mapping.DeliveryAddress;
+import com.prototyne.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,29 +28,34 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final UserRepository userRepository;
     private final AlarmRespository alarmRepository;
     private final ProductRepository productRepository;
+    private final DeliveryAddressRepository deliveryAddressRepository;
     private final JwtManager jwtManager;
     private final TicketService ticketService;
     private final EventRepository eventRepository;
     private final InvestmentConverter investmentConverter;
     private final EventService eventService;
+    private final DeliveryService deliveryService;
     private final InvestmentRepository investmentRepository;
 
     @Override
-    public InvestmentDTO.ApplicationResponse Application(String accessToken, Long eventId) {
+    @Transactional
+    public InvestmentDTO.ApplicationResponse Application(String accessToken, Long deliveryId, Long eventId) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
 
 
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findById(deliveryId)
+                .orElseThrow(()-> new TempHandler(ErrorStatus.DELIVERY_NOT_FOUND));
+
         Long productId = event.getProduct().getId();
         Product product = productRepository.findById(productId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
 
-
-        String deliveryName = user.getDeliveryName();
-        String deliveryPhone = user.getDeliveryPhone();
-        String deliveryBaseAddress = user.getBaseAddress();
-        String deliveryDetailAddress = user.getDetailAddress();
+        String deliveryName = deliveryAddress.getDeliveryName();
+        String deliveryPhone = deliveryAddress.getDeliveryPhone();
+        String deliveryBaseAddress = deliveryAddress.getBaseAddress();
+        String deliveryDetailAddress = deliveryAddress.getDetailAddress();
 
         String ticketName = product.getName();
         String ticketDesc = product.getEnterprise().getName();
@@ -55,45 +63,58 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         int userTickets = ticketService.getTicketNumber(accessToken).getTicketNumber();
         int reqTickets = product.getReqTickets();
-
         boolean apply = userTickets >= reqTickets;
+
+        int eventSpeed= event.getSpeed();
+        int userSpeed=user.getSpeed();
+        boolean is_speed=userSpeed >=eventSpeed;
+
+
         if (investmentRepository.findFirstByUserIdAndEventId(userId, eventId).isPresent()) {
             throw new TempHandler(ErrorStatus.EVENT_USER_EXIST);
         }
 
         if (apply) {
-            // 변경된 ticket 객체를 저장소에 저장
-            TicketDto.TicketListDto ticketListDto = TicketDto.TicketListDto.builder()
-                    .createdAt(LocalDateTime.now())
-                    .name(ticketName)
-                    .ticketDesc(ticketDesc)
-                    .ticketChange(-reqTickets)
-                    .build();
+            if(is_speed) {
+                // 변경된 ticket 객체를 저장소에 저장
+                TicketDto.TicketListDto ticketListDto = TicketDto.TicketListDto.builder()
+                        .createdAt(LocalDateTime.now())
+                        .name(ticketName)
+                        .ticketDesc(ticketDesc)
+                        .ticketChange(-reqTickets)
+                        .build();
 
-            Investment investment = investmentConverter.toInvestment(user, event, apply);
+                Investment investment = investmentConverter.toInvestment(user, event, apply);
 
-            // TicketService를 사용하여 티켓 저장
-            ticketService.saveTicket(ticketListDto, user);
+                // TicketService를 사용하여 티켓 저장
+                ticketService.saveTicket(ticketListDto, user);
 
-            // 알람 추가
-            Alarm alarm = Alarm.builder()
-                    .user(user)
-                    .title("[시제품명] " + product.getName())
-                    .contents("제품 후기 작성 마감 하루 전입니다!")
-                    .thumbnailUrl(product.getThumbnailUrl())
-                    .StartReview(event.getFeedbackEnd().minusDays(1))
-                    .build();
+                //체험 신청 시, 해당 event의 시속만큼 사용자의 speed(시속) 차감
 
-            alarmRepository.save(alarm);
-            alarmRepository.save(Alarm.builder()
-                    .user(user)
-                    .title("티켓 사용")
-                    .contents("티켓 " + reqTickets + "개 사용 완료 - " + product.getName())
-                    .thumbnailUrl(product.getThumbnailUrl())
-                    .StartReview(LocalDate.now())
-                    .build());
+                // 알람 추가
+                Alarm alarm = Alarm.builder()
+                        .user(user)
+                        .title("[시제품명] " + product.getName())
+                        .contents("제품 후기 작성 마감 하루 전입니다!")
+                        .thumbnailUrl(product.getThumbnailUrl())
+                        .StartReview(event.getFeedbackEnd().minusDays(1))
+                        .build();
 
-            eventService.saveInvestment(investment);
+                alarmRepository.save(alarm);
+                alarmRepository.save(Alarm.builder()
+                        .user(user)
+                        .title("티켓 사용")
+                        .contents("티켓 " + reqTickets + "개 사용 완료 - " + product.getName())
+                        .thumbnailUrl(product.getThumbnailUrl())
+                        .StartReview(LocalDate.now())
+                        .build());
+
+                eventService.saveInvestment(investment);
+            }
+            else{
+                throw new TempHandler(ErrorStatus.USER_SPEED__LACK_ERROR);
+            }
+
         } else {
             throw new TempHandler(ErrorStatus.TiCKET_LACK_ERROR);
         }
