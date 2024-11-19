@@ -46,7 +46,7 @@ public class EventConverter {
     // 체험 정보 형식으로
     public static EventDTO.EventInfo toEventInfo(Product product, Event event) {
         // 시제품 정보
-        ProductDTO.CreateProductRequest.ProductInfo productInfo = ProductDTO.CreateProductRequest.ProductInfo.builder()
+        ProductDTO.ProductInfo productInfo = ProductDTO.ProductInfo.builder()
                 .productName(product.getName())
                 .contents(product.getContents())
                 .reqTickets(product.getReqTickets())

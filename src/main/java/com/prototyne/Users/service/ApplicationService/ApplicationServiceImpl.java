@@ -1,18 +1,21 @@
 package com.prototyne.Users.service.ApplicationService;
 
-import com.prototyne.apiPayload.code.status.ErrorStatus;
-import com.prototyne.apiPayload.exception.handler.TempHandler;
 import com.prototyne.Users.converter.InvestmentConverter;
-import com.prototyne.domain.*;
-import com.prototyne.repository.*;
-import com.prototyne.config.JwtManager;
+import com.prototyne.Users.service.DeliveryService.DeliveryService;
 import com.prototyne.Users.service.ProductService.EventService;
 import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.Users.web.dto.InvestmentDTO;
 import com.prototyne.Users.web.dto.TicketDto;
+import com.prototyne.apiPayload.code.status.ErrorStatus;
+import com.prototyne.apiPayload.exception.handler.TempHandler;
+import com.prototyne.config.JwtManager;
+import com.prototyne.domain.*;
+import com.prototyne.domain.mapping.DeliveryAddress;
+import com.prototyne.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,29 +28,34 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final UserRepository userRepository;
     private final AlarmRespository alarmRepository;
     private final ProductRepository productRepository;
+    private final DeliveryAddressRepository deliveryAddressRepository;
     private final JwtManager jwtManager;
     private final TicketService ticketService;
     private final EventRepository eventRepository;
     private final InvestmentConverter investmentConverter;
     private final EventService eventService;
+    private final DeliveryService deliveryService;
     private final InvestmentRepository investmentRepository;
 
     @Override
-    public InvestmentDTO.ApplicationResponse Application(String accessToken, Long eventId) {
+    @Transactional
+    public InvestmentDTO.ApplicationResponse Application(String accessToken, Long deliveryId, Long eventId) {
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
 
 
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findById(deliveryId)
+                .orElseThrow(()-> new TempHandler(ErrorStatus.DELIVERY_NOT_FOUND));
+
         Long productId = event.getProduct().getId();
         Product product = productRepository.findById(productId).orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_EVENT));
 
-
-        String deliveryName = user.getDeliveryName();
-        String deliveryPhone = user.getDeliveryPhone();
-        String deliveryBaseAddress = user.getBaseAddress();
-        String deliveryDetailAddress = user.getDetailAddress();
+        String deliveryName = deliveryAddress.getDeliveryName();
+        String deliveryPhone = deliveryAddress.getDeliveryPhone();
+        String deliveryBaseAddress = deliveryAddress.getBaseAddress();
+        String deliveryDetailAddress = deliveryAddress.getDetailAddress();
 
         String ticketName = product.getName();
         String ticketDesc = product.getEnterprise().getName();
