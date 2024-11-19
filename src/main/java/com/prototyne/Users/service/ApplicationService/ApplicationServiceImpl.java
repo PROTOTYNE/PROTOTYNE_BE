@@ -63,45 +63,58 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         int userTickets = ticketService.getTicketNumber(accessToken).getTicketNumber();
         int reqTickets = product.getReqTickets();
-
         boolean apply = userTickets >= reqTickets;
+
+        int eventSpeed= event.getSpeed();
+        int userSpeed=user.getSpeed();
+        boolean is_speed=userSpeed >=eventSpeed;
+
+
         if (investmentRepository.findFirstByUserIdAndEventId(userId, eventId).isPresent()) {
             throw new TempHandler(ErrorStatus.EVENT_USER_EXIST);
         }
 
         if (apply) {
-            // 변경된 ticket 객체를 저장소에 저장
-            TicketDto.TicketListDto ticketListDto = TicketDto.TicketListDto.builder()
-                    .createdAt(LocalDateTime.now())
-                    .name(ticketName)
-                    .ticketDesc(ticketDesc)
-                    .ticketChange(-reqTickets)
-                    .build();
+            if(is_speed) {
+                // 변경된 ticket 객체를 저장소에 저장
+                TicketDto.TicketListDto ticketListDto = TicketDto.TicketListDto.builder()
+                        .createdAt(LocalDateTime.now())
+                        .name(ticketName)
+                        .ticketDesc(ticketDesc)
+                        .ticketChange(-reqTickets)
+                        .build();
 
-            Investment investment = investmentConverter.toInvestment(user, event, apply);
+                Investment investment = investmentConverter.toInvestment(user, event, apply);
 
-            // TicketService를 사용하여 티켓 저장
-            ticketService.saveTicket(ticketListDto, user);
+                // TicketService를 사용하여 티켓 저장
+                ticketService.saveTicket(ticketListDto, user);
 
-            // 알람 추가
-            Alarm alarm = Alarm.builder()
-                    .user(user)
-                    .title("[시제품명] " + product.getName())
-                    .contents("제품 후기 작성 마감 하루 전입니다!")
-                    .thumbnailUrl(product.getThumbnailUrl())
-                    .StartReview(event.getFeedbackEnd().minusDays(1))
-                    .build();
+                //체험 신청 시, 해당 event의 시속만큼 사용자의 speed(시속) 차감
 
-            alarmRepository.save(alarm);
-            alarmRepository.save(Alarm.builder()
-                    .user(user)
-                    .title("티켓 사용")
-                    .contents("티켓 " + reqTickets + "개 사용 완료 - " + product.getName())
-                    .thumbnailUrl(product.getThumbnailUrl())
-                    .StartReview(LocalDate.now())
-                    .build());
+                // 알람 추가
+                Alarm alarm = Alarm.builder()
+                        .user(user)
+                        .title("[시제품명] " + product.getName())
+                        .contents("제품 후기 작성 마감 하루 전입니다!")
+                        .thumbnailUrl(product.getThumbnailUrl())
+                        .StartReview(event.getFeedbackEnd().minusDays(1))
+                        .build();
 
-            eventService.saveInvestment(investment);
+                alarmRepository.save(alarm);
+                alarmRepository.save(Alarm.builder()
+                        .user(user)
+                        .title("티켓 사용")
+                        .contents("티켓 " + reqTickets + "개 사용 완료 - " + product.getName())
+                        .thumbnailUrl(product.getThumbnailUrl())
+                        .StartReview(LocalDate.now())
+                        .build());
+
+                eventService.saveInvestment(investment);
+            }
+            else{
+                throw new TempHandler(ErrorStatus.USER_SPEED__LACK_ERROR);
+            }
+
         } else {
             throw new TempHandler(ErrorStatus.TiCKET_LACK_ERROR);
         }

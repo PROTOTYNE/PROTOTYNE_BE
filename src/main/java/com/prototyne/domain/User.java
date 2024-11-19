@@ -52,6 +52,9 @@ public class User extends BaseEntity {
     @ColumnDefault("false")
     private Boolean signupComplete;
 
+    @Column(nullable = false)
+    private Integer speed; //시속
+
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> recentSearchList = new ArrayList<>(); // 최근 검색어 10개 저장
 
