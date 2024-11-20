@@ -72,13 +72,15 @@ public class ProductController {
     @Operation(summary = "시제품 카테고리 선택 조회 API - 인증 필요",
             description = """
                 카테고리 입력 ("" 없이 입력) \n
-                category = "뷰티" | "스포츠" | "식품" | "의류" | "전자기기" | "장난감" \n""",
+                category = "뷰티" | "스포츠" | "식품" | "의류" | "전자기기" | "장난감" \n
+                sortType = "new" | "popular" | "lowPrice" | "highPrice" \n""",
             security = {@SecurityRequirement(name = "session-token")})
     public ApiResponse<List<ProductDTO.SearchResponse>> getCategoriesList(
             HttpServletRequest token,
-            @RequestParam(value = "category") String category) {
+            @RequestParam(value = "category") String category,
+            @RequestParam(value = "sortType", defaultValue = "new") String sortType) {
         String oauthToken = jwtManager.getToken(token);
-        List<ProductDTO.SearchResponse> categoriesList = eventService.getEventsByCategory(oauthToken, category);
+        List<ProductDTO.SearchResponse> categoriesList = eventService.getEventsByCategory(oauthToken, category, sortType);
         return ApiResponse.onSuccess(categoriesList);
     }
 }

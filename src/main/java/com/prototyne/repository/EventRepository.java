@@ -42,8 +42,10 @@ public interface EventRepository extends JpaRepository<Event, Long>, EventReposi
     List<Event> findAllByProductNameContaining(String name);
 
     // 카테고리에 따른 이벤트
-    // List<Event> findByProductCategory(ProductCategory category);
-    List<Event> findByCategory(ProductCategory category);
+    List<Event> findByCategoryNew(ProductCategory category, LocalDate now);
+    List<Event> findByCategoryPopular(ProductCategory category, LocalDate now);
+    List<Event> findByCategoryLowPrice(ProductCategory category, LocalDate now);
+    List<Event> findByCategoryHighPrice(ProductCategory category, LocalDate now);
 
     // 기업 ID로 모든 이벤트 조회 (조인)
     @Query("SELECT e FROM Event e JOIN FETCH e.product p WHERE p.enterprise.id = :enterpriseId")

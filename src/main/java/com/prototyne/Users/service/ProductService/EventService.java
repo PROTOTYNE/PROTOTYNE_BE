@@ -9,7 +9,7 @@ public interface EventService {
     ProductDTO.HomeResponse getHomeById(String accessToken);
     List<ProductDTO.EventResponse> getEventsByType(Long userId, String type);
     List<ProductDTO.SearchResponse> getEventsBySearch(String accessToken, String name);
-    List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category);
+    List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category, String sortType);
     ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventId);
 
 
