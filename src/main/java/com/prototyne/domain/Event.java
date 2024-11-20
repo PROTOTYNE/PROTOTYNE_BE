@@ -39,8 +39,9 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private LocalDate feedbackEnd;
 
+    @Column(nullable = false)
     @PositiveOrZero // 음수 허용 X
-    private Integer speed;
+    private Integer speed; //시속
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id")

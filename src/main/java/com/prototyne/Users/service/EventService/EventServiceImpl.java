@@ -14,10 +14,12 @@ import com.prototyne.repository.InvestmentRepository;
 import com.prototyne.repository.UserRepository;
 import com.prototyne.config.JwtManager;
 import com.prototyne.Users.web.dto.ProductDTO;
+import com.prototyne.repository.querydsl.EventRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -188,7 +190,7 @@ public class EventServiceImpl implements EventService {
         ProductCategory productCategory = changeToProductCategory(category);
         // 신청 진행 중인 시제품 이벤트만 가져옴
         LocalDate now = LocalDate.now();
-        List<Event> events = eventRepository.findByProductCategory(productCategory).stream()
+        List<Event> events = eventRepository.findByCategory(productCategory).stream()
                 .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
                 .collect(Collectors.toList());
 
@@ -233,8 +235,9 @@ public class EventServiceImpl implements EventService {
 
     // 디데이 계산 -> 컨버터로 옮기기
     private Integer calculateDDay(LocalDate now, LocalDate endDate) {
-        long daysBetween = java.time.Duration.between(now, endDate).toDays();
-        return (int) daysBetween;
+//        long daysBetween = java.time.Duration.between(now, endDate).toDays();
+//        return (int) daysBetween;
+        return (int) ChronoUnit.DAYS.between(now, endDate);
     }
 
     public void saveInvestment(Investment investment) {
