@@ -25,6 +25,7 @@ public class EntReviewServiceImpl implements EntReviewService {
     private final InvestmentRepository investmentRepository;
     private final ProductRepository productRepository;
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
 
     @Override
     public EntAllReviewResponseDTO.ReviewResponse getAllReviews(String token, Long eventId) {
@@ -186,7 +187,13 @@ public class EntReviewServiceImpl implements EntReviewService {
         Feedback feedback=feedbackRepository.findByInvestmentIdAndUserId(investment.getId(), userId);
         feedback.setPenalty(true);
 
+        User user=userRepository.findById(userId)
+                .orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
+        user.setSpeed(user.getSpeed()-50);
+
+
         feedbackRepository.save(feedback);
+        userRepository.save(user);
 
         List<String> imagefiles = new ArrayList<>();
 
