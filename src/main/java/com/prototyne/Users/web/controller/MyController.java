@@ -1,5 +1,6 @@
 package com.prototyne.Users.web.controller;
 
+import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.apiPayload.ApiResponse;
 import com.prototyne.config.JwtManager;
 import com.prototyne.Users.service.UserService.UserDetailServiceImpl;
@@ -22,6 +23,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 @Tag(name = "${swagger.tag.my}")
 public class MyController {
 
+    private final TicketService ticketService;
     private final UserDetailServiceImpl userDetailService;
     private final JwtManager jwtManager;
 
@@ -73,4 +75,14 @@ public class MyController {
         return ApiResponse.onSuccess(userDetailService.updateAddInfo(accessToken, addInfo));
     }
 
+    //
+    @GetMapping("/speed")
+    @Operation(summary = "[마이페이지] 유저 스피드 조회 API - 인증 필요",
+            description = "마이페이지 상단부 유저 스피드 점수 및 사용한 티켓 수 및 체험 수 조회",
+            security = {@SecurityRequirement(name = "session-token")})
+    public ApiResponse<UserDto.MyPageInfo> getMyPageInfo(HttpServletRequest request) throws Exception {
+        String accessToken = jwtManager.getToken(request);
+        UserDto.MyPageInfo MyPageInfoResponse = userDetailService.getMyPageInfo(accessToken);
+        return ApiResponse.onSuccess(MyPageInfoResponse);
+    }
 }

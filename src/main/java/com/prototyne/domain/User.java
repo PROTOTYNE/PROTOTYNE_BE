@@ -1,11 +1,10 @@
 package com.prototyne.domain;
 
+import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.domain.common.BaseEntity;
 import com.prototyne.domain.enums.Gender;
 import com.prototyne.domain.mapping.Additional;
 import com.prototyne.domain.mapping.Heart;
-import com.prototyne.Users.web.dto.DeliveryDto;
-import com.prototyne.Users.web.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -53,20 +52,8 @@ public class User extends BaseEntity {
     @ColumnDefault("false")
     private Boolean signupComplete;
 
-    @Column(length = 20)
-    private String deliveryName;
-
-    @Column(length = 20)
-    private String deliveryPhone;
-
-    @Column(length = 20)
-    private String postCode; // 우편 번호
-
-    @Column(length = 50)
-    private String baseAddress; // 기본 주소
-
-    @Column(length = 50)
-    private String detailAddress; // 상세 주소
+    @Column(nullable = false)
+    private Integer speed; //시속
 
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> recentSearchList = new ArrayList<>(); // 최근 검색어 10개 저장
@@ -88,14 +75,6 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Feedback> feedbackList = new ArrayList<>();
-
-    public void setDelivery(DeliveryDto deliveryDto) {
-        this.deliveryName = deliveryDto.getDeliveryName();
-        System.out.println("deliveryDto.getDeliveryPhone() = " + deliveryDto.getDeliveryPhone());
-        this.deliveryPhone = deliveryDto.getDeliveryPhone();
-        this.baseAddress = deliveryDto.getBaseAddress();
-        this.detailAddress = deliveryDto.getDetailAddress();
-    }
 
     public void setDetail(UserDto.UserDetailRequest userDetailRequest) {
         this.birth = LocalDate.from(userDetailRequest.getBirth());

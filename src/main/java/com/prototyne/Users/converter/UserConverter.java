@@ -1,8 +1,7 @@
 package com.prototyne.Users.converter;
 
-import com.prototyne.domain.User;
-import com.prototyne.Users.web.dto.DeliveryDto;
 import com.prototyne.Users.web.dto.UserDto;
+import com.prototyne.domain.User;
 import lombok.Builder;
 import org.springframework.stereotype.Component;
 
@@ -43,16 +42,6 @@ public class UserConverter {
                 .build();
     }
 
-    public static DeliveryDto toDeliveryDto(User user) {
-        return DeliveryDto.builder()
-                .deliveryName(user.getDeliveryName())
-                .deliveryPhone(user.getDeliveryPhone())
-                .postCode(user.getPostCode())
-                .baseAddress(user.getBaseAddress())
-                .detailAddress(user.getDetailAddress())
-                .build();
-    }
-
     public UserDto.UserDetailResponse toUserDetailResponse(User user, UserDto.AddInfo additionalInfo) {
         // DetailInfo 생성
         UserDto.DetailInfo detailInfo = UserDto.DetailInfo.builder()
@@ -77,6 +66,20 @@ public class UserConverter {
                 .username(user.getUsername())
                 .detailInfo(detailInfo)
                 .addInfo(addInfo)
+                .build();
+    }
+
+    public static UserDto.MyPageInfo toMyPageInfo(User user, int usedtickets, int investmentCnt) {
+        UserDto.UserSpeed userSpeed = UserDto.UserSpeed.builder()
+                .username(user.getUsername())
+                .profileUrl(user.getProfileUrl())
+                .speed(user.getSpeed())
+                .build();
+
+        return UserDto.MyPageInfo.builder()
+                .userSpeed(userSpeed)
+                .usedTicket(usedtickets)
+                .investmentCnt(investmentCnt)
                 .build();
     }
 }

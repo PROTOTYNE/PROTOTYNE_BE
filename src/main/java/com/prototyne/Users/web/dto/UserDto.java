@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prototyne.apiPayload.code.status.ErrorStatus;
 import com.prototyne.apiPayload.exception.handler.TempHandler;
+import com.prototyne.domain.User;
 import com.prototyne.domain.enums.Gender;
 import lombok.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
@@ -254,5 +256,21 @@ public class UserDto {
         }
     }
 
+    // 유저 스피드 정보
+    @Getter
+    @Builder
+    public static class UserSpeed {
+        private String username;
+        private String profileUrl;
+        private Integer speed;
+    }
 
+    // 유저 마이페이지 스피드 정보
+    @Getter
+    @Builder
+    public static class MyPageInfo {
+        private UserDto.UserSpeed userSpeed;
+        private Integer usedTicket;
+        private Integer investmentCnt;
+    }
 }

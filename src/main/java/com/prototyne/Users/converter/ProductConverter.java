@@ -1,9 +1,12 @@
 package com.prototyne.Users.converter;
 
+import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.domain.*;
 import com.prototyne.Users.web.dto.ProductDTO;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,25 +14,42 @@ import java.util.stream.Collectors;
 public class ProductConverter {
 
     // 홈 화면 형식
-    public static ProductDTO.HomeResponse toHome (List<ProductDTO.EventResponse> pL,
-                                                  List<ProductDTO.SearchResponse> iL,
-                                                  List<ProductDTO.SearchResponse> nL) {
+    public static ProductDTO.HomeResponse toHomeResponse (User user,
+                                                          List<ProductDTO.EventDTO> pL,
+                                                          List<ProductDTO.EventDTO> iL,
+                                                          List<ProductDTO.EventDTO> lL) {
+        UserDto.UserSpeed userSpeed = UserDto.UserSpeed.builder()
+                .username(user.getUsername())
+                .profileUrl(user.getProfileUrl())
+                .speed(user.getSpeed())
+                .build();
+
         return ProductDTO.HomeResponse.builder()
-                .popularList(pL).imminentList(iL).newList(nL).build();
+                .userSpeed(userSpeed)
+                .popularList(pL).imminentList(iL).newList(lL).build();
     }
 
     // 체험 진행 중인 시제품 목록 형식
-    public static ProductDTO.EventResponse toEvent(Event event, Product product,
-                                                   int investCount, Boolean isBookmarked) {
+    public static ProductDTO.EventDTO toEvent(Event event, boolean bookmark) {
+        Product product = event.getProduct();
+        int investCount = event.getInvestmentList().size();
+        LocalDate now = LocalDate.now();
+
         // 시제품 이미지의 첫번째 이미지
         String productImage = getProductImageUrls(product).stream().findFirst().orElse(null);
-        return ProductDTO.EventResponse.builder()
-                .id(event.getId())
-                .name(product.getName())
+        return ProductDTO.EventDTO.builder()
+                .eventId(event.getId())
+                .proName(product.getName())
                 .thumbnailUrl(productImage)
-                .investCount(investCount)
+                .entName(product.getEnterprise().getName())
                 .reqTickets(product.getReqTickets())
-                .bookmark(isBookmarked)
+                .bookmark(bookmark)
+                .createdAt(event.getCreatedAt())
+                .eventEnd(event.getFeedbackEnd())
+                .releaseEnd(event.getReleaseEnd())
+                .speed(event.getSpeed())
+                .investCount(investCount)
+                .dDay(calculateDDay(now, event.getEventEnd())) // 디데이 계산
                 .build();
     }
 
@@ -84,9 +104,6 @@ public class ProductConverter {
                 .releaseEnd(event.getReleaseEnd())
                 .feedbackStart(event.getFeedbackStart())
                 .feedbackEnd(event.getFeedbackEnd())
-//                .judgeStart(event.getJudgeStart())
-//                .judgeEnd(event.getJudgeEnd())
-//                .endDate(event.getEndDate())
                 .build();
     }
 
@@ -113,5 +130,10 @@ public class ProductConverter {
                 .map(ProductImage::getImageUrl) // ProductImage url 추출
                 .limit(3)                // 최대 3장으로 제한
                 .collect(Collectors.toList());
+    }
+
+    // 디데이 계산
+    private static Integer calculateDDay(LocalDate now, LocalDate endDate) {
+        return (int) ChronoUnit.DAYS.between(now, endDate);
     }
 }

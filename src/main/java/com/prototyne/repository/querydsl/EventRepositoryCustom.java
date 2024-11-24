@@ -15,4 +15,7 @@ public interface EventRepositoryCustom {
     List<Event> findByCategoryLowPrice(ProductCategory category, LocalDate now);
     // 카테고리별 가격 높은순 정렬
     List<Event> findByCategoryHighPrice(ProductCategory category, LocalDate now);
+    List<Event> findByCategory(ProductCategory category);
+    List<Event> findAllEventsByLimit(String type, int limit);
+    List<Event> findAllEventsByType(String type, String cursor, int pageSize);
 }
