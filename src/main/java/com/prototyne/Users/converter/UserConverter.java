@@ -68,4 +68,18 @@ public class UserConverter {
                 .addInfo(addInfo)
                 .build();
     }
+
+    public static UserDto.MyPageInfo toMyPageInfo(User user, int usedtickets, int investmentCnt) {
+        UserDto.UserSpeed userSpeed = UserDto.UserSpeed.builder()
+                .username(user.getUsername())
+                .profileUrl(user.getProfileUrl())
+                .speed(user.getSpeed())
+                .build();
+
+        return UserDto.MyPageInfo.builder()
+                .userSpeed(userSpeed)
+                .usedTicket(usedtickets)
+                .investmentCnt(investmentCnt)
+                .build();
+    }
 }

@@ -3,6 +3,7 @@ package com.prototyne.domain;
 import com.prototyne.domain.common.BaseEntity;
 import com.prototyne.domain.mapping.Heart;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class Event extends BaseEntity {
     private LocalDate feedbackEnd;
 
     @Column(nullable = false)
+    @PositiveOrZero // 음수 허용 X
     private Integer speed; //시속
 
     @ManyToOne(fetch=FetchType.LAZY)

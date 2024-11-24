@@ -8,6 +8,7 @@ import com.prototyne.domain.Feedback;
 import com.prototyne.domain.FeedbackImage;
 import com.prototyne.domain.Investment;
 import com.prototyne.domain.User;
+import com.prototyne.domain.enums.InvestmentStatus;
 import com.prototyne.repository.FeedbackImageRepository;
 import com.prototyne.repository.FeedbackRepository;
 import com.prototyne.repository.InvestmentRepository;
@@ -57,6 +58,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedback.setAnswer6(feedbackDTO.getAnswer6());
 
         feedbackRepository.save(feedback);
+        changeInvestmentStatus(investment);
 
         return FeedbackConverter.toFeedbackDto(feedback, investment);
 
@@ -102,4 +104,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     }
 
+    // 투자한 시제품 InvestmentStatus 바꾸기
+    void changeInvestmentStatus(Investment investment) {
+        investment.setStatus(InvestmentStatus.후기작성);
+        investmentRepository.save(investment);
+    }
 }

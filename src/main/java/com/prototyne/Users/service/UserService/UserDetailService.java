@@ -10,4 +10,6 @@ public interface UserDetailService {
     UserDto.DetailInfo updateBasicInfo(String accessToken, UserDto.DetailInfo detailInfo) throws UserPrincipalNotFoundException;
 
     UserDto.AddInfo updateAddInfo(String accessToken, UserDto.AddInfo addInfo) throws UserPrincipalNotFoundException;
+
+    UserDto.MyPageInfo getMyPageInfo(String accessToken) throws UserPrincipalNotFoundException;
 }
