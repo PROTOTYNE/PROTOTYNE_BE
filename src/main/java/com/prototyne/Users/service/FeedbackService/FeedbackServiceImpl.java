@@ -60,6 +60,10 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbackRepository.save(feedback);
         changeInvestmentStatus(investment);
 
+        //후기 작성 시 speed(시속) +5점
+        user.setSpeed(user.getSpeed()+5);
+        userRepository.save(user);
+        
         return FeedbackConverter.toFeedbackDto(feedback, investment);
 
     }

@@ -29,10 +29,10 @@ public class ReviewController {
     private final JwtManager jwtManager;
 
     @Tag(name="${swagger.tag.product-etc}")
-    @GetMapping("/{productId}")
+    @GetMapping("/{eventId}")
     @Operation(summary="후기 질문 목록 조회 API", description="시제품의 후기 질문 목록 조회")
-    public ApiResponse<ReviewDTO.ReviewResponseDTO> getReviewQuestions(@PathVariable Long productId){
-        ReviewDTO.ReviewResponseDTO reviewQuestions = reviewService.getReviewById(productId);
+    public ApiResponse<ReviewDTO.ReviewQuestionDTO> getReviewQuestions(@PathVariable Long eventId){
+        ReviewDTO.ReviewQuestionDTO reviewQuestions = reviewService.getReviewById(eventId);
         return ApiResponse.onSuccess(reviewQuestions);
     }
 
