@@ -189,7 +189,7 @@ public class EntReviewServiceImpl implements EntReviewService {
 
         User user=userRepository.findById(userId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
-        user.setSpeed(user.getSpeed()-50);
+        user.setSpeed(user.getSpeed()-10);
 
 
         feedbackRepository.save(feedback);
