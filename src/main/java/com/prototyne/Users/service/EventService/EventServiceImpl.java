@@ -183,24 +183,26 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category) {
-        // 유저 아이디 객체 가져옴
+    public List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category, String sortType) {
         Long userId = jwtManager.validateJwt(accessToken);
-        // 카테고리 타입 변환 (String -> Enum)
-        ProductCategory productCategory = changeToProductCategory(category);
-        // 신청 진행 중인 시제품 이벤트만 가져옴
+        ProductCategory productCategory = changeToProductCategory(category); // 카테고리 타입 변환 (String -> Enum)
         LocalDate now = LocalDate.now();
-        List<Event> events = eventRepository.findByCategory(productCategory).stream()
-                .filter(event -> now.isAfter(event.getEventStart()) && now.isBefore(event.getEventEnd()))
-                .collect(Collectors.toList());
+
+        // 이벤트 조회 및 정렬
+        List<Event> events = switch (sortType) {
+            case "popular" -> eventRepository.findByCategoryPopular(productCategory, now).stream().collect(Collectors.toList());
+            case "lowPrice" -> eventRepository.findByCategoryLowPrice(productCategory, now).stream().collect(Collectors.toList());
+            case "highPrice" -> eventRepository.findByCategoryHighPrice(productCategory, now).stream().collect(Collectors.toList());
+            case "new" -> eventRepository.findByCategoryNew(productCategory, now).stream().collect(Collectors.toList());
+            default -> throw new IllegalArgumentException("Invalid sortType: " + sortType);
+        };
 
         // DTO 변환
         return events.stream()
                 .map(event -> {
                     Product product = event.getProduct();
                     int dDay = calculateDDay(now, event.getEventEnd());
-                    // 북마크 상태 확인
-                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent();
+                    boolean isBookmarked = heartRepository.findFirstByUserIdAndEvent(userId, event).isPresent(); // 북마크 상태 확인
                     return ProductConverter.toSearch(event, product, dDay, isBookmarked);
                 })
                 .collect(Collectors.toList());
@@ -235,8 +237,6 @@ public class EventServiceImpl implements EventService {
 
     // 디데이 계산 -> 컨버터로 옮기기
     private Integer calculateDDay(LocalDate now, LocalDate endDate) {
-//        long daysBetween = java.time.Duration.between(now, endDate).toDays();
-//        return (int) daysBetween;
         return (int) ChronoUnit.DAYS.between(now, endDate);
     }
 

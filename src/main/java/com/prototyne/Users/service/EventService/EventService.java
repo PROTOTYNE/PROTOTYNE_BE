@@ -12,7 +12,7 @@ public interface EventService {
     String getNextCursor(List<ProductDTO.EventDTO> events, String type);
 
     List<ProductDTO.SearchResponse> getEventsBySearch(String accessToken, String name);
-    List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category);
+    List<ProductDTO.SearchResponse> getEventsByCategory(String accessToken, String category, String sortType);
     ProductDTO.EventDetailsResponse getEventDetailsById(String accessToken, Long eventId);
 
 
