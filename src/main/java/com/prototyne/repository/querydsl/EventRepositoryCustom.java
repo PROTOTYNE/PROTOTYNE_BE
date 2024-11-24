@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface EventRepositoryCustom {
-    // 카테고리별 최신순 정렬 (기본)
+    // 카테고리별 최신순 정렬 (default)
     List<Event> findByCategoryNew(ProductCategory category, LocalDate now);
     // 카테고리별 인기순 정렬
     List<Event> findByCategoryPopular(ProductCategory category, LocalDate now);
