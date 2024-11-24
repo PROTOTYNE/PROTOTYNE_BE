@@ -2,7 +2,7 @@ package com.prototyne.Users.service.ApplicationService;
 
 import com.prototyne.Users.converter.InvestmentConverter;
 import com.prototyne.Users.service.DeliveryService.DeliveryService;
-import com.prototyne.Users.service.ProductService.EventService;
+import com.prototyne.Users.service.EventService.EventService;
 import com.prototyne.Users.service.TicketService.TicketService;
 import com.prototyne.Users.web.dto.InvestmentDTO;
 import com.prototyne.Users.web.dto.TicketDto;

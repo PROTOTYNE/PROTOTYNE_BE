@@ -8,6 +8,7 @@ import com.prototyne.domain.enums.Gender;
 import com.prototyne.domain.mapping.Additional;
 import com.prototyne.repository.ADD_setRepository;
 import com.prototyne.repository.AdditionalRepository;
+import com.prototyne.repository.TicketRepository;
 import com.prototyne.repository.UserRepository;
 import com.prototyne.config.JwtManager;
 import com.prototyne.Users.web.dto.UserDto;
@@ -26,6 +27,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDetailServiceImpl implements UserDetailService {
 
+    private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final AdditionalRepository additionalRepository;
     private final ADD_setRepository addSetRepository;
@@ -154,5 +156,21 @@ public class UserDetailServiceImpl implements UserDetailService {
 
             additionalRepository.save(new Additional(user, newAddSet));  // 새로운 관계 저장
         }
+    }
+
+    // 마이페이지 - 티켓 개수 조회
+    @Override
+    public UserDto.MyPageInfo getMyPageInfo(String accessToken) throws UserPrincipalNotFoundException {
+        Long userId = jwtManager.validateJwt(accessToken);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserPrincipalNotFoundException(userId + "에 해당하는 회원이 없습니다."));
+
+        // 사용한 티켓 수 (피드백 작성 기준)
+        int usedTickets = ticketRepository.getUsedTickets(userId);
+
+        // 체험한 시제품 수 (피드백 작성 기준)
+        int investmentCnt = ticketRepository.getInvestmentCnt(userId);
+
+        return userConverter.toMyPageInfo(user, usedTickets, investmentCnt);
     }
 }

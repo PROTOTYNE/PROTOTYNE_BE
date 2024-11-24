@@ -1,8 +1,10 @@
 package com.prototyne.Users.service.TicketService;
 
+import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.domain.User;
 import com.prototyne.Users.web.dto.TicketDto;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
 public interface TicketService {
@@ -17,5 +19,4 @@ public interface TicketService {
     void buyTicket(String accessToken, int ticketNumber);
 
     void provideMonthlyTicket();
-
 }
