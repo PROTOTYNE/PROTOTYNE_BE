@@ -49,12 +49,13 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 시제품 목록 조회 실패
     PRODUCT_ERROR_TYPE(HttpStatus.BAD_REQUEST, "PRODUCT4001", "유효한 정렬 기준(type)이 아닙니다. 허용된 값: popular, imminent, new"),
+    PRODUCT_ERROR_NEW(HttpStatus.BAD_REQUEST, "PRODUCT4002", "이번 주에 등록한 시제품이 없습니다."),
     // 시제품 카테고리 조회 실패
-    PRODUCT_ERROR_CATEGORY(HttpStatus.BAD_REQUEST, "PRODUCT4002", "존재하지 않는 카테고리입니다."),
+    PRODUCT_ERROR_CATEGORY(HttpStatus.BAD_REQUEST, "PRODUCT4003", "존재하지 않는 카테고리입니다."),
     // 시제품 상세보기 조회 실패
-    PRODUCT_ERROR_EVENT(HttpStatus.BAD_REQUEST, "PRODUCT4003", "존재하지 않는 이벤트입니다."),
+    PRODUCT_ERROR_EVENT(HttpStatus.BAD_REQUEST, "PRODUCT4004", "존재하지 않는 이벤트입니다."),
 
-    PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4004", "존재하지 않는 시제품입니다."),
+    PRODUCT_ERROR_ID(HttpStatus.BAD_REQUEST, "PRODUCT4005", "존재하지 않는 시제품입니다."),
 
     // 시제품 삭제 시, 시제품에 연결된 eventList가 비어있지 않은 경우
     PRODUCT_ERROR_EVENTLIST(HttpStatus.BAD_REQUEST, "PRODUCT4005", "시제품에 대한 체험이 존재합니다."),
