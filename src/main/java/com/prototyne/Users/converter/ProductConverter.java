@@ -3,6 +3,8 @@ package com.prototyne.Users.converter;
 import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.domain.*;
 import com.prototyne.Users.web.dto.ProductDTO;
+import com.prototyne.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -11,17 +13,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class ProductConverter {
 
+    private final UserRepository userRepository;
     // 홈 화면 형식
     public static ProductDTO.HomeResponse toHomeResponse (User user,
+                                                          Double avgSpeed,
                                                           List<ProductDTO.EventDTO> pL,
                                                           List<ProductDTO.EventDTO> iL,
                                                           List<ProductDTO.EventDTO> lL) {
+//        Double avgSpeed = calculateAvgSpeed();
         UserDto.UserSpeed userSpeed = UserDto.UserSpeed.builder()
                 .username(user.getUsername())
                 .profileUrl(user.getProfileUrl())
                 .speed(user.getSpeed())
+                .avgSpeed(avgSpeed)
                 .build();
 
         return ProductDTO.HomeResponse.builder()
