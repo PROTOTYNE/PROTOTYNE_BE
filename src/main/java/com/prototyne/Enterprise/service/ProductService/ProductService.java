@@ -11,7 +11,10 @@ public interface ProductService {
     List<ProductDTO.ProductResponse> getProducts(String accessToken);
 
     // 기업 id로부터 시제품 등록 (토큰 인증 필수) - id 반환
-    Long createProduct(String accessToken, ProductDTO.CreateProductRequest productRequest, List<MultipartFile> images);
+    Long createProduct(String accessToken, ProductDTO.CreateProductRequest productRequest);
+
+    // 기업 id로부터 시제품 등록 (토큰 인증 필수) - id 반환
+    List<String> createProductImages(String accessToken, Long productId, List<MultipartFile> images);
 
     // 기업 id가 가진 시제품 삭제
     void deleteProduct(String accessToken, Long productId);
