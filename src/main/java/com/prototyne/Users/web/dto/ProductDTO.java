@@ -32,10 +32,10 @@ public class ProductDTO {
         private Boolean bookmark;       // 유저의 북마크 여부
         private Integer reqTickets;     // 시제품 필요 티켓 수
         private Integer speed;          // 이벤트 시속 점수
-        private Integer investCount;    // 신청한 사람 수 -> 투자 테이블 수
-        private Integer dDay;           // 디데이(신청마감 기준, 프론트 처리?)
+        private Integer investCount;    // 신청한 사람 수
+        private Integer dDay;           // 디데이
         private LocalDate eventEnd;
-        private LocalDate releaseEnd;  // 당첨자 결과 발표일
+        private LocalDate releaseDate;
         private LocalDateTime createdAt;
     }
 
@@ -84,6 +84,7 @@ public class ProductDTO {
         private String contents;    // 시제품 설명
         private Boolean isBookmarked;   // 사용자의 북마크 여부
         private DateInfo dateInfo;  // 이벤트 날짜 정보
+        private LocalDate launchedDate; // 출시 예정일
         private InvestInfo investInfo;  // 유저 투자 정보
     }
 
@@ -92,8 +93,7 @@ public class ProductDTO {
     public static class DateInfo {
         private LocalDate eventStart;
         private LocalDate eventEnd;
-        private LocalDate releaseStart;
-        private LocalDate releaseEnd;
+        private LocalDate releaseDate;
         private LocalDate feedbackStart;
         private LocalDate feedbackEnd;
     }

@@ -46,7 +46,7 @@ public class ProductConverter {
                 .bookmark(bookmark)
                 .createdAt(event.getCreatedAt())
                 .eventEnd(event.getFeedbackEnd())
-                .releaseEnd(event.getReleaseEnd())
+                .releaseDate(event.getReleaseDate())
                 .speed(event.getSpeed())
                 .investCount(investCount)
                 .dDay(calculateDDay(now, event.getEventEnd())) // 디데이 계산
@@ -78,7 +78,6 @@ public class ProductConverter {
          ProductDTO.DateInfo dateInfo = toDateInfo(event);
          // 유저 투자 정보 DTO 객체 생성
          ProductDTO.InvestInfo investInfo = toInvestInfo(investment);
-         // Heart(북마크)목록에서 제품에 대한 사용자의 북마크 존재여부로 판단
 
          return  ProductDTO.EventDetailsResponse.builder()
                  .eventId(event.getId())
@@ -100,8 +99,7 @@ public class ProductConverter {
         return ProductDTO.DateInfo.builder()
                 .eventStart(event.getEventStart())
                 .eventEnd(event.getEventEnd())
-                .releaseStart(event.getReleaseStart())
-                .releaseEnd(event.getReleaseEnd())
+                .releaseDate(event.getReleaseDate())
                 .feedbackStart(event.getFeedbackStart())
                 .feedbackEnd(event.getFeedbackEnd())
                 .build();

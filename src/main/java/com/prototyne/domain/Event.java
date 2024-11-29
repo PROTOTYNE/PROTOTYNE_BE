@@ -28,10 +28,7 @@ public class Event extends BaseEntity {
     private LocalDate eventEnd;
 
     @Column(nullable = false)
-    private LocalDate releaseStart;
-
-    @Column(nullable = false)
-    private LocalDate releaseEnd;
+    private LocalDate releaseDate;
 
     @Column(nullable = false)
     private LocalDate feedbackStart;

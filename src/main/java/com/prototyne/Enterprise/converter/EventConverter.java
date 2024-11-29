@@ -36,8 +36,7 @@ public class EventConverter {
                 .product(product)
                 .eventStart(request.getEventStart())
                 .eventEnd(request.getEventEnd())
-                .releaseStart(request.getReleaseStart())
-                .releaseEnd(request.getReleaseEnd())
+                .releaseDate(request.getReleaseDate())
                 .feedbackStart(request.getFeedbackStart())
                 .feedbackEnd(request.getFeedbackEnd())
                 .build();
@@ -59,8 +58,7 @@ public class EventConverter {
         EventDTO.EventDate eventDate = EventDTO.EventDate.builder()
                 .eventStart(event.getEventStart())
                 .eventEnd(event.getEventEnd())
-                .releaseStart(event.getReleaseStart())
-                .releaseEnd(event.getReleaseEnd())
+                .releaseDate(event.getReleaseDate())
                 .feedbackStart(event.getFeedbackStart())
                 .feedbackEnd(event.getFeedbackEnd())
                 .build();
@@ -99,8 +97,8 @@ public class EventConverter {
     // 현재 날짜에 따라 체험(이벤트) 단계 계산
     private static Integer calculateStage(LocalDate now, Event event){
         if (now.isBefore(event.getEventStart())) return 1; // 시작 전
-        else if (now.isBefore(event.getReleaseStart())) return 2; // 신청자 모집 기간
-        else if (now.isBefore(event.getFeedbackStart())) return 3; // 당첨자 발표 기간
+        else if (now.isBefore(event.getReleaseDate())) return 2; // 신청자 모집 기간
+        else if (now.isBefore(event.getFeedbackStart())) return 3; // 당첨자 발표일
         else if (now.isBefore(event.getFeedbackEnd()) || now.isEqual(event.getFeedbackEnd()))
             return  4; // 후기 작성 기간
         else return 5; // 종료
@@ -114,7 +112,7 @@ public class EventConverter {
             case 2:
                 return event.getEventEnd(); // 신청자 모집 기간 -> 이벤트 종료일
             case 3:
-                return event.getReleaseEnd(); // 당첨자 발표 기간 -> 발표 종료일
+                return event.getReleaseDate(); // 당첨자 발표 기간 -> 발표일
             case 4:
                 return event.getFeedbackEnd(); // 후기 작성 기간 -> 작성 종료일
             case 5:
