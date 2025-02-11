@@ -42,6 +42,24 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Ensure nginxserver is running
+        uses: appleboy/ssh-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.LIVE_SERVER_IP }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: false
+          script: |
+            if [ $(sudo docker ps -q -f name=nginxserver) ]; then
+              echo "nginxserver is already running."
+            elif [ $(sudo docker ps -a -q -f name=nginxserver) ]; then
+              echo "nginxserver exists but is stopped. Restarting it now."
+              sudo docker start nginxserver;
+            else
+              echo "nginxserver does not exist. Creating a new container."
+              sudo docker run -d --name nginxserver -p 80:80 nginx;
+            fi
+            
       - name: Set target IP
         run: |
           URL="http://${{ secrets.LIVE_SERVER_IP }}/env"
