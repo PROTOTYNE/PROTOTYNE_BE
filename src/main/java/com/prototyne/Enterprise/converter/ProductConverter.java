@@ -27,8 +27,7 @@ public class ProductConverter {
     // 시제품 엔티티 형식으로
     public static Product toProduct(ProductDTO.ProductInfo req1,
                                     ProductDTO.Questions req2,
-                                    Enterprise enterprise,
-                                    List<String> imageUrls) {
+                                    Enterprise enterprise) {
         // Product 생성
         ProductDTO.ProductInfo productInfo = req1;
         ProductDTO.Questions questions = req2;
@@ -47,26 +46,6 @@ public class ProductConverter {
                 .question5(questions.getQuestion5())
                 .enterprise(enterprise)
                 .build();
-
-        // 이미지 업로드한 경우에만 ProductImage 생성
-        if (imageUrls != null && !imageUrls.isEmpty()) {
-            // imageList 초기화 후, imageUrlsList와 연결
-            if (newProduct.getProductImageList() == null) {
-                newProduct.setProductImageList(new ArrayList<>());
-            }
-
-            List<ProductImage> productImages = imageUrls.stream()
-                    .map(url -> ProductImage.builder()
-                            .imageUrl(url)
-                            .product(newProduct)
-                            .build())
-                    .toList();
-
-            newProduct.getProductImageList().addAll(productImages);
-
-            // 첫번째 이미지로 썸네일 설정
-            newProduct.setThumbnailUrl(productImages.get(0).getImageUrl());
-        }
 
         return newProduct;
     }

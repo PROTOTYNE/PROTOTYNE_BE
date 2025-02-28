@@ -87,7 +87,7 @@ public class TicketServiceImpl implements TicketService {
         // appliedNum
         Integer appliedNum = (int) myProductRepository.findByUserId(userId).stream()
                 .filter(investment -> investment.getStatus() == InvestmentStatus.신청)
-                .filter(investment -> investment.getEvent().getReleaseStart().atStartOfDay().isAfter(now))
+                .filter(investment -> investment.getEvent().getReleaseDate().atStartOfDay().isAfter(now))
                 .count();
 
         // selectedNum
