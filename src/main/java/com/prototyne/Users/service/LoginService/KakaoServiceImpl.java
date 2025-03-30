@@ -27,13 +27,19 @@ public class KakaoServiceImpl implements KakaoService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private String clientId;
+    private String redirectUri;
 
     @Autowired
-    public KakaoServiceImpl(JwtManager jwtManager, UserRepository userRepository, TokenService tokenService, @Value("${spring.datasource.client-id}") String clientId) {
+    public KakaoServiceImpl(JwtManager jwtManager,
+                            UserRepository userRepository,
+                            TokenService tokenService,
+                            @Value("${spring.datasource.client-id}") String clientId,
+                            @Value("${spring.kakao.redirect-uri}") String redirectUri) {
         this.jwtManager = jwtManager;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.clientId = clientId;
+        this.redirectUri = redirectUri;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class KakaoServiceImpl implements KakaoService {
                         .queryParam("grant_type", "authorization_code")
                         .queryParam("client_id", clientId)
                         .queryParam("code", code)
+                        .queryParam("redirect_uri", redirectUri)
                         .build(true))
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .retrieve()
