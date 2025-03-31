@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("https://prototyne.netlify.app", "http://localhost:5173")
+                .allowedOriginPatterns("https://prototyne.netlify.app", "http://localhost:5173", "https://54c8-220-117-166-129.ngrok-free.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
