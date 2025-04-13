@@ -2,6 +2,13 @@ spring:
   application:
     name: live-server
 
+  kakao:
+    redirect-uri: ${KAKAO_REDIRECT_URI}
+    pay:
+      admin-key: ${KAKAO_PAY_ADMIN_KEY}
+      secret-key: ${KAKAO_PAY_SECRET_KEY}
+      cid: ${KAKAO_PAY_CID}
+
 cloud:
   aws:
     credentials:
