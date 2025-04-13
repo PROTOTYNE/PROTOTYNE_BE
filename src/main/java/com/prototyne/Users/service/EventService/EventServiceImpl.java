@@ -23,6 +23,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.prototyne.Users.converter.ProductConverter.toHomeResponse;
+
 @Service("usersEventServiceImpl")
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -32,12 +34,14 @@ public class EventServiceImpl implements EventService {
     private final InvestmentRepository investmentRepository;
     private final HeartRepository heartRepository;
     private final JwtManager jwtManager;
-
     @Override
     public ProductDTO.HomeResponse getHomeByLimit(String accessToken, Integer popular, Integer imminent, Integer latest) {
         // 유저 아이디 객체 가져옴
         Long userId = jwtManager.validateJwt(accessToken);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+
+        // 모든 유저의 평균 speed 계산
+        Double avgSpeed = userRepository.findAvgSpeed();
 
         // 인기순
         List<ProductDTO.EventDTO> pList = eventRepository.findAllEventsByLimit("popular", popular)
@@ -66,7 +70,7 @@ public class EventServiceImpl implements EventService {
                 })
                 .collect(Collectors.toList());
 
-        return ProductConverter.toHomeResponse(user, pList, iList, lList);
+        return toHomeResponse(user, avgSpeed, pList, iList, lList);
     }
 
     // 홈 화면 더보기 조회
@@ -75,9 +79,15 @@ public class EventServiceImpl implements EventService {
     public List<ProductDTO.EventDTO> getEventsByType(Long userId, String type, String cursor, Integer pageSize) {
 
         // 유저 아이디 확인
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+        userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         List<Event> events = eventRepository.findAllEventsByType(type, cursor, pageSize);
+
+        // 이번 주에 등록된 시제품이 없을 경우
+        if ("new".equals(type) && (events == null || events.isEmpty())) {
+            throw new TempHandler(ErrorStatus.PRODUCT_ERROR_NEW);
+        }
+
         return events.stream()
                 .map(event -> {
                     // 북마크 상태 확인

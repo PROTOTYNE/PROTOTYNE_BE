@@ -39,7 +39,7 @@ public class MyProductServiceImpl implements MyProductService {
 
         return myProductRepository.findByUserId(userId).stream()
                 .filter(investment -> investment.getStatus() == InvestmentStatus.신청)
-                .filter(investment -> investment.getEvent().getReleaseStart().isAfter(now))
+                .filter(investment -> investment.getEvent().getReleaseDate().isAfter(now))
                 .map(myProductConverter::toAppliedDto)
                 .collect(Collectors.toList());
     }

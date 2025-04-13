@@ -10,9 +10,11 @@ import com.prototyne.domain.Enterprise;
 import com.prototyne.domain.Product;
 import com.prototyne.domain.ProductImage;
 import com.prototyne.repository.EnterpriseRepository;
+import com.prototyne.repository.ProductImageRepository;
 import com.prototyne.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final JwtManager jwtManager;
     private final ProductRepository productRepository;
+    private final ProductImageRepository productImageRepository;
     private final EnterpriseRepository enterpriseRepository;
     private final AmazonS3Manager s3Manager;
 
@@ -41,14 +44,37 @@ public class ProductServiceImpl implements ProductService {
 
     // 세제품 등록
     @Override
+    @Transactional
     public Long createProduct(String accessToken,
-                                 ProductDTO.CreateProductRequest productRequest,
-                                 List<MultipartFile> images) {
+                                 ProductDTO.CreateProductRequest productRequest) {
         Long enterpriseId = jwtManager.validateJwt(accessToken);
 
-        // 기업 조회
         Enterprise enterprise = enterpriseRepository.findById(enterpriseId)
                 .orElseThrow(() -> new TempHandler(ErrorStatus.ENTERPRISE_ERROR_ID));
+
+        Product newProduct = ProductConverter.toProduct(productRequest.getProductInfo(),
+                productRequest.getQuestions(),
+                enterprise);
+
+        // 시제품 저장 및 id 반환
+        Product product = productRepository.save(newProduct);
+        return product.getId();
+    }
+
+    // 세제품 이미지 등록
+    @Override
+    @Transactional
+    public List<String> createProductImages(String accessToken,
+                              Long productId,
+                              List<MultipartFile> images) {
+        Long enterpriseId = jwtManager.validateJwt(accessToken);
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new TempHandler(ErrorStatus.PRODUCT_ERROR_ID));
+
+        // 해당 시제품을 기업이 가졌는지 확인
+        if (!product.getEnterprise().getId().equals(enterpriseId))
+            throw new TempHandler(ErrorStatus.ENTERPRISE_ERROR_PRODUCT);
 
         // null일 경우 빈 리스트로 대체
         if (images == null) images = new ArrayList<>();
@@ -59,12 +85,14 @@ public class ProductServiceImpl implements ProductService {
 
         // S3에 이미지 업로드
         List<String> imageUrls = s3Manager.uploadFiles("product", images);
-        Product newProduct = ProductConverter.toProduct(productRequest.getProductInfo(), productRequest.getQuestions(),
-                enterprise, imageUrls);
 
-        // 시제품 저장 및 id 반환
-        Product product = productRepository.save(newProduct);
-        return product.getId();
+        saveProductImages(product, imageUrls);
+
+        if (!imageUrls.isEmpty()) {
+            updateProductThumbnail(product, imageUrls);
+        }
+
+        return imageUrls;
     }
 
     // 시제품 삭제
@@ -96,5 +124,22 @@ public class ProductServiceImpl implements ProductService {
 
         // 제품 삭제
         productRepository.delete(product);
+    }
+
+    private void saveProductImages(Product product, List<String> imageUrls){
+        // ProductImage 생성 및 매핑
+        List<ProductImage> productImages = imageUrls.stream()
+                .map(url -> ProductImage.builder()
+                        .imageUrl(url)
+                        .product(product) // Product와 관계 설정
+                        .build())
+                .toList();
+
+        productImageRepository.saveAll(productImages);
+    }
+
+    private void updateProductThumbnail(Product product, List<String> imageUrls) {
+        product.setThumbnailUrl(imageUrls.get(0));
+        productRepository.save(product);
     }
 }

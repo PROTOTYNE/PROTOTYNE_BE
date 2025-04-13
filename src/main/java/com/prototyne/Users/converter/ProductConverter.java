@@ -3,6 +3,8 @@ package com.prototyne.Users.converter;
 import com.prototyne.Users.web.dto.UserDto;
 import com.prototyne.domain.*;
 import com.prototyne.Users.web.dto.ProductDTO;
+import com.prototyne.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -11,17 +13,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class ProductConverter {
 
+    private final UserRepository userRepository;
     // 홈 화면 형식
     public static ProductDTO.HomeResponse toHomeResponse (User user,
+                                                          Double avgSpeed,
                                                           List<ProductDTO.EventDTO> pL,
                                                           List<ProductDTO.EventDTO> iL,
                                                           List<ProductDTO.EventDTO> lL) {
+//        Double avgSpeed = calculateAvgSpeed();
         UserDto.UserSpeed userSpeed = UserDto.UserSpeed.builder()
                 .username(user.getUsername())
                 .profileUrl(user.getProfileUrl())
                 .speed(user.getSpeed())
+                .avgSpeed(avgSpeed)
                 .build();
 
         return ProductDTO.HomeResponse.builder()
@@ -46,7 +53,7 @@ public class ProductConverter {
                 .bookmark(bookmark)
                 .createdAt(event.getCreatedAt())
                 .eventEnd(event.getFeedbackEnd())
-                .releaseEnd(event.getReleaseEnd())
+                .releaseDate(event.getReleaseDate())
                 .speed(event.getSpeed())
                 .investCount(investCount)
                 .dDay(calculateDDay(now, event.getEventEnd())) // 디데이 계산
@@ -78,7 +85,6 @@ public class ProductConverter {
          ProductDTO.DateInfo dateInfo = toDateInfo(event);
          // 유저 투자 정보 DTO 객체 생성
          ProductDTO.InvestInfo investInfo = toInvestInfo(investment);
-         // Heart(북마크)목록에서 제품에 대한 사용자의 북마크 존재여부로 판단
 
          return  ProductDTO.EventDetailsResponse.builder()
                  .eventId(event.getId())
@@ -100,8 +106,7 @@ public class ProductConverter {
         return ProductDTO.DateInfo.builder()
                 .eventStart(event.getEventStart())
                 .eventEnd(event.getEventEnd())
-                .releaseStart(event.getReleaseStart())
-                .releaseEnd(event.getReleaseEnd())
+                .releaseDate(event.getReleaseDate())
                 .feedbackStart(event.getFeedbackStart())
                 .feedbackEnd(event.getFeedbackEnd())
                 .build();

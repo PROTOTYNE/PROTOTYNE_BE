@@ -81,13 +81,23 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
     @Override
     public List<Event> findAllEventsByLimit(String type, int limit) {
         QEvent event = QEvent.event;
+        JPAQuery<Event> query = jpaQueryFactory.selectFrom(event);
 
+        // new의 경우 일주일 조건
+        if ("new".equals(type)) {
+            LocalDate today = LocalDate.now();
+            LocalDate lastWeekSameDay = today.minusWeeks(1);
+
+            LocalDateTime startOfLastWeek = lastWeekSameDay.atStartOfDay();             // 시작
+            LocalDateTime endOfThisWeek = today.atTime(23, 59, 59);  // 끝
+
+            BooleanExpression weekCondition = event.createdAt.between(startOfLastWeek, endOfThisWeek);
+            query.where(weekCondition);
+        }
+
+        // 정렬 조건
         List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(event, type);
-
-        // 쿼리 작성: 커서 조건 제거
-        JPAQuery<Event> query = jpaQueryFactory
-                .selectFrom(event)
-                .orderBy(orderSpecifiers.toArray(new OrderSpecifier<?>[0]))
+        query.orderBy(orderSpecifiers.toArray(new OrderSpecifier<?>[0]))
                 .limit(limit); // 요청된 개수만큼 제한
 
         return query.fetch();
@@ -97,15 +107,27 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom {
     @Override
     public List<Event> findAllEventsByType(String type, String cursor, int pageSize) {
         QEvent event = QEvent.event;
+        JPAQuery<Event> query = jpaQueryFactory.selectFrom(event);
 
+        // new의 경우 일주일 조건
+        if ("new".equals(type)) {
+            LocalDate today = LocalDate.now();
+            LocalDate lastWeekSameDay = today.minusWeeks(1);
+
+            LocalDateTime startOfLastWeek = lastWeekSameDay.atStartOfDay();             // 시작
+            LocalDateTime endOfThisWeek = today.atTime(23, 59, 59);  // 끝
+
+            BooleanExpression weekCondition = event.createdAt.between(startOfLastWeek, endOfThisWeek);
+            query.where(weekCondition);
+        }
+
+        // 정렬 조건
         List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(event, type);
+        // 커서 조건
         BooleanExpression cursorCondition = getCursorCondition(event, type, cursor);
-
-        JPAQuery<Event> query = jpaQueryFactory
-                .selectFrom(event)
-                .where(cursorCondition)
+        query.where(cursorCondition)
                 .orderBy(orderSpecifiers.toArray(new OrderSpecifier<?>[0]))
-                .limit(pageSize); // 페이지 크기 제한
+                .limit(pageSize);
 
         return query.fetch();
     }
