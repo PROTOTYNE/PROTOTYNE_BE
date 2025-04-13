@@ -33,8 +33,8 @@ public class KakaoServiceImpl implements KakaoService {
     public KakaoServiceImpl(JwtManager jwtManager,
                             UserRepository userRepository,
                             TokenService tokenService,
-                            @Value("${spring.datasource.client-id}") String clientId,
-                            @Value("${spring.kakao.redirect-uri}") String redirectUri) {
+                            @Value("${KAKAO_REST_API_KEY}") String clientId,
+                            @Value("${KAKAO_REDIRECT_URI}") String redirectUri) {
         this.jwtManager = jwtManager;
         this.userRepository = userRepository;
         this.tokenService = tokenService;

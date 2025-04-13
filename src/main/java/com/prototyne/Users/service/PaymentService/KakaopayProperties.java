@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class KakaopayProperties {
-    @Value("${spring.kakao.pay.secret-key}")
+    @Value("${KAKAO_PAY_SECRET_KEY}")
     private String secretKey;
 
-    @Value("${spring.kakao.pay.cid}")
+    @Value("${KAKAO_PAY_CID}")
     private String cid;
 
-    @Value("${spring.server.liveServerIp}")
+    @Value("${spring.server.liveServerIp:13.125.19.26}")
     private String serverAddress;
 }
