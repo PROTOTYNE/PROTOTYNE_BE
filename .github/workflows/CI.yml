@@ -1,0 +1,68 @@
+name: PROTOTYNE BE auto deploy workflows
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-deploy:
+    name: BE 코드 빌드 및 배포
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: BE repo 체크아웃
+        uses: actions/checkout@v3
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle 빌드
+        run: ./gradlew clean build -x test
+
+      - name: DockerHub 로그인
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker 이미지 빌드 및 푸시
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/live_server:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/live_server:latest
+
+      - name: manifest repo 이미지 경로 수정
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git clone https://x-access-token:${{ secrets.MANIFEST_REPO_PAT }}@github.com/PROTOTYNE/PROTOTYNE_manifest.git
+          cd PROTOTYNE_manifest/k8s
+          sed -i 's|image:.*|image: '"${{ secrets.DOCKERHUB_USERNAME }}"'/live_server:latest|' deployment.yaml
+          git add deployment.yaml
+          git commit -m "chore: update image tag via CI"
+          git push
+
+      - name: KUBECONFIG 설정
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+
+      - name: k8s Secret 적용
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: prototyne-secret
+            namespace: default
+          type: Opaque
+          stringData:
+            MYSQL_URL: ${{ secrets.MYSQL_URL }}
+            MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+            MYSQL_DB: ${{ secrets.MYSQL_DB }}
+            MYSQL_USER: ${{ secrets.MYSQL_USER }}
+            MYSQL_PW: ${{ secrets.MYSQL_PW }}
+            KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          EOF
