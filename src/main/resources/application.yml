@@ -84,6 +84,11 @@ spring:
     activate:
       on-profile: common
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -138,8 +143,3 @@ management:
       admin-key: ${KAKAO_PAY_ADMIN_KEY}
       secret-key: ${KAKAO_PAY_SECRET_KEY}
       cid: ${KAKAO_PAY_CID}
-
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
