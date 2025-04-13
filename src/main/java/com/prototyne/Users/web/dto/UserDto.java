@@ -263,6 +263,7 @@ public class UserDto {
         private String username;
         private String profileUrl;
         private Integer speed;
+        private Double avgSpeed; // 타인 평균 속도
     }
 
     // 유저 마이페이지 스피드 정보
