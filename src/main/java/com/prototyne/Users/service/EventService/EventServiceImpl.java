@@ -75,9 +75,15 @@ public class EventServiceImpl implements EventService {
     public List<ProductDTO.EventDTO> getEventsByType(Long userId, String type, String cursor, Integer pageSize) {
 
         // 유저 아이디 확인
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("해당하는 회원이 존재하지 않습니다."));
+        userRepository.findById(userId).orElseThrow(() -> new TempHandler(ErrorStatus.LOGIN_ERROR_ID));
 
         List<Event> events = eventRepository.findAllEventsByType(type, cursor, pageSize);
+
+        // 이번 주에 등록된 시제품이 없을 경우
+        if ("new".equals(type) && (events == null || events.isEmpty())) {
+            throw new TempHandler(ErrorStatus.PRODUCT_ERROR_NEW);
+        }
+
         return events.stream()
                 .map(event -> {
                     // 북마크 상태 확인
