@@ -120,16 +120,14 @@ spring-doc:
     tags-sorter: alpha
     operations-sorter: method
 
-cloud:
-  aws:
-    s3:
-      bucket: prototyne
-      path: # 이미지 디렉터리 (가게, 상품, 피드백 ..)
-        test: test
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-    credentials:
-      accessKey: ${AWS_ACCESS_KEY_ID}
-      secretKey: ${AWS_SECRET_ACCESS_KEY}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    enable:
+      all: true
