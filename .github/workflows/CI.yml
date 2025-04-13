@@ -33,39 +33,25 @@ jobs:
 
       - name: Docker 이미지 빌드 및 푸시
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/live_server:latest .
+          IMAGE_TAG=1.0.${{ github.run_number }}
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/live_server:${IMAGE_TAG} .
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/live_server:${IMAGE_TAG} ${{ secrets.DOCKERHUB_USERNAME }}/live_server:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/live_server:${IMAGE_TAG}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/live_server:latest
-
+      
       - name: manifest repo 이미지 경로 수정
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git clone https://x-access-token:${{ secrets.MANIFEST_REPO_PAT }}@github.com/PROTOTYNE/PROTOTYNE_manifest.git
           cd PROTOTYNE_manifest/k8s
-          sed -i 's|image:.*|image: '"${{ secrets.DOCKERHUB_USERNAME }}"'/live_server:latest|' deployment.yaml
+          sed -i 's|^\(\s*image:\s*\).*|\1'"${{ secrets.DOCKERHUB_USERNAME }}"'/live_server:'"${IMAGE_TAG}"'|' deployment.yaml
           git add deployment.yaml
-          git commit -m "chore: update image tag via CI"
-          git push
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "ci(manifest): update image to ${IMAGE_TAG} via GitHub Actions [skip ci]"
+            git push
+          fi
 
-      - name: KUBECONFIG 설정
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-
-      - name: k8s Secret 적용
-        run: |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: prototyne-secret
-            namespace: default
-          type: Opaque
-          stringData:
-            MYSQL_URL: ${{ secrets.MYSQL_URL }}
-            MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
-            MYSQL_DB: ${{ secrets.MYSQL_DB }}
-            MYSQL_USER: ${{ secrets.MYSQL_USER }}
-            MYSQL_PW: ${{ secrets.MYSQL_PW }}
-            KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-          EOF
