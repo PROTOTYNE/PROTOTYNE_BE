@@ -19,7 +19,7 @@ public class MyProductConverter {
     public MyProductDto.CommonDto toCommonDto(Investment investment) {
         Event event = investment.getEvent();
         Product product = event.getProduct();
-        LocalDate releaseStart = event.getReleaseStart();
+        LocalDate releaseStart = event.getReleaseDate();
         LocalDate now = LocalDate.now();
         String calculatedStatus;
 
@@ -47,7 +47,7 @@ public class MyProductConverter {
 
     public MyProductDto.AppliedDto toAppliedDto(Investment investment) {
         MyProductDto.CommonDto commonInfo = toCommonDto(investment);
-        LocalDate releaseStart = investment.getEvent().getReleaseStart();
+        LocalDate releaseStart = investment.getEvent().getReleaseDate();
         LocalDateTime now = LocalDateTime.now();
 
         // releaseStart - 현재 날짜

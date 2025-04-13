@@ -18,10 +18,8 @@ public class EventDTO {
         private final LocalDate eventStart;     // 체험 시작
         @NotNull(message = "eventEnd가 공백입니다.")
         private final LocalDate eventEnd;       // 체험 마감
-        @NotNull(message = "releaseStart가 공백입니다.")
-        private final LocalDate releaseStart;   // 당첨자 시작
-        @NotNull(message = "releaseEnd가 공백입니다.")
-        private final LocalDate releaseEnd;     // 당첨자 종료
+        @NotNull(message = "releaseDate가 공백입니다.")
+        private final LocalDate releaseDate;    // 당첨자 발표
         @NotNull(message = "feedbackStart가 공백입니다.")
         private final LocalDate feedbackStart;  // 피드백 시작
         @NotNull(message = "feedbackEnd가 공백입니다.")
