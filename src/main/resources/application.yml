@@ -119,3 +119,15 @@ spring-doc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: method
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    enable:
+      all: true
